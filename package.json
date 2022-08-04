@@ -1,0 +1,38 @@
+{
+  "name": "@sladg/nextjs-image-optimizer-handler",
+  "version": "0.0.1",
+  "description": "Plug-and-play lambda for replacing default NextJS image optimization handler.",
+  "license": "ISC",
+  "author": "Jan Soukup <jan@ssoukup.com>",
+  "main": "handler.ts",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "NODE_ENV=production esbuild lib/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
+    "postbuild": "cd dist && zip -r index.zip index.js*"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "exports": {
+    "./zip": "./dist/index.zip",
+    ".": {
+      "require": "./lib/handler.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.142.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.101",
+    "@types/node": "^18.6.3",
+    "esbuild": "^0.14.53"
+  },
+  "peerDependencies": {
+    "next": "^12.2.3"
+  }
+}
