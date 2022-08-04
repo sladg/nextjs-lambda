@@ -7,7 +7,9 @@
   "main": "handler.ts",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "NODE_ENV=production esbuild lib/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
+    "build:handler": "NODE_ENV=production esbuild lib/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
+    "build:sharp": "./build-sharp-layer.sh",
+    "build": "npm run build:handler && npm run build:sharp",
     "postbuild": "cd dist && zip -r index.zip index.js*"
   },
   "engines": {
@@ -18,6 +20,7 @@
     "dist"
   ],
   "exports": {
+    "./sharp-layer": "./dist/sharp-layer.zip",
     "./zip": "./dist/index.zip",
     ".": {
       "require": "./lib/index.ts",
@@ -28,6 +31,7 @@
     "@aws-sdk/client-s3": "^3.142.0"
   },
   "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
     "@types/aws-lambda": "^8.10.101",
     "@types/node": "^18.6.3",
     "esbuild": "^0.14.53"
