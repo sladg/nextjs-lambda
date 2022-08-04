@@ -1,3 +1,17 @@
+# v0.2.0 (Thu Aug 04 2022)
+
+#### 🚀 Enhancement
+
+- fix: fetch tags for release process [#7](https://github.com/sladg/nextjs-image-optimizer-handler/pull/7) (soukup@u.plus [@sladg](https://github.com/sladg))
+- feat: repository and git config added [#6](https://github.com/sladg/nextjs-image-optimizer-handler/pull/6) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v0.1.0 (Thu Aug 04 2022)
 
 #### 🚀 Enhancement
