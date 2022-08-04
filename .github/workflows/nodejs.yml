@@ -8,7 +8,8 @@ on:
         branches: ['master']
 
 jobs:
-    build:
+    deployment:
+        environment: production
         runs-on: ubuntu-22.04
         strategy:
             matrix:
@@ -23,12 +24,14 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'npm'
-            - run: npm ci
+            - name: Install dependencies
+              run: npm ci
             - name: Install zip
               run: |
                   sudo apt-get update
                   sudo apt-get install zip -y
-            - run: npm run build
+            - name: Build & package
+              run: npm run build
             - name: Release
               run: npm run release
               env:
