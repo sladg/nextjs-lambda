@@ -32,6 +32,19 @@ Lambda consumes Api Gateway requests, so we need to create ApiGw proxy (v2) that
 
 Lambda is designed to serve `_next/image*` route in NextJS stack and replaces the default handler so we can optimize caching and memory limits for page renders and image optimization.
 
+## Sharp
+
+Besides handler (wrapper) itself, underlying NextJS also requires sharp binaries.
+To build those, we use `npm install` with some extra parametes. Then we zip all sharp dependencies and compress it to easily importable zip file.
+
+```
+const code = require.resolve('@sladg/nextjs-image-optimizer-handler/sharp-layer')
+
+const sharpLayer = new LayerVersion(this, 'SharpLayer', {
+  code: Code.fromAsset(code)
+})
+```
+
 ## Notes
 
 This is part of NextJS to Lambda deployment process. More info to follow.
