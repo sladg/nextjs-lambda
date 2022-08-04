@@ -5,6 +5,14 @@
   "license": "ISC",
   "author": "Jan Soukup <jan@ssoukup.com>",
   "main": "handler.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sladg/nextjs-image-optimizer-handler"
+  },
   "scripts": {
     "prebuild": "rm -rf dist",
     "build:handler": "NODE_ENV=production esbuild lib/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
