@@ -1,11 +1,5 @@
 {
     "plugins": [
-        [
-            "upload-assets",
-            [
-                "./dist/**"
-            ]
-        ],
         "npm",
         "git-tag",
         "conventional-commits"
