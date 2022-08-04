@@ -1,0 +1,30 @@
+{
+    "plugins": [
+        "npm",
+        "git-tag",
+        "conventional-commits"
+    ],
+    "labels": [
+        {
+            "name": "major",
+            "changelogTitle": "💥 Breaking Change",
+            "description": "Increment the major version when merged",
+            "releaseType": "major",
+            "color": "#C5000B"
+        },
+        {
+            "name": "minor",
+            "changelogTitle": "🚀 Enhancement",
+            "description": "Increment the minor version when merged",
+            "releaseType": "minor",
+            "color": "#F1A60E"
+        },
+        {
+            "name": "patch",
+            "changelogTitle": "🐛 Bug Fix",
+            "description": "Increment the patch version when merged",
+            "releaseType": "patch",
+            "color": "#870048"
+        }
+    ]
+}

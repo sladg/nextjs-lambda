@@ -10,7 +10,8 @@
     "build:handler": "NODE_ENV=production esbuild lib/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
     "build:sharp": "./build-sharp-layer.sh",
     "build": "npm run build:handler && npm run build:sharp",
-    "postbuild": "cd dist && zip -r index.zip index.js*"
+    "postbuild": "cd dist && zip -r index.zip index.js*",
+    "release": "auto shipit"
   },
   "engines": {
     "node": ">=16"
@@ -31,20 +32,16 @@
     "@aws-sdk/client-s3": "^3.142.0"
   },
   "devDependencies": {
+    "@auto-it/conventional-commits": "^10.37.4",
+    "@auto-it/git-tag": "^10.37.4",
+    "@auto-it/npm": "^10.37.4",
     "@tsconfig/node16": "^1.0.3",
     "@types/aws-lambda": "^8.10.101",
     "@types/node": "^18.6.3",
+    "auto": "^10.37.4",
     "esbuild": "^0.14.53"
   },
   "peerDependencies": {
     "next": "^12.2.3"
-  },
-  "repository": "sladg/nextjs-image-optimizer-handler",
-  "auto": {
-    "plugins": [
-      "npm",
-      "conventional-commits"
-    ],
-    "onlyPublishWithReleaseLabel": true
   }
 }

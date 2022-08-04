@@ -29,9 +29,8 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install zip -y
             - run: npm run build
-            - uses: auto-it/setup-auto@v1
             - name: Release
-              run: auto shipit --plugins npm,git-tag,conventional-commit
+              run: npm run release
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
