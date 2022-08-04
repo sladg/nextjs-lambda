@@ -20,7 +20,7 @@
   "exports": {
     "./zip": "./dist/index.zip",
     ".": {
-      "require": "./lib/handler.ts",
+      "require": "./lib/index.ts",
       "import": "./dist/index.js"
     }
   },
