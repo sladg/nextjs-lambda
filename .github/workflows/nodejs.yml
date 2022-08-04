@@ -9,29 +9,29 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         strategy:
             matrix:
                 node-version: [16.x]
 
         steps:
             - uses: actions/checkout@v3
-            - run: git fetch --unshallow --tags
+              with:
+                  fetch-depth: 10
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'npm'
             - run: npm ci
+            - name: Install zip
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install zip -y
             - run: npm run build
-            - run: npm run release
-            - name: auto shipit
-              uses: terradatum/auto-action@master
+            - uses: auto-it/setup-auto@v1
+            - name: Release
+              run: auto shipit --plugins npm,git-tag,conventional-commit
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-              with:
-                  plugins: |
-                      npm
-                      git-tag
-                      conventional-commit

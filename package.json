@@ -10,8 +10,7 @@
     "build:handler": "NODE_ENV=production esbuild lib/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
     "build:sharp": "./build-sharp-layer.sh",
     "build": "npm run build:handler && npm run build:sharp",
-    "postbuild": "cd dist && zip -r index.zip index.js*",
-    "publish": "npm publish --access=public"
+    "postbuild": "cd dist && zip -r index.zip index.js*"
   },
   "engines": {
     "node": ">=16"
