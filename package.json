@@ -53,6 +53,7 @@
     "@auto-it/conventional-commits": "^10.37.4",
     "@auto-it/git-tag": "^10.37.4",
     "@auto-it/npm": "^10.37.4",
+    "@auto-it/released": "^10.37.4",
     "@auto-it/upload-assets": "^10.37.4",
     "@tsconfig/node16": "^1.0.3",
     "@types/aws-lambda": "^8.10.101",
