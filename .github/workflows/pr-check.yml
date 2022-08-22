@@ -1,0 +1,16 @@
+name: 'Check PR for word'
+on: [pull_request]
+
+jobs:
+    check_pr:
+        runs-on: ubuntu-22.04
+        strategy:
+            matrix:
+                node-version: [16.x]
+        steps:
+            - uses: actions/checkout@v2
+            - uses: jefflinse/pr-semver-bump@v1
+              name: Validate Pull Request Metadata
+              with:
+                  mode: validate
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}
