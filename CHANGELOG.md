@@ -1,3 +1,22 @@
+# v0.5.0 (Mon Aug 22 2022)
+
+#### 🚀 Enhancement
+
+- fix: draft of PR checks for labels to ensure releases [#14](https://github.com/sladg/nextjs-lambda/pull/14) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### 🐛 Bug Fix
+
+- refactor: released labels once PR is merged [#13](https://github.com/sladg/nextjs-lambda/pull/13) (soukup@u.plus [@sladg](https://github.com/sladg))
+- doc: improved documentation for new parts, added todos [#12](https://github.com/sladg/nextjs-lambda/pull/12) (soukup@u.plus [@sladg](https://github.com/sladg))
+- ref: allow for default handler use [#11](https://github.com/sladg/nextjs-lambda/pull/11) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v0.4.2 (Mon Aug 22 2022)
 
 #### 🐛 Bug Fix
