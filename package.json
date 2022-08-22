@@ -19,7 +19,7 @@
     "build:handler:server": "FILE=server-handler npm run build:file",
     "build:handler:image": "FILE=image-handler npm run build:file && cd dist/image-handler && zip -r index.zip *",
     "build:cli": "FILE=cli npm run build:file",
-    "build:sharp": "./build-sharp-layer.sh",
+    "build:sharp": "./scripts/build-sharp-layer.sh",
     "build": "npm run build:handler:image && npm run build:handler:server && npm run build:sharp && npm run build:cli",
     "release": "auto shipit"
   },
@@ -28,11 +28,12 @@
   },
   "files": [
     "lib",
-    "dist"
+    "dist",
+    "scripts"
   ],
   "bin": "dist/cli/index.js",
   "exports": {
-    "./sharp-layer": "./dist/sharp-layer.zip",
+    "./sharp-layer/zip": "./dist/sharp-layer.zip",
     "./image-handler/zip": "./dist/image-handler/index.zip",
     "./image-handler": {
       "require": "./lib/image-handler.ts",
