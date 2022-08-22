@@ -8,7 +8,8 @@ const exec = util.promisify(child_exec)
 // @TODO: Ensure path exists.
 // @TODO: Ensure.next folder exists with standalone folder inside.
 
-const scriptName = path.resolve(`${__dirname}/../../scripts/pack-nextjs.sh`)
+const scriptDir = path.dirname(__filename)
+const scriptName = path.resolve(`${scriptDir}/../../scripts/pack-nextjs.sh`)
 
 const run = async () => {
   console.log("Starting packaging of your NextJS project!")
