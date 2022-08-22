@@ -9,8 +9,9 @@ jobs:
                 node-version: [16.x]
         steps:
             - uses: actions/checkout@v2
-            - uses: jefflinse/pr-semver-bump@v1
-              name: Validate Pull Request Metadata
-              with:
-                  mode: validate
-                  repo-token: ${{ secrets.GITHUB_TOKEN }}
+            - uses: kceb/pull-request-url-action@v1
+              id: pr-url
+            - name: Validate SemVer
+              run: npx auto pr-check --url ${{ steps.pr-url.outputs.url }}
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
