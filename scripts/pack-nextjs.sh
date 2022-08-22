@@ -3,6 +3,10 @@ set -e
 
 # Current root for reference.
 MY_ROOT=$(pwd)
+SCRIPT_PATH="$(
+    cd -- "$(dirname "$0")" >/dev/null 2>&1
+    pwd -P
+)"
 
 # Folder where zip files will be outputed for CDK to pickup.
 OUTPUT_PATH=next.out
@@ -26,12 +30,20 @@ NEXT_CONFIG=
 GREP_BY=webpack
 
 echo "My root is: $MY_ROOT"
+echo "My script path is: $SCRIPT_PATH"
 
 echo "Cleaning possible left-overs."
 rm -rf $MY_ROOT/$OUTPUT_PATH
 
 echo "Creating output folder."
 mkdir -p $MY_ROOT/$OUTPUT_PATH
+
+if [[ -f "$HANDLER_PATH" ]]; then
+    echo "Custom server handler found!"
+else
+    echo "Using default server handler."
+    HANDLER_PATH=$SCRIPT_PATH/../dist/server-handler/index.js
+fi
 
 #
 # -------------------------- Create deps layer --------------------------
