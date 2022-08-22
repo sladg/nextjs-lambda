@@ -1,8 +1,8 @@
-# NextJS Image Optimizer Handler
+# NextJS Lambda Utils
 
-This is a wrapper for `next/server/image-optimizer` allowing to use S3.
-
-It is intended to be used with `nextjs` deployments to Lambda.
+This is a set of utils needed for deploying NextJS into AWS Lambda.
+It includes a wrapper for `next/server/image-optimizer` allowing to use S3.
+And includes CLI and custom server handler to integrate with ApiGw.
 
 ## Usage
 
