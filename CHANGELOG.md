@@ -1,3 +1,16 @@
+# v0.4.0 (Mon Aug 22 2022)
+
+#### 🚀 Enhancement
+
+- feat: server-handler and packaging for nextjs [#8](https://github.com/sladg/nextjs-lambda/pull/8) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v0.2.0 (Thu Aug 04 2022)
 
 #### 🚀 Enhancement
