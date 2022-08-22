@@ -1,3 +1,16 @@
+# v0.4.1 (Mon Aug 22 2022)
+
+#### 🐛 Bug Fix
+
+- fix: scripts [#9](https://github.com/sladg/nextjs-lambda/pull/9) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v0.4.0 (Mon Aug 22 2022)
 
 #### 🚀 Enhancement
