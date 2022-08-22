@@ -13,7 +13,7 @@ Use
 const sharpLayer: LayerVersion
 const assetsBucket: Bucket
 
-const code = require.resolve('@sladg/nextjs-image-optimizer-handler/zip')
+const code = require.resolve('@sladg/nextjs-lambda/image-handler/zip')
 
 const imageOptimizerFn = new Function(this, 'LambdaFunction', {
       code: Code.fromAsset(code),
@@ -38,7 +38,7 @@ Besides handler (wrapper) itself, underlying NextJS also requires sharp binaries
 To build those, we use `npm install` with some extra parametes. Then we zip all sharp dependencies and compress it to easily importable zip file.
 
 ```
-const code = require.resolve('@sladg/nextjs-image-optimizer-handler/sharp-layer')
+const code = require.resolve('@sladg/nextjs-lambda/sharp-layer')
 
 const sharpLayer = new LayerVersion(this, 'SharpLayer', {
   code: Code.fromAsset(code)
@@ -48,3 +48,5 @@ const sharpLayer = new LayerVersion(this, 'SharpLayer', {
 ## Notes
 
 This is part of NextJS to Lambda deployment process. More info to follow.
+
+## @TODO: Add Server-handler description
