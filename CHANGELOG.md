@@ -1,3 +1,16 @@
+# v0.4.2 (Mon Aug 22 2022)
+
+#### 🐛 Bug Fix
+
+- fix: cli, improved command support, correct resolution for files [#10](https://github.com/sladg/nextjs-lambda/pull/10) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v0.4.1 (Mon Aug 22 2022)
 
 #### 🐛 Bug Fix
