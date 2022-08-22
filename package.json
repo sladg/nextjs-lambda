@@ -1,6 +1,6 @@
 {
   "name": "@sladg/nextjs-lambda",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Plug-and-play lambda for replacing default NextJS image optimization handler.",
   "license": "ISC",
   "author": "Jan Soukup <jan@ssoukup.com>",
