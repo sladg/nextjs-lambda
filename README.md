@@ -6,6 +6,7 @@ And includes CLI and custom server handler to integrate with ApiGw.
 
 - [NextJS Lambda Utils](#nextjs-lambda-utils)
   - [Usage](#usage)
+    - [next.config.js](#nextconfigjs)
     - [Server handler](#server-handler)
     - [Image handler](#image-handler)
     - [CDK](#cdk)
@@ -14,6 +15,7 @@ And includes CLI and custom server handler to integrate with ApiGw.
     - [Server handler](#server-handler-1)
     - [Static assets](#static-assets)
 - [TODO](#todo)
+- [Disclaimer](#disclaimer)
 
 ## Usage
 
@@ -22,6 +24,19 @@ We need to create 2 lambdas in order to use NextJS. First one is handling pages/
 This division makes it easier to control resources and specify sizes and timeouts as those operations are completely different.
 
 Loading of assets and static content is handled via Cloudfront and S3 origin, so there is no need for specifying this behaviour in Lambda or handling it anyhow.
+
+### next.config.js
+
+The only requirement is to change your Next12 config to produce standalone output via `output: 'standalone'`.
+This should work fine for single-repositories with yarn/npm/pnpm.
+
+In case you are using monorepo/workspaces, be aware! Producing standalone build is tricky due to dependencies being spread out and not contained within single `node_modules` folder, making it complicated for `SWC` to properly produce required dependencies. This would most likely result in deployment failing with HTTP 500, internal error, as some required dependency is not in place.
+
+See:
+
+- https://github.com/vercel/next.js/issues/36386
+- https://github.com/vercel/next.js/discussions/32223
+-
 
 ### Server handler
 
@@ -35,14 +50,14 @@ Create new lambda function with NODE_16 runtime in AWS.
 
 ```
 const dependenciesLayer = new LayerVersion(this, 'DepsLayer', {
-  code: Code.fromAsset(`next.out/dependenciesLayer.zip`),
-})
+        code: Code.fromAsset(`next.out/dependenciesLayer.zip`),
+    })
 
-const imageOptimizerFn = new Function(this, 'LambdaFunction', {
+const requestHandlerFn = new Function(this, 'LambdaFunction', {
       code: Code.fromAsset(`next.out/code.zip`, { followSymlinks: SymlinkFollowMode.NEVER }),
       runtime: Runtime.NODEJS_16_X,
       handler: 'handler.handler',
-   re   layers: [dependenciesLayer],
+      layers: [dependenciesLayer],
       memorySize: 512,
       timeout: Duration.seconds(10),
     })
@@ -273,3 +288,15 @@ Cloudfront paths used:
 - Use lib/index.ts as single entry and export all paths/functions from it (including zip paths).
 - Consider using \*.svg, \*.png, \*.jpeg etc. as routing rule for Cloudfront to distinguish between assets and pages.
 - Add command for guessing version bumps from git commits & keywords, existing solutions are horendously huge, we just need a simple version bumping.
+
+# Disclaimer
+
+At this point, advanced features were not tested with this setup. This includes:
+
+- `GetServerSideProps`,
+- middleware,
+- ISR and fallbacks,
+- streaming,
+- custom babel configuration.
+
+I am looking for advanced projects implementing those features, so we can test them out! Reach out to me!
