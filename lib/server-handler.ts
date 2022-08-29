@@ -1,8 +1,7 @@
 process.env.NODE_ENV = "production"
 process.chdir(__dirname)
 
-import NextServer, { Options } from "next/dist/server/next-server"
-import type { NextIncomingMessage } from "next/dist/server/request-meta"
+import NextServer from "next/dist/server/next-server"
 import slsHttp from "serverless-http"
 import path from "path"
 import { ServerResponse } from "http"
@@ -17,7 +16,7 @@ if (!process.env.NEXT_MANUAL_SIG_HANDLE) {
   process.on("SIGINT", () => process.exit(0))
 }
 
-const config: Options = {
+const config = {
   hostname: "localhost",
   port: Number(process.env.PORT) || 3000,
   dir: path.join(__dirname),
@@ -28,9 +27,31 @@ const config: Options = {
 
 const nextHandler = new NextServer(config).getRequestHandler()
 
-const server = slsHttp(async (req: NextIncomingMessage, res: ServerResponse) => {
-  await nextHandler(req, res)
-  // @TODO: Add error handler.
-})
+const server = slsHttp(
+  async (req: any, res: ServerResponse) => {
+    await nextHandler(req, res).catch((e) => {
+      // Log into Cloudwatch for easier debugging.
+      console.error(`NextJS request failed due to:`)
+      console.error(e)
+
+      res.setHeader("Content-Type", "application/json")
+      res.end(
+        JSON.stringify(
+          {
+            message: "Server failed to respond.",
+            details: e,
+          },
+          // Prettified.
+          null,
+          3
+        )
+      )
+    })
+  },
+  {
+    // We have separate function for handling images. Assets are handled by S3.
+    binary: false,
+  }
+)
 
 export const handler = server

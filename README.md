@@ -6,25 +6,60 @@ And includes CLI and custom server handler to integrate with ApiGw.
 
 - [NextJS Lambda Utils](#nextjs-lambda-utils)
   - [Usage](#usage)
+    - [Server handler](#server-handler)
+    - [Image handler](#image-handler)
+    - [CDK](#cdk)
   - [Sharp](#sharp)
   - [Packaging](#packaging)
-    - [Server handler](#server-handler)
+    - [Server handler](#server-handler-1)
     - [Static assets](#static-assets)
 - [TODO](#todo)
 
 ## Usage
 
+We need to create 2 lambdas in order to use NextJS. First one is handling pages/api rendering, second is solving image optimization.
+
+This division makes it easier to control resources and specify sizes and timeouts as those operations are completely different.
+
+Loading of assets and static content is handled via Cloudfront and S3 origin, so there is no need for specifying this behaviour in Lambda or handling it anyhow.
+
+### Server handler
+
+```
+next build
+
+npx @sladg/nextjs-lambda pack
+```
+
 Create new lambda function with NODE_16 runtime in AWS.
-Use
+
+```
+const dependenciesLayer = new LayerVersion(this, 'DepsLayer', {
+  code: Code.fromAsset(`next.out/dependenciesLayer.zip`),
+})
+
+const imageOptimizerFn = new Function(this, 'LambdaFunction', {
+      code: Code.fromAsset(`next.out/code.zip`, { followSymlinks: SymlinkFollowMode.NEVER }),
+      runtime: Runtime.NODEJS_16_X,
+      handler: 'handler.handler',
+   re   layers: [dependenciesLayer],
+      memorySize: 512,
+      timeout: Duration.seconds(10),
+    })
+```
+
+### Image handler
+
+Create new lambda function with NODE_16 runtime in AWS.
 
 ```
 const sharpLayer: LayerVersion
 const assetsBucket: Bucket
 
-const code = require.resolve('@sladg/nextjs-lambda/image-handler/zip')
+const imageHandlerZip = require.resolve('@sladg/nextjs-lambda/image-handler/zip')
 
 const imageOptimizerFn = new Function(this, 'LambdaFunction', {
-      code: Code.fromAsset(code),
+      code: Code.fromAsset(imageHandlerZip),
       runtime: Runtime.NODEJS_16_X,
       handler: 'index.handler',
       layers: [sharpLayer],
@@ -39,6 +74,148 @@ const imageOptimizerFn = new Function(this, 'LambdaFunction', {
 Lambda consumes Api Gateway requests, so we need to create ApiGw proxy (v2) that will trigger Lambda.
 
 Lambda is designed to serve `_next/image*` route in NextJS stack and replaces the default handler so we can optimize caching and memory limits for page renders and image optimization.
+
+### CDK
+
+Here is complete example using CDK:
+
+```
+import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha'
+import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
+import { AssetHashType, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, SymlinkFollowMode } from 'aws-cdk-lib'
+import { CloudFrontAllowedMethods, CloudFrontWebDistribution } from 'aws-cdk-lib/aws-cloudfront'
+import { Code, Function, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda'
+import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3'
+import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
+import { Construct } from 'constructs'
+
+const imageHandlerZip = require.resolve('@sladg/nextjs-lambda/image-handler/zip')
+const sharpLayerZip = require.resolve('@sladg/nextjs-lambda/sharp-layer/zip')
+
+export class NextLambdaStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
+    super(scope, id, props)
+
+    const depsLayer = new LayerVersion(this, 'DepsLayer', {
+      code: Code.fromAsset(`next.out/dependenciesLayer.zip`),
+    })
+
+    const sharpLayer = new LayerVersion(this, 'SharpLayer', {
+      code: Code.fromAsset(sharpLayerZip, { assetHash: 'static', assetHashType: AssetHashType.CUSTOM }),
+    })
+
+    const assetsBucket = new Bucket(this, 'NextAssetsBucket', {
+      publicReadAccess: true,
+      autoDeleteObjects: true,
+      removalPolicy: RemovalPolicy.DESTROY,
+    })
+
+    const lambdaFn = new Function(this, 'DefaultNextJs', {
+      code: Code.fromAsset(`next.out/code.zip`, { followSymlinks: SymlinkFollowMode.NEVER }),
+      runtime: Runtime.NODEJS_16_X,
+      handler: 'handler.handler',
+      layers: [depsLayer],
+      // No need for big memory as image handling is done elsewhere.
+      memorySize: 512,
+      timeout: Duration.seconds(15),
+    })
+
+    const imageOptimizationFn = new Function(this, 'ImageOptimizationNextJs', {
+      code: Code.fromAsset(imageHandlerZip),
+      runtime: Runtime.NODEJS_16_X,
+      handler: 'index.handler',
+      layers: [sharpLayer],
+      memorySize: 1024,
+      timeout: Duration.seconds(10),
+      environment: {
+        S3_SOURCE_BUCKET: assetsBucket.bucketName,
+      },
+    })
+
+    assetsBucket.grantRead(imageOptimizationFn)
+
+    const apiGwDefault = new HttpApi(this, 'NextJsLambdaProxy', {
+      createDefaultStage: true,
+      defaultIntegration: new HttpLambdaIntegration('LambdaApigwIntegration', lambdaFn),
+    })
+
+    const apiGwImages = new HttpApi(this, 'ImagesLambdaProxy', {
+      createDefaultStage: true,
+      defaultIntegration: new HttpLambdaIntegration('ImagesApigwIntegration', imageOptimizationFn),
+    })
+
+    const cfnDistro = new CloudFrontWebDistribution(this, 'TestApigwDistro', {
+      // Must be set, because cloufront would use index.html which would not match in NextJS routes.
+      defaultRootObject: '',
+      comment: 'ApiGwLambda Proxy for NextJS',
+      originConfigs: [
+        {
+          // Default behaviour, lambda handles.
+          behaviors: [
+            {
+              allowedMethods: CloudFrontAllowedMethods.ALL,
+              isDefaultBehavior: true,
+              forwardedValues: { queryString: true },
+            },
+            {
+              allowedMethods: CloudFrontAllowedMethods.ALL,
+              pathPattern: '_next/data/*',
+            },
+          ],
+          customOriginSource: {
+            domainName: `${apiGwDefault.apiId}.execute-api.${this.region}.amazonaws.com`,
+          },
+        },
+        {
+          // Our implementation of image optimization, we are tapping into Next's default route to avoid need for next.config.js changes.
+          behaviors: [
+            {
+              // Should use caching based on query params.
+              allowedMethods: CloudFrontAllowedMethods.ALL,
+              pathPattern: '_next/image*',
+              forwardedValues: { queryString: true },
+            },
+          ],
+          customOriginSource: {
+            domainName: `${apiGwImages.apiId}.execute-api.${this.region}.amazonaws.com`,
+          },
+        },
+        {
+          // Remaining next files (safe-catch) and our assets that are not imported via `next/image`
+          behaviors: [
+            {
+              allowedMethods: CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
+              pathPattern: '_next/*',
+            },
+            {
+              allowedMethods: CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
+              pathPattern: 'assets/*',
+            },
+          ],
+          s3OriginSource: {
+            s3BucketSource: assetsBucket,
+          },
+        },
+      ],
+    })
+
+    // This can be handled by `aws s3 sync` but we need to ensure invalidation of Cfn after deploy.
+    new BucketDeployment(this, 'PublicFilesDeployment', {
+      destinationBucket: assetsBucket,
+      sources: [Source.asset(`next.out/assetsLayer.zip`)],
+      accessControl: BucketAccessControl.PUBLIC_READ,
+      // Invalidate all paths after deployment.
+      distributionPaths: ['/*'],
+      distribution: cfnDistro,
+    })
+
+    new CfnOutput(this, 'cfnDistroUrl', { value: cfnDistro.distributionDomainName })
+    new CfnOutput(this, 'defaultApiGwUrl', { value: apiGwDefault.apiEndpoint })
+    new CfnOutput(this, 'imagesApiGwUrl', { value: apiGwImages.apiEndpoint })
+    new CfnOutput(this, 'assetsBucketUrl', { value: assetsBucket.bucketDomainName })
+  }
+}
+```
 
 ## Sharp
 
@@ -90,7 +267,9 @@ Cloudfront paths used:
 
 # TODO
 
-- Explain script used for packaging Next app,
+- Explain scripts used for packaging Next app,
 - Add CDK examples on how to set it up,
 - Export CDK contruct for simple plug-n-play use,
 - Use lib/index.ts as single entry and export all paths/functions from it (including zip paths).
+- Consider using \*.svg, \*.png, \*.jpeg etc. as routing rule for Cloudfront to distinguish between assets and pages.
+- Add command for guessing version bumps from git commits & keywords, existing solutions are horendously huge, we just need a simple version bumping.
