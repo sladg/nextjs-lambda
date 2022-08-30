@@ -49,8 +49,7 @@ program
 	.argument('<commitMessage>', 'Commit message to use for guessing bump.')
 	.argument('<latestVersion>', 'Your existing app version which should be used for calculation of next version.')
 	.option('-t, --tagPrefix <prefix>', 'Prefix version with string of your choice', 'v')
-	.action(async (args, options) => {
-		const { commitMessage, latestVersion } = args
+	.action(async (commitMessage, latestVersion, options) => {
 		const { tagPrefix } = options
 
 		if (!isValidTag(latestVersion, tagPrefix)) {
@@ -82,6 +81,7 @@ program
 		const git = simpleGit()
 		const tags = await git.tags()
 		const log = await git.log()
+		const branch = await git.branch()
 		const [remote] = await git.getRemotes()
 
 		const latestCommit = log.latest?.hash
@@ -130,8 +130,7 @@ program
 		// @Note: CI/CD should not be listening for tags in master, it should listen to release branch.
 		await git.addTag(nextTagWithPrefix)
 		await git.pushTags()
-
-		await git.push(remote.name, releaseBranch)
+		await git.push(remote.name, `${branch.current}:${releaseBranch}`)
 
 		console.log(`Successfuly tagged and created new branch - ${releaseBranch}`)
 	})
