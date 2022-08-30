@@ -65,11 +65,7 @@ export const bumpMapping = [
 		bump: BumpType.Patch,
 	},
 	{
-		test: /(.*)(feat:|feat\((.*)\):)/,
-		bump: BumpType.Minor,
-	},
-	{
-		test: /(.*)(feature:|feature\((.*)\):)/,
+		test: /(.*)(feat:|feat\((.*)\):|feature:|feature\((.*)\):)/,
 		bump: BumpType.Minor,
 	},
 	{
@@ -77,11 +73,7 @@ export const bumpMapping = [
 		bump: BumpType.Minor,
 	},
 	{
-		test: /(.*)(ref:|ref\((.*)\):)/,
-		bump: BumpType.Minor,
-	},
-	{
-		test: /(.*)(refactor:|refactor\((.*)\):)/,
+		test: /(.*)(ref:|ref\((.*)\):|refactor:|refactor\((.*)\):|refactoring:|refactoring\((.*)\):)/,
 		bump: BumpType.Minor,
 	},
 	{
@@ -93,7 +85,7 @@ export const bumpMapping = [
 		bump: BumpType.Minor,
 	},
 	{
-		test: /(.*)(test:|test\((.*)\):)/,
+		test: /(.*)(test:|test\((.*)\):|tests:|tests\((.*)\):)/,
 		bump: BumpType.Minor,
 	},
 	{
@@ -105,11 +97,7 @@ export const bumpMapping = [
 		bump: BumpType.Minor,
 	},
 	{
-		test: /(.*)(docs:|docs\((.*)\):)/,
-		bump: BumpType.Minor,
-	},
-	{
-		test: /(.*)(doc:|doc\((.*)\):)/,
+		test: /(.*)(docs:|docs\((.*)\):|doc:|doc\((.*)\):)/,
 		bump: BumpType.Minor,
 	},
 	{
@@ -149,16 +137,16 @@ export const replaceVersionInCommonFiles = (oldVersion: string, newVersion: stri
 	const results = replaceInFileSync({
 		allowEmptyPaths: true,
 		ignore: [
-			'**/node_modules',
-			'**/.venv',
-			'**/vendor',
-			'**/.git',
+			'**/node_modules/**',
+			'**/.venv/**',
+			'**/vendor/**',
+			'**/.git/**',
 			//
 		],
 		files: [
 			'package.json',
 			'package-lock.json',
-			'package-lock.json', // duplicate because lock file contains two occurences.
+			'package-lock.json', // Duplicate because lock file contains two occurences.
 			// 'yarn.lock', Yarn3 lock file does not contain version from package.json
 			'composer.json',
 			// 'composer.lock', Composer2 lock file does not include version from composer.json

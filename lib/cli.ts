@@ -142,7 +142,7 @@ program
 		// So we are overwriting last commit message and pushing to release branch.
 		await git
 			//
-			.raw(`--message Release: ${nextTagWithPrefix}`, '--amend')
+			.raw(`--message "Release: ${nextTagWithPrefix}"`, '--amend')
 			.push(remote.name, `${branch.current}:${releaseBranch}`)
 
 		// Create tag and push it to master.
