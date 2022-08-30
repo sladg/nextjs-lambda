@@ -51,6 +51,7 @@
     "commander": "^9.4.0",
     "critters": "^0.0.16",
     "next": "^12.2.5",
+    "replace-in-file": "^6.3.5",
     "serverless-http": "^3.0.2",
     "simple-git": "^3.13.0"
   },

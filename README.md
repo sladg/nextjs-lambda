@@ -14,6 +14,9 @@ And includes CLI and custom server handler to integrate with ApiGw.
   - [Packaging](#packaging)
     - [Server handler](#server-handler-1)
     - [Static assets](#static-assets)
+- [Versioning](#versioning)
+  - [Guess](#guess)
+  - [Shipit](#shipit)
 - [TODO](#todo)
 - [Disclaimer](#disclaimer)
 
@@ -279,6 +282,23 @@ Cloudfront paths used:
 
 - `_next/*`
 - `assets/*`
+
+# Versioning
+
+This package exposes two CLI functions intended to deal with versioning your application and releasing.
+
+Motivation behind is to get rid of huge dependencies and over-kill implementations such as @auto-it, release-it or semver. Those are bulky and unncessarily complex.
+
+## Guess
+
+Simple CLI command that takes commit message and current version and outputs (stdout) next version based on keywords inside commit message.
+
+## Shipit
+
+Similar to guess command, however, it automatically tags a commit on current branch and creates release branch for you so hooking up pipelines is as simple as it can be. Version is automatically bumped in common NPM and PHP files (package.json, package-lock.json and composer.json).
+
+Simply call `@sladg/next-lambda shipit` on any branch and be done.
+
 
 # TODO
 
