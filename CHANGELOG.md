@@ -1,3 +1,20 @@
+# v1.1.0 (Tue Aug 30 2022)
+
+#### 🚀 Enhancement
+
+- feature(bumps): allow for cli to calculate and bump versions for projects [#17](https://github.com/sladg/nextjs-lambda/pull/17) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### 🐛 Bug Fix
+
+- docs: readme improved [#16](https://github.com/sladg/nextjs-lambda/pull/16) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v1.0.0 (Mon Aug 29 2022)
 
 #### 💥 Breaking Change
