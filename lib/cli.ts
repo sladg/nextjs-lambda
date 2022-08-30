@@ -5,9 +5,11 @@ import path from 'path'
 import packageJson from '../package.json'
 import { simpleGit } from 'simple-git'
 import { Command } from 'commander'
-import { bumpCalculator, bumpMapping, BumpType, isValidTag } from './utils'
+import { bumpCalculator, bumpMapping, BumpType, isValidTag, replaceVersionInCommonFiles } from './utils'
 
 const exec = util.promisify(child_exec)
+
+const skipCiFlag = '[skip ci]'
 
 const scriptDir = path.dirname(__filename)
 const scriptPath = path.resolve(`${scriptDir}/../../scripts/pack-nextjs.sh`)
@@ -86,6 +88,7 @@ program
 
 		const latestCommit = log.latest?.hash
 		const latestTag = tags.latest ?? '0.0.0'
+		const currentTag = latestTag.replace(tagPrefix, '')
 
 		if (!isValidTag(latestTag, tagPrefix)) {
 			throw new Error(`Invalid tag found - ${latestTag}!`)
@@ -120,17 +123,31 @@ program
 			bumps.push(BumpType.Patch)
 		}
 
-		const nextTag = bumps.reduce((acc, curr) => bumpCalculator(acc, curr), latestTag.replace(tagPrefix, ''))
+		const nextTag = bumps.reduce((acc, curr) => bumpCalculator(acc, curr), currentTag)
 		const nextTagWithPrefix = tagPrefix + nextTag
 		const releaseBranch = `${releaseBranchPrefix}${nextTagWithPrefix}`
-
 		console.log(`Next version is - ${nextTagWithPrefix}!`)
+
+		const replacementResults = replaceVersionInCommonFiles(currentTag, nextTag)
+		console.log(`Replaced version in files.`, replacementResults)
+
+		// Commit changed files (versions) and create a release commit with skip ci flag.
+		await git
+			//
+			.add('./*')
+			.commit(`Release: ${nextTagWithPrefix} ${skipCiFlag}`)
+			.push(remote.name, branch.current)
+
+		// As current branch commit includes skip ci flag, we want to ommit this flag for release branch so pipeline can run (omitting infinite loop).
+		// So we are overwriting last commit message and pushing to release branch.
+		await git
+			//
+			.raw(`--message Release: ${nextTagWithPrefix}`, '--amend')
+			.push(remote.name, `${branch.current}:${releaseBranch}`)
 
 		// Create tag and push it to master.
 		// @Note: CI/CD should not be listening for tags in master, it should listen to release branch.
-		await git.addTag(nextTagWithPrefix)
-		await git.pushTags()
-		await git.push(remote.name, `${branch.current}:${releaseBranch}`)
+		await git.addTag(nextTagWithPrefix).pushTags()
 
 		console.log(`Successfuly tagged and created new branch - ${releaseBranch}`)
 	})

@@ -1,5 +1,6 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { IncomingMessage, ServerResponse } from 'http'
+import { replaceInFileSync } from 'replace-in-file'
 import { NextUrlWithParsedQuery } from 'next/dist/server/request-meta'
 import { Readable } from 'stream'
 
@@ -142,4 +143,42 @@ export const bumpCalculator = (version: string, bumpType: BumpType) => {
 	}
 
 	throw new Error(`Unknown bump type - ${bumpType}!`)
+}
+
+export const replaceVersionInCommonFiles = (oldVersion: string, newVersion: string) => {
+	const results = replaceInFileSync({
+		allowEmptyPaths: true,
+		ignore: [
+			'**/node_modules',
+			'**/.venv',
+			'**/vendor',
+			'**/.git',
+			//
+		],
+		files: [
+			'package.json',
+			'package-lock.json',
+			'package-lock.json', // duplicate because lock file contains two occurences.
+			// 'yarn.lock', Yarn3 lock file does not contain version from package.json
+			'composer.json',
+			// 'composer.lock', Composer2 lock file does not include version from composer.json
+			'pyproject.toml',
+			'**/__init__.py',
+		],
+		from: [
+			`"version": "${oldVersion}"`, // npm/php style
+			`"version":"${oldVersion}"`, // uglified npm/php style
+			`version = "${oldVersion}"`, // python style
+			`__version__ = '${oldVersion}'`, // python style
+		],
+		to: [
+			`"version": "${newVersion}"`,
+			`"version":"${newVersion}"`,
+			`version = "${newVersion}"`,
+			`__version__ = '${newVersion}'`,
+			//
+		],
+	})
+
+	return results
 }
