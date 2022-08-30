@@ -1,3 +1,16 @@
+# v1.1.3 (Tue Aug 30 2022)
+
+#### 🐛 Bug Fix
+
+- fix: git commands, correctly escape [#20](https://github.com/sladg/nextjs-lambda/pull/20) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v1.1.2 (Tue Aug 30 2022)
 
 #### 🐛 Bug Fix
