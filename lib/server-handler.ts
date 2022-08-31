@@ -1,5 +1,6 @@
-process.env.NODE_ENV = 'production'
+// ! This is needed for nextjs to correctly resolve.
 process.chdir(__dirname)
+process.env.NODE_ENV = 'production'
 
 import NextServer from 'next/dist/server/next-server'
 import slsHttp from 'serverless-http'

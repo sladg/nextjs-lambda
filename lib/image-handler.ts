@@ -1,7 +1,6 @@
-process.env.NODE_ENV = 'production'
-// Set NEXT_SHARP_PATH environment variable
 // ! Make sure this comes before the fist import
 process.env.NEXT_SHARP_PATH = require.resolve('sharp')
+process.env.NODE_ENV = 'production'
 
 import type { APIGatewayProxyEventV2, APIGatewayProxyStructuredResultV2 } from 'aws-lambda'
 import { defaultConfig, NextConfigComplete } from 'next/dist/server/config-shared'

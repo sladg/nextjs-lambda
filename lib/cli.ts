@@ -1,19 +1,17 @@
 #!/usr/bin/env node
-import { exec as child_exec } from 'child_process'
-import util from 'util'
-import path from 'path'
-import packageJson from '../package.json'
-import { simpleGit } from 'simple-git'
-import { Command } from 'commander'
-import { bumpCalculator, bumpMapping, BumpType, isValidTag, replaceVersionInCommonFiles } from './utils'
 
-const exec = util.promisify(child_exec)
+import { Command } from 'commander'
+import { mkdirSync, rmSync, symlinkSync, writeFileSync } from 'fs'
+import { tmpdir } from 'os'
+import path from 'path'
+import { simpleGit } from 'simple-git'
+import packageJson from '../package.json'
+import { bumpCalculator, bumpMapping, BumpType, findInFile, isValidTag, replaceVersionInCommonFiles, zipFolder, zipMultipleFoldersOrFiles } from './utils'
 
 const skipCiFlag = '[skip ci]'
-
+const commandCwd = process.cwd()
+const nextServerConfigRegex = /(?<=conf: )(.*)(?=,)/
 const scriptDir = path.dirname(__filename)
-const scriptPath = path.resolve(`${scriptDir}/../../scripts/pack-nextjs.sh`)
-const handlerPath = path.resolve(`${scriptDir}/../server-handler/index.js`)
 
 const program = new Command()
 
@@ -26,21 +24,107 @@ program
 program
 	.command('pack')
 	.description('Package standalone Next12 build into Lambda compatible ZIPs.')
-	.option('--output', 'folder where to save output', 'next.out')
-	.option('--publicFolder', 'folder where public assets are located', 'public')
-	.option('--handler', 'custom handler to deal with ApiGw events', handlerPath)
-	.option('--grepBy', 'keyword to identify configuration inside server.js', 'webpack')
-	.action(async (str, options) => {
-		// @TODO: Ensure path exists.
-		// @TODO: Ensure.next folder exists with standalone folder inside.
+	.option(
+		'--standaloneFolder',
+		'Folder including NextJS standalone build. Parental folder should include more folders as well.',
+		path.resolve(commandCwd, '.next/standalone'),
+	)
+	.option(
+		'--publicFolder',
+		'Folder where public assets are located, typically this folder is located in root of the project.',
+		path.resolve(commandCwd, './public'),
+	)
+	.option(
+		'--handlerPath',
+		'Path to custom handler to be used to handle ApiGw events. By default this is provided for you.',
+		path.resolve(scriptDir, './../server-handler/index.js'),
+	)
+	.option(
+		'--outputFolder',
+		'Path to folder which should be used for outputting bundled ZIP files for your Lambda. It will be cleared before every script run.',
+		path.resolve(commandCwd, './next.out'),
+	)
+	.action(async (options) => {
+		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = options
 
-		// @TODO: Transform into code, move away from script.
-		// Also, pass parameters and options.
-		console.log('Starting packaging of your NextJS project!')
+		// Dependencies layer configuration
+		const nodeModulesFolderPath = path.resolve(standaloneFolder, './node_modules')
+		const depsLambdaFolder = 'nodejs/node_modules'
+		const lambdaNodeModulesPath = path.resolve('/opt', depsLambdaFolder)
+		const dependenciesOutputPath = path.resolve(outputFolder, 'dependenciesLayer.zip')
 
-		await exec(`chmod +x ${scriptPath} && ${scriptPath}`)
-			.then(({ stdout }) => console.log(stdout))
-			.catch(console.error)
+		// Code layer configuration
+		const generatedNextServerPath = path.resolve(standaloneFolder, './server.js')
+		const codeOutputPath = path.resolve(outputFolder, 'code.zip')
+
+		// Assets bundle configuration
+		const generatedStaticContentPath = path.resolve(commandCwd, '.next/static')
+		const generatedStaticRemapping = '_next/static'
+		const assetsOutputPath = path.resolve(outputFolder, 'assetsLayer.zip')
+
+		// Clean output directory before continuing
+		rmSync(outputFolder, { force: true, recursive: true })
+		mkdirSync(outputFolder)
+
+		// Zip dependencies from standalone output in a layer-compatible format.
+		await zipFolder({
+			outputName: dependenciesOutputPath,
+			folderPath: nodeModulesFolderPath,
+			dir: depsLambdaFolder,
+		})
+
+		// Zip staticly generated assets and public folder.
+		await zipMultipleFoldersOrFiles({
+			outputName: assetsOutputPath,
+			inputDefinition: [
+				{
+					path: publicFolder,
+				},
+				{
+					path: generatedStaticContentPath,
+					dir: generatedStaticRemapping,
+				},
+			],
+		})
+
+		// Create a symlink for node_modules so they point to the separately packaged layer.
+		// We need to create symlink because we are not using NodejsFunction in CDK as bundling is custom.
+		const tmpFolder = tmpdir()
+
+		const symlinkPath = path.resolve(tmpFolder, `./node_modules_${Math.random()}`)
+		symlinkSync(lambdaNodeModulesPath, symlinkPath)
+
+		const nextConfig = findInFile(generatedNextServerPath, nextServerConfigRegex)
+		const configPath = path.resolve(tmpFolder, `./config.json_${Math.random()}`)
+		writeFileSync(configPath, nextConfig, 'utf-8')
+
+		// Zip codebase including symlinked node_modules and handler.
+		await zipMultipleFoldersOrFiles({
+			outputName: codeOutputPath,
+			inputDefinition: [
+				{
+					isGlob: true,
+					cwd: standaloneFolder,
+					path: '**/*',
+					ignore: ['**/node_modules/**', '*.zip'],
+				},
+				{
+					isFile: true,
+					path: handlerPath,
+					name: 'handler.js',
+				},
+				{
+					isFile: true,
+					path: symlinkPath,
+					name: 'node_modules',
+				},
+				{
+					isFile: true,
+					path: configPath,
+					name: 'config.json',
+				},
+			],
+		})
 
 		console.log('Your NextJS project was succefully prepared for Lambda.')
 	})

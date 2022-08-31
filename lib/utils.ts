@@ -1,7 +1,10 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import archiver from 'archiver'
+import { createWriteStream, readFileSync, symlinkSync } from 'fs'
+import { IOptions as GlobOptions } from 'glob'
 import { IncomingMessage, ServerResponse } from 'http'
-import { replaceInFileSync } from 'replace-in-file'
 import { NextUrlWithParsedQuery } from 'next/dist/server/request-meta'
+import { replaceInFileSync } from 'replace-in-file'
 import { Readable } from 'stream'
 
 // Make header keys lowercase to ensure integrity.
@@ -145,6 +148,7 @@ export const replaceVersionInCommonFiles = (oldVersion: string, newVersion: stri
 		],
 		files: [
 			'package.json',
+			'**/package.json', // Useful for workspaces with nested package.jsons also including versions.
 			'package-lock.json',
 			'package-lock.json', // Duplicate because lock file contains two occurences.
 			// 'yarn.lock', Yarn3 lock file does not contain version from package.json
@@ -170,3 +174,83 @@ export const replaceVersionInCommonFiles = (oldVersion: string, newVersion: stri
 
 	return results
 }
+
+export const findInFile = (filePath: string, regex: RegExp): string => {
+	const content = readFileSync(filePath, 'utf-8')
+	const data = content.match(regex)
+
+	if (!data?.[0]) {
+		throw new Error('Unable to match Next server configuration.')
+	}
+
+	return data[0]
+}
+
+interface ZipFolderProps {
+	outputName: string
+	folderPath: string
+	dir?: string
+}
+
+export const zipFolder = async ({ folderPath, outputName, dir }: ZipFolderProps) =>
+	zipMultipleFoldersOrFiles({
+		outputName,
+		inputDefinition: [{ path: folderPath, dir }],
+	})
+
+interface FolderInput {
+	path: string
+	dir?: string
+}
+
+interface FileInput {
+	path: string
+	name: string
+	isFile: true
+}
+
+interface SymlinkInput {
+	source: string
+	target: string
+	isSymlink: true
+}
+
+interface GlobInput extends GlobOptions {
+	path: string
+	isGlob: true
+}
+
+interface ZipProps {
+	outputName: string
+	inputDefinition: (FolderInput | FileInput | SymlinkInput | GlobInput)[]
+}
+
+export const zipMultipleFoldersOrFiles = async ({ outputName, inputDefinition }: ZipProps) => {
+	const archive = archiver('zip', { zlib: { level: 5 } })
+	const stream = createWriteStream(outputName)
+
+	return new Promise((resolve, reject) => {
+		inputDefinition.forEach((props) => {
+			if ('isFile' in props) {
+				archive.file(props.path, { name: props.name })
+			} else if ('isSymlink' in props) {
+				archive.symlink(props.source, props.target)
+			} else if ('isGlob' in props) {
+				archive.glob(props.path, props)
+			} else {
+				archive.directory(props.path, props.dir ?? false)
+			}
+		})
+
+		archive.on('error', (err) => reject(err)).pipe(stream)
+		stream.on('close', resolve)
+		archive.finalize()
+	})
+}
+
+interface SymlinkProps {
+	sourcePath: string
+	linkLocation: string
+}
+
+export const createSymlink = ({ linkLocation, sourcePath }: SymlinkProps) => symlinkSync(sourcePath, linkLocation)
