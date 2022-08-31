@@ -1,3 +1,16 @@
+# v2.0.0 (Wed Aug 31 2022)
+
+#### 💥 Breaking Change
+
+- refactor: nextjs packaging [#22](https://github.com/sladg/nextjs-lambda/pull/22) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v1.1.4 (Tue Aug 30 2022)
 
 #### 🐛 Bug Fix
