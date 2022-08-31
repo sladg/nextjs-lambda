@@ -4,7 +4,7 @@
   "description": "Plug-and-play lambda for replacing default NextJS image optimization handler.",
   "license": "ISC",
   "author": "Jan Soukup <jan@ssoukup.com>",
-  "main": "handler.ts",
+  "main": "lib/index.ts",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build:file": "NODE_ENV=production esbuild lib/$FILE.ts  --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$FILE/index.js",
+    "build:file": "NODE_ENV=production esbuild lib/$FILE.ts --bundle --minify --sourcemap --platform=node --target=es2020 --external:sharp --outfile=dist/$FILE/index.js",
     "build:handler:server": "FILE=server-handler npm run build:file",
     "build:handler:image": "FILE=image-handler npm run build:file && cd dist/image-handler && zip -r index.zip *",
     "build:cli:package": "FILE=cli npm run build:file",
@@ -47,8 +47,13 @@
     }
   },
   "dependencies": {
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.39.1-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.39.1-alpha.0",
     "@aws-sdk/client-s3": "^3.142.0",
+    "archiver": "^5.3.1",
+    "aws-cdk-lib": "^2.39.1",
     "commander": "^9.4.0",
+    "constructs": "^10.1.92",
     "critters": "^0.0.16",
     "next": "^12.2.5",
     "replace-in-file": "^6.3.5",
@@ -62,6 +67,7 @@
     "@auto-it/released": "^10.37.4",
     "@auto-it/upload-assets": "^10.37.4",
     "@tsconfig/node16": "^1.0.3",
+    "@types/archiver": "^5.3.1",
     "@types/aws-lambda": "^8.10.101",
     "@types/node": "^18.6.3",
     "auto": "^10.37.4",
