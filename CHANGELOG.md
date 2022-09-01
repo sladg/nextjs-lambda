@@ -1,3 +1,16 @@
+# v3.1.0 (Thu Sep 01 2022)
+
+#### 🚀 Enhancement
+
+- fix: cdk props redefined, simpler and easier config [#25](https://github.com/sladg/nextjs-lambda/pull/25) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v3.0.0 (Thu Sep 01 2022)
 
 #### 💥 Breaking Change
