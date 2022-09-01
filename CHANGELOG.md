@@ -1,3 +1,16 @@
+# v3.0.0 (Thu Sep 01 2022)
+
+#### 💥 Breaking Change
+
+- ref(app): bundling, cdk [#24](https://github.com/sladg/nextjs-lambda/pull/24) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v2.0.0 (Wed Aug 31 2022)
 
 #### 💥 Breaking Change
