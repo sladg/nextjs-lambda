@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { Command } from 'commander'
 import { mkdirSync, rmSync, symlinkSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
@@ -46,6 +44,10 @@ program
 	)
 	.action(async (options) => {
 		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = options
+
+		// @TODO: Validate that output folder exists.
+		// @TODO: Validate server.js exists and we can match data.
+		// @TODO: Validate that public folder is using `assets` subfolder.
 
 		// Dependencies layer configuration
 		const nodeModulesFolderPath = path.resolve(standaloneFolder, './node_modules')

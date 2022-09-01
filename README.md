@@ -9,8 +9,8 @@ And includes CLI and custom server handler to integrate with ApiGw.
     - [next.config.js](#nextconfigjs)
     - [Server handler](#server-handler)
     - [Image handler](#image-handler)
-    - [CDK](#cdk)
-  - [Sharp](#sharp)
+    - [Via CDK](#via-cdk)
+    - [Sharp](#sharp)
   - [Packaging](#packaging)
     - [Server handler](#server-handler-1)
     - [Static assets](#static-assets)
@@ -39,7 +39,7 @@ See:
 
 - https://github.com/vercel/next.js/issues/36386
 - https://github.com/vercel/next.js/discussions/32223
--
+
 
 ### Server handler
 
@@ -59,7 +59,7 @@ const dependenciesLayer = new LayerVersion(this, 'DepsLayer', {
 const requestHandlerFn = new Function(this, 'LambdaFunction', {
       code: Code.fromAsset(`next.out/code.zip`, { followSymlinks: SymlinkFollowMode.NEVER }),
       runtime: Runtime.NODEJS_16_X,
-      handler: 'handler.handler',
+      handler: 'server-handler.handler',
       layers: [dependenciesLayer],
       memorySize: 512,
       timeout: Duration.seconds(10),
@@ -79,7 +79,7 @@ const imageHandlerZip = require.resolve('@sladg/nextjs-lambda/image-handler/zip'
 const imageOptimizerFn = new Function(this, 'LambdaFunction', {
       code: Code.fromAsset(imageHandlerZip),
       runtime: Runtime.NODEJS_16_X,
-      handler: 'index.handler',
+      handler: 'image-handler.handler',
       layers: [sharpLayer],
       memorySize: 1024,
       timeout: Duration.seconds(15),
@@ -93,149 +93,13 @@ Lambda consumes Api Gateway requests, so we need to create ApiGw proxy (v2) that
 
 Lambda is designed to serve `_next/image*` route in NextJS stack and replaces the default handler so we can optimize caching and memory limits for page renders and image optimization.
 
-### CDK
+### Via CDK
 
-Here is complete example using CDK:
+See `NextStandaloneLambda` construct in `lib/construct.ts`.
+This is a complete definition which consumes output of `pack` CLI command. It requires 3 zips (assets, dependencies and code) and exposes get methods for all resources to provide a way to set custom routes, set environment variables, etc.
 
-```
-import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha'
-import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
-import { AssetHashType, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, SymlinkFollowMode } from 'aws-cdk-lib'
-import { CloudFrontAllowedMethods, CloudFrontWebDistribution } from 'aws-cdk-lib/aws-cloudfront'
-import { Code, Function, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda'
-import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3'
-import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
-import { Construct } from 'constructs'
 
-const imageHandlerZip = require.resolve('@sladg/nextjs-lambda/image-handler/zip')
-const sharpLayerZip = require.resolve('@sladg/nextjs-lambda/sharp-layer/zip')
-
-export class NextLambdaStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props)
-
-    const depsLayer = new LayerVersion(this, 'DepsLayer', {
-      code: Code.fromAsset(`next.out/dependenciesLayer.zip`),
-    })
-
-    const sharpLayer = new LayerVersion(this, 'SharpLayer', {
-      code: Code.fromAsset(sharpLayerZip, { assetHash: 'static', assetHashType: AssetHashType.CUSTOM }),
-    })
-
-    const assetsBucket = new Bucket(this, 'NextAssetsBucket', {
-      publicReadAccess: true,
-      autoDeleteObjects: true,
-      removalPolicy: RemovalPolicy.DESTROY,
-    })
-
-    const lambdaFn = new Function(this, 'DefaultNextJs', {
-      code: Code.fromAsset(`next.out/code.zip`, { followSymlinks: SymlinkFollowMode.NEVER }),
-      runtime: Runtime.NODEJS_16_X,
-      handler: 'handler.handler',
-      layers: [depsLayer],
-      // No need for big memory as image handling is done elsewhere.
-      memorySize: 512,
-      timeout: Duration.seconds(15),
-    })
-
-    const imageOptimizationFn = new Function(this, 'ImageOptimizationNextJs', {
-      code: Code.fromAsset(imageHandlerZip),
-      runtime: Runtime.NODEJS_16_X,
-      handler: 'index.handler',
-      layers: [sharpLayer],
-      memorySize: 1024,
-      timeout: Duration.seconds(10),
-      environment: {
-        S3_SOURCE_BUCKET: assetsBucket.bucketName,
-      },
-    })
-
-    assetsBucket.grantRead(imageOptimizationFn)
-
-    const apiGwDefault = new HttpApi(this, 'NextJsLambdaProxy', {
-      createDefaultStage: true,
-      defaultIntegration: new HttpLambdaIntegration('LambdaApigwIntegration', lambdaFn),
-    })
-
-    const apiGwImages = new HttpApi(this, 'ImagesLambdaProxy', {
-      createDefaultStage: true,
-      defaultIntegration: new HttpLambdaIntegration('ImagesApigwIntegration', imageOptimizationFn),
-    })
-
-    const cfnDistro = new CloudFrontWebDistribution(this, 'TestApigwDistro', {
-      // Must be set, because cloufront would use index.html which would not match in NextJS routes.
-      defaultRootObject: '',
-      comment: 'ApiGwLambda Proxy for NextJS',
-      originConfigs: [
-        {
-          // Default behaviour, lambda handles.
-          behaviors: [
-            {
-              allowedMethods: CloudFrontAllowedMethods.ALL,
-              isDefaultBehavior: true,
-              forwardedValues: { queryString: true },
-            },
-            {
-              allowedMethods: CloudFrontAllowedMethods.ALL,
-              pathPattern: '_next/data/*',
-            },
-          ],
-          customOriginSource: {
-            domainName: `${apiGwDefault.apiId}.execute-api.${this.region}.amazonaws.com`,
-          },
-        },
-        {
-          // Our implementation of image optimization, we are tapping into Next's default route to avoid need for next.config.js changes.
-          behaviors: [
-            {
-              // Should use caching based on query params.
-              allowedMethods: CloudFrontAllowedMethods.ALL,
-              pathPattern: '_next/image*',
-              forwardedValues: { queryString: true },
-            },
-          ],
-          customOriginSource: {
-            domainName: `${apiGwImages.apiId}.execute-api.${this.region}.amazonaws.com`,
-          },
-        },
-        {
-          // Remaining next files (safe-catch) and our assets that are not imported via `next/image`
-          behaviors: [
-            {
-              allowedMethods: CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
-              pathPattern: '_next/*',
-            },
-            {
-              allowedMethods: CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
-              pathPattern: 'assets/*',
-            },
-          ],
-          s3OriginSource: {
-            s3BucketSource: assetsBucket,
-          },
-        },
-      ],
-    })
-
-    // This can be handled by `aws s3 sync` but we need to ensure invalidation of Cfn after deploy.
-    new BucketDeployment(this, 'PublicFilesDeployment', {
-      destinationBucket: assetsBucket,
-      sources: [Source.asset(`next.out/assetsLayer.zip`)],
-      accessControl: BucketAccessControl.PUBLIC_READ,
-      // Invalidate all paths after deployment.
-      distributionPaths: ['/*'],
-      distribution: cfnDistro,
-    })
-
-    new CfnOutput(this, 'cfnDistroUrl', { value: cfnDistro.distributionDomainName })
-    new CfnOutput(this, 'defaultApiGwUrl', { value: apiGwDefault.apiEndpoint })
-    new CfnOutput(this, 'imagesApiGwUrl', { value: apiGwImages.apiEndpoint })
-    new CfnOutput(this, 'assetsBucketUrl', { value: assetsBucket.bucketDomainName })
-  }
-}
-```
-
-## Sharp
+### Sharp
 
 Besides handler (wrapper) itself, underlying NextJS also requires sharp binaries.
 To build those, we use `npm install` with some extra parametes. Then we zip all sharp dependencies and compress it to easily importable zip file.
@@ -258,7 +122,7 @@ To package everything, make sure to be in your project root folder and next fold
 
 It will create `next.out/` folder with 3 zip packages. One zip Lambda's code, one is dependencies layer and one is assets layer.
 
-- code zip: include all files generated by next that are required to run on Lambda behind ApiGateway. Original handler as well as new server handler are included. Use `handler.handler` for custom one or `server.handler` for original one.
+- code zip: include all files generated by next that are required to run on Lambda behind ApiGateway. Original handler as well as new server handler are included. Use `server-handler.handler` for custom one or `server.handler` for original one.
 - dependencies layer: all transpilied `node_modules`. Next includes only used files, dramatically reducing overall size.
 - assets layer: your public folder together with generated assets. Keep in mind that to public refer file, you need to include it in `public/assets/` folder, not just in public. This limitation dramatically simplifies whole setup. This zip file is uploaded to S3, it's not included in Lambda code.
 
