@@ -7,10 +7,16 @@ export default [
 	{
 		input: 'lib/index.ts',
 		plugins: [json(), ts()],
-		output: {
-			format: 'cjs',
-			file: pkg.main,
-		},
+		output: [
+			{
+				format: 'cjs',
+				file: pkg.main,
+			},
+			{
+				format: 'esm',
+				file: pkg.module,
+			},
+		],
 	},
 	{
 		input: 'lib/cli.ts',
