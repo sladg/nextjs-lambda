@@ -2,60 +2,45 @@
   "name": "@sladg/nextjs-lambda",
   "version": "2.0.0",
   "description": "Plug-and-play lambda for replacing default NextJS image optimization handler.",
-  "license": "ISC",
-  "author": "Jan Soukup <jan@ssoukup.com>",
-  "main": "lib/index.ts",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/sladg/nextjs-lambda"
   },
-  "scripts": {
-    "prebuild": "rm -rf dist",
-    "build:file": "NODE_ENV=production esbuild lib/$FILE.ts --bundle --minify --sourcemap --platform=node --target=es2020 --external:sharp --outfile=dist/$FILE/index.js",
-    "build:handler:server": "FILE=server-handler npm run build:file",
-    "build:handler:image": "FILE=image-handler npm run build:file && cd dist/image-handler && zip -r index.zip *",
-    "build:cli:package": "FILE=cli npm run build:file",
-    "build:sharp": "./scripts/build-sharp-layer.sh",
-    "build": "npm run build:handler:image && npm run build:handler:server && npm run build:sharp && npm run build:cli:package",
-    "release": "auto shipit"
+  "license": "MIT",
+  "author": "Jan Soukup <jan@ssoukup.com>",
+  "exports": {
+    "server-handler": "./dist/server-handler.js",
+    "server-handler/zip": "./dist/server-handler.zip",
+    "image-handler": "./dist/image-handler.js",
+    "image-handler/zip": "./dist/image-handler.zip",
+    "sharp-layer/zip": "./dist/sharp-layer.zip"
   },
-  "engines": {
-    "node": ">=16"
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "bin": {
+    "app": "dist/cli.js"
   },
   "files": [
-    "lib",
-    "dist",
-    "scripts"
+    "dist"
   ],
-  "bin": {
-    "package": "dist/cli/index.js"
-  },
-  "exports": {
-    "./sharp-layer/zip": "./dist/sharp-layer.zip",
-    "./image-handler/zip": "./dist/image-handler/index.zip",
-    "./image-handler": {
-      "require": "./lib/image-handler.ts",
-      "import": "./dist/image-handler/index.js"
-    },
-    "./server-handler": {
-      "require": "./lib/server-handler.ts",
-      "import": "./dist/server-handler/index.js"
-    }
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "npm run build:main && npm run build:sharp",
+    "build:main": "rollup -c",
+    "build:sharp": "./scripts/build-sharp-layer.sh",
+    "release": "auto shipit"
   },
   "dependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "^2.39.1-alpha.0",
     "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.39.1-alpha.0",
     "@aws-sdk/client-s3": "^3.142.0",
+    "@types/archiver": "^5.3.1",
+    "@types/aws-lambda": "^8.10.101",
+    "@types/node": "^18.6.3",
     "archiver": "^5.3.1",
     "aws-cdk-lib": "^2.39.1",
     "commander": "^9.4.0",
     "constructs": "^10.1.92",
-    "critters": "^0.0.16",
-    "next": "^12.2.5",
     "replace-in-file": "^6.3.5",
     "serverless-http": "^3.0.2",
     "simple-git": "^3.13.0"
@@ -66,12 +51,22 @@
     "@auto-it/npm": "^10.37.4",
     "@auto-it/released": "^10.37.4",
     "@auto-it/upload-assets": "^10.37.4",
+    "@rollup/plugin-json": "^4.1.0",
     "@tsconfig/node16": "^1.0.3",
-    "@types/archiver": "^5.3.1",
-    "@types/aws-lambda": "^8.10.101",
-    "@types/node": "^18.6.3",
     "auto": "^10.37.4",
-    "esbuild": "^0.14.53",
+    "critters": "^0.0.16",
+    "rollup-plugin-command": "^1.1.3",
+    "rollup-plugin-ts": "^3.0.2",
     "typescript": "^4.8.2"
+  },
+  "peerDependencies": {
+    "next": "^12"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

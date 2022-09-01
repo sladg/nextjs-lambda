@@ -6,7 +6,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyStructuredResultV2 } from '
 import { defaultConfig, NextConfigComplete } from 'next/dist/server/config-shared'
 import { imageOptimizer as nextImageOptimizer, ImageOptimizerCache } from 'next/dist/server/image-optimizer'
 import { ImageConfigComplete } from 'next/dist/shared/lib/image-config'
-import { normalizeHeaders, requestHandler } from './utils'
+import { normalizeHeaders, requestHandler } from '../utils'
 
 const sourceBucket = process.env.S3_SOURCE_BUCKET ?? undefined
 

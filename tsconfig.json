@@ -1,8 +1,10 @@
 {
     "extends": "@tsconfig/node16/tsconfig.json",
     "compilerOptions": {
+        "moduleResolution": "Node",
+        "target": "ESNext",
         "outDir": "./dist",
+        "declaration": true,
         "resolveJsonModule": true
-    },
-    "include": ["lib"]
+    }
 }

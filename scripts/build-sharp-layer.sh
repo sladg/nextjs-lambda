@@ -5,6 +5,8 @@ set -e
 LAMBDA_FOLDER=nodejs
 SHARP_IGNORE_GLOBAL_LIBVIPS=1
 
+mkdir -p dist
+
 npm install \
     --arch=x64 \
     --platform=linux \
