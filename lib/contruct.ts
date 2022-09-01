@@ -6,18 +6,23 @@ import { Code, Function, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda'
 import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import path from 'path'
 
-const imageHandlerZip = require.resolve('@sladg/nextjs-lambda/image-handler/zip')
-const sharpLayerZip = require.resolve('@sladg/nextjs-lambda/sharp-layer/zip')
+import { imageHandlerZipPath, sharpLayerZipPath } from './consts'
 
 interface NextConstructProps extends StackProps {
-	outputFolderPath: string
-	handler?: string
+	customServerHandler?: string
+	customImageHandler?: string
+
 	cfnViewerCertificate?: ViewerCertificate
+
+	imageHandlerZipPath?: string
+	sharpLayerZipPath?: string
+	codeZipPath: string
+	dependenciesZipPath: string
+	assetsZipPath: string
 }
 
-export class NextStandaloneLambda extends Stack {
+export class NextStandaloneStack extends Stack {
 	private readonly cfnDistro: CloudFrontWebDistribution
 	private readonly serverLambda: Function
 	private readonly imageLambda: Function
@@ -27,13 +32,12 @@ export class NextStandaloneLambda extends Stack {
 	constructor(scope: Construct, id: string, props: NextConstructProps) {
 		super(scope, id, props)
 
-		const depsLayerPath = path.resolve(props.outputFolderPath, './dependenciesLayer.zip')
 		const depsLayer = new LayerVersion(this, 'DepsLayer', {
-			code: Code.fromAsset(depsLayerPath),
+			code: Code.fromAsset(props.dependenciesZipPath),
 		})
 
 		const sharpLayer = new LayerVersion(this, 'SharpLayer', {
-			code: Code.fromAsset(sharpLayerZip, { assetHash: 'static', assetHashType: AssetHashType.CUSTOM }),
+			code: Code.fromAsset(props.sharpLayerZipPath ?? sharpLayerZipPath, { assetHash: 'static', assetHashType: AssetHashType.CUSTOM }),
 		})
 
 		const assetsBucket = new Bucket(this, 'NextAssetsBucket', {
@@ -42,11 +46,10 @@ export class NextStandaloneLambda extends Stack {
 			removalPolicy: RemovalPolicy.DESTROY,
 		})
 
-		const lambdaCodePath = path.resolve(props.outputFolderPath, './code.zip')
 		this.serverLambda = new Function(this, 'DefaultNextJs', {
-			code: Code.fromAsset(lambdaCodePath, { followSymlinks: SymlinkFollowMode.NEVER }),
+			code: Code.fromAsset(props.codeZipPath, { followSymlinks: SymlinkFollowMode.NEVER }),
 			runtime: Runtime.NODEJS_16_X,
-			handler: props.handler ?? 'handler.handler',
+			handler: props.customServerHandler ?? 'handler.handler',
 			layers: [depsLayer],
 			// No need for big memory as image handling is done elsewhere.
 			memorySize: 512,
@@ -54,9 +57,9 @@ export class NextStandaloneLambda extends Stack {
 		})
 
 		this.imageLambda = new Function(this, 'ImageOptimizationNextJs', {
-			code: Code.fromAsset(imageHandlerZip),
+			code: Code.fromAsset(props.imageHandlerZipPath ?? imageHandlerZipPath),
 			runtime: Runtime.NODEJS_16_X,
-			handler: 'index.handler',
+			handler: props.customImageHandler ?? 'index.handler',
 			layers: [sharpLayer],
 			memorySize: 1024,
 			timeout: Duration.seconds(10),
@@ -133,11 +136,10 @@ export class NextStandaloneLambda extends Stack {
 			],
 		})
 
-		const assetsZipPath = path.resolve(props.outputFolderPath, './assetsLayer.zip')
 		// This can be handled by `aws s3 sync` but we need to ensure invalidation of Cfn after deploy.
 		new BucketDeployment(this, 'PublicFilesDeployment', {
 			destinationBucket: assetsBucket,
-			sources: [Source.asset(assetsZipPath)],
+			sources: [Source.asset(props.assetsZipPath)],
 			accessControl: BucketAccessControl.PUBLIC_READ,
 			// Invalidate all paths after deployment.
 			distributionPaths: ['/*'],
