@@ -1,3 +1,16 @@
+# v3.1.2 (Thu Sep 01 2022)
+
+#### 🐛 Bug Fix
+
+- fix: export configuration, nested paths [#27](https://github.com/sladg/nextjs-lambda/pull/27) (soukup@u.plus [@sladg](https://github.com/sladg))
+
+#### Authors: 2
+
+- Jan ([@sladg](https://github.com/sladg))
+- Jan Soukup (soukup@u.plus)
+
+---
+
 # v3.1.1 (Thu Sep 01 2022)
 
 #### 🐛 Bug Fix
