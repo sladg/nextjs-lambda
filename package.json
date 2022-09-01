@@ -9,14 +9,12 @@
   "license": "MIT",
   "author": "Jan Soukup <jan@ssoukup.com>",
   "exports": {
-    "default": "./dist/main.js",
-    "require": "./dist/main.js",
-    "import": "./dist/main.mjs",
-    "server-handler": "./dist/server-handler.js",
-    "server-handler/zip": "./dist/server-handler.zip",
-    "image-handler": "./dist/image-handler.js",
-    "image-handler/zip": "./dist/image-handler.zip",
-    "sharp-layer/zip": "./dist/sharp-layer.zip"
+    ".": "./dist/main.js",
+    "./server-handler": "./dist/server-handler.js",
+    "./server-handler/zip": "./dist/server-handler.zip",
+    "./image-handler": "./dist/image-handler.js",
+    "./image-handler/zip": "./dist/image-handler.zip",
+    "./sharp-layer/zip": "./dist/sharp-layer.zip"
   },
   "main": "dist/main.js",
   "module": "dist/main.mjs",
