@@ -15,6 +15,6 @@ npm install \
     --prefix=$LAMBDA_FOLDER \
     sharp
 
-zip -r dist/sharp-layer.zip $LAMBDA_FOLDER
+zip -q -r dist/sharp-layer.zip $LAMBDA_FOLDER
 
 rm -rf $LAMBDA_FOLDER

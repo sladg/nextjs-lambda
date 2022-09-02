@@ -1,5 +1,5 @@
-import packageJson from '../package.json'
+import path from 'path'
 
-export const sharpLayerZipPath = require.resolve(packageJson.name + './sharp-layer/zip')
-export const imageHandlerZipPath = require.resolve(packageJson.name + './image-handler/zip')
-export const serverHandlerZipPath = require.resolve(packageJson.name + './server-handler/zip')
+export const sharpLayerZipPath = path.resolve(__dirname, './sharp-layer.zip')
+export const imageHandlerZipPath = path.resolve(__dirname, './image-handler.zip')
+export const serverHandlerZipPath = path.resolve(__dirname, './server-handler.zip')

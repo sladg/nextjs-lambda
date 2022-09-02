@@ -35,7 +35,7 @@ program
 	.option(
 		'--handlerPath',
 		'Path to custom handler to be used to handle ApiGw events. By default this is provided for you.',
-		path.resolve(scriptDir, './../server-handler/index.js'),
+		path.resolve(scriptDir, './server-handler.js'),
 	)
 	.option(
 		'--outputFolder',
