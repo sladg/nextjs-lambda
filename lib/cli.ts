@@ -35,7 +35,7 @@ program
 	.option(
 		'--handlerPath',
 		'Path to custom handler to be used to handle ApiGw events. By default this is provided for you.',
-		path.resolve(scriptDir, './../server-handler/index.js'),
+		path.resolve(scriptDir, './server-handler.js'),
 	)
 	.option(
 		'--outputFolder',
@@ -111,6 +111,12 @@ program
 					ignore: ['**/node_modules/**', '*.zip'],
 				},
 				{
+					// Ensure hidden files are included.
+					isGlob: true,
+					cwd: standaloneFolder,
+					path: '.*/**/*',
+				},
+				{
 					isFile: true,
 					path: handlerPath,
 					name: 'handler.js',
@@ -161,12 +167,18 @@ program
 	.option('--failOnMissingCommit', 'In case commit has not happened since last tag (aka. we are on latest tag) fail.', Boolean, true)
 	.option('-f, --forceBump', 'In case no compatible commits found, use patch as fallback and ensure bump happens.', Boolean, true)
 	.option('-a, --autoPush', 'This will automatically create release branch and tag commit in master.', Boolean, true)
-	.option('-t, --tagPrefix <prefix>', 'Prefix version with string of your choice', 'v')
+	.option('-t, --tagPrefix <prefix>', 'Prefix version with string of your choice.', 'v')
 	.option('-r, --releaseBranchPrefix <prefix>', 'Prefix for release branch fork.', 'release/')
+	.option('--gitUser', 'User name to be used for commits.', 'Bender')
+	.option('--gitEmail', 'User email to be used for commits.', 'bender@bot.eu')
 	.action(async (options) => {
-		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump } = options
+		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail } = options
 
 		const git = simpleGit()
+
+		git.addConfig('user.name', gitUser)
+		git.addConfig('user.email', gitEmail)
+
 		const tags = await git.tags()
 		const log = await git.log()
 		const branch = await git.branch()
@@ -221,19 +233,19 @@ program
 		await git
 			//
 			.add('./*')
-			.commit(`Release: ${nextTagWithPrefix} ${skipCiFlag}`)
+			.raw('commit', '--message', `"Release: ${nextTagWithPrefix} ${skipCiFlag}"`)
+			// Create tag and push it to master.
+			.addTag(nextTagWithPrefix)
 			.push(remote.name, branch.current)
 
 		// As current branch commit includes skip ci flag, we want to ommit this flag for release branch so pipeline can run (omitting infinite loop).
 		// So we are overwriting last commit message and pushing to release branch.
 		await git
 			//
-			.raw('commit', `--message "Release: ${nextTagWithPrefix}"`, '--amend')
+			.raw('commit', '--message', `"Release: ${nextTagWithPrefix}"`, '--amend')
 			.push(remote.name, `${branch.current}:${releaseBranch}`)
 
-		// Create tag and push it to master.
 		// @Note: CI/CD should not be listening for tags in master, it should listen to release branch.
-		await git.addTag(nextTagWithPrefix).pushTags()
 
 		console.log(`Successfuly tagged and created new branch - ${releaseBranch}`)
 	})

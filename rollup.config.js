@@ -1,46 +1,97 @@
-import pkg from './package.json'
-import ts from 'rollup-plugin-ts'
 import json from '@rollup/plugin-json'
-import cmd from 'rollup-plugin-command'
+import ts from 'rollup-plugin-ts'
+import pkg from './package.json'
+import { defineConfig } from 'rollup'
+import esbuild from 'esbuild'
+import path from 'path'
+import AdmZip from 'adm-zip'
 
-export default [
+const standalone = {
+	name: 'standalone',
+	resolveId(source, importer, options) {
+		return source
+	},
+	transform(code, id) {
+		const result = esbuild.buildSync({
+			stdin: {
+				contents: code,
+				loader: 'ts',
+				resolveDir: path.dirname(id),
+			},
+			external: ['sharp', 'next'],
+			bundle: true,
+			minify: true,
+			write: false,
+			outdir: 'out',
+			platform: 'node',
+			target: 'es2020',
+		})
+
+		result.errors.forEach((err) => {
+			console.error(err.text)
+		})
+		result.warnings.forEach((err) => {
+			console.warn(err.text)
+		})
+
+		return result.outputFiles[0].text
+	},
+	writeBundle(options, bundle) {
+		console.log(options.file)
+		const outputFileName = options.file
+
+		if (!outputFileName.includes('.zip')) {
+			return
+		}
+
+		const chunkCode = Object.values(bundle)[0].code
+
+		const zip = new AdmZip()
+		zip.addFile('index.js', chunkCode)
+		zip.writeZip(outputFileName)
+	},
+}
+
+export default defineConfig([
 	{
 		input: 'lib/index.ts',
 		plugins: [json(), ts()],
-		output: [
-			{
-				format: 'cjs',
-				file: pkg.main,
-			},
-			{
-				format: 'esm',
-				file: pkg.module,
-			},
-		],
+		output: {
+			format: 'cjs',
+			file: pkg.exports,
+		},
 	},
 	{
 		input: 'lib/cli.ts',
 		plugins: [json(), ts()],
 		output: {
 			format: 'cjs',
-			file: pkg.bin.app,
+			file: pkg.bin['next-utils'],
 			banner: '#!/usr/bin/env node',
 		},
 	},
 	{
-		input: 'lib/standalone/image-handler.ts',
-		plugins: [ts(), cmd(`zip ${pkg.exports['image-handler/zip']} ${pkg.exports['image-handler']}`, { exitOnFail: true })],
-		output: {
-			format: 'cjs',
-			file: pkg.exports['image-handler'],
-		},
+		input: 'lib/standalone/server-handler.ts',
+		plugins: [standalone],
+		output: [
+			{
+				file: 'dist/server-handler.zip',
+			},
+			{
+				file: 'dist/server-handler.js',
+			},
+		],
 	},
 	{
-		input: 'lib/standalone/server-handler.ts',
-		plugins: [ts(), cmd(`zip ${pkg.exports['server-handler/zip']} ${pkg.exports['server-handler']}`, { exitOnFail: true })],
-		output: {
-			format: 'cjs',
-			file: pkg.exports['server-handler'],
-		},
+		input: 'lib/standalone/image-handler.ts',
+		plugins: [standalone],
+		output: [
+			{
+				file: 'dist/image-handler.zip',
+			},
+			{
+				file: 'dist/image-handler.js',
+			},
+		],
 	},
-]
+])

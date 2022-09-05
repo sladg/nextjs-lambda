@@ -3,7 +3,6 @@
 set -e
 
 LAMBDA_FOLDER=nodejs
-SHARP_IGNORE_GLOBAL_LIBVIPS=1
 
 mkdir -p dist
 
@@ -13,8 +12,8 @@ npm install \
     --target=16.15 \
     --libc=glibc \
     --prefix=$LAMBDA_FOLDER \
-    sharp
+    next
 
-zip -q -r dist/sharp-layer.zip $LAMBDA_FOLDER
+zip -q -r dist/next-layer.zip $LAMBDA_FOLDER
 
 rm -rf $LAMBDA_FOLDER

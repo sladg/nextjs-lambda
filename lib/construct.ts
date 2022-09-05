@@ -6,8 +6,9 @@ import { Code, Function, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda'
 import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
+import packageJson from '../package.json'
 
-import { imageHandlerZipPath, sharpLayerZipPath } from './consts'
+import { imageHandlerZipPath, sharpLayerZipPath, nextLayerZipPath } from './consts'
 
 interface NextConstructProps extends StackProps {
 	customServerHandler?: string
@@ -17,6 +18,7 @@ interface NextConstructProps extends StackProps {
 
 	imageHandlerZipPath?: string
 	sharpLayerZipPath?: string
+	nextLayerZipPath?: string
 	codeZipPath: string
 	dependenciesZipPath: string
 	assetsZipPath: string
@@ -37,10 +39,21 @@ export class NextStandaloneStack extends Stack {
 		})
 
 		const sharpLayer = new LayerVersion(this, 'SharpLayer', {
-			code: Code.fromAsset(props.sharpLayerZipPath ?? sharpLayerZipPath, { assetHash: 'static', assetHashType: AssetHashType.CUSTOM }),
+			code: Code.fromAsset(props.sharpLayerZipPath ?? sharpLayerZipPath, {
+				assetHash: `static-sharp-${packageJson.version}`,
+				assetHashType: AssetHashType.CUSTOM,
+			}),
+		})
+
+		const nextLayer = new LayerVersion(this, 'NextLayer', {
+			code: Code.fromAsset(props.nextLayerZipPath ?? nextLayerZipPath, {
+				assetHash: `static-next-${packageJson.version}`,
+				assetHashType: AssetHashType.CUSTOM,
+			}),
 		})
 
 		const assetsBucket = new Bucket(this, 'NextAssetsBucket', {
+			// @NOTE: Considering not having public ACL.
 			publicReadAccess: true,
 			autoDeleteObjects: true,
 			removalPolicy: RemovalPolicy.DESTROY,
@@ -50,7 +63,7 @@ export class NextStandaloneStack extends Stack {
 			code: Code.fromAsset(props.codeZipPath, { followSymlinks: SymlinkFollowMode.NEVER }),
 			runtime: Runtime.NODEJS_16_X,
 			handler: props.customServerHandler ?? 'handler.handler',
-			layers: [depsLayer],
+			layers: [depsLayer, nextLayer],
 			// No need for big memory as image handling is done elsewhere.
 			memorySize: 512,
 			timeout: Duration.seconds(15),
@@ -60,7 +73,7 @@ export class NextStandaloneStack extends Stack {
 			code: Code.fromAsset(props.imageHandlerZipPath ?? imageHandlerZipPath),
 			runtime: Runtime.NODEJS_16_X,
 			handler: props.customImageHandler ?? 'index.handler',
-			layers: [sharpLayer],
+			layers: [sharpLayer, nextLayer],
 			memorySize: 1024,
 			timeout: Duration.seconds(10),
 			environment: {

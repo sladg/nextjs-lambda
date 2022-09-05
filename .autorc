@@ -1,8 +1,0 @@
-{
-    "plugins": [
-        "released",
-        "npm",
-        "git-tag",
-        "conventional-commits"
-    ]
-}

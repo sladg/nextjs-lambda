@@ -1,5 +1,6 @@
-name: 'Check PR for word'
-on: [pull_request]
+on:
+  push:
+    branches: ['release/**']
 
 jobs:
   check_pr:
@@ -16,9 +17,13 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - uses: kceb/pull-request-url-action@v1
-        id: pr-url
-      - name: Validate SemVer
-        run: npx auto pr-check --url ${{ steps.pr-url.outputs.url }}
+      - name: Install zip
+        run: |
+          sudo apt-get update
+          sudo apt-get install zip -y
+      - name: Build & package
+        run: npm run build
+      - name: Release
+        run: npm run release --gitUser @sladg --gitEmail jan@ssoukup.com
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

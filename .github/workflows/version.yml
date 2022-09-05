@@ -1,14 +1,19 @@
-name: 'Check PR for word'
-on: [pull_request]
+on:
+  push:
+    branches: ['master']
 
 jobs:
-  check_pr:
+  deployment:
+    environment: production
     runs-on: ubuntu-22.04
     strategy:
       matrix:
         node-version: [16.x]
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Prepare repository
+        run: git fetch --unshallow --tags
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -16,9 +21,9 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - uses: kceb/pull-request-url-action@v1
-        id: pr-url
-      - name: Validate SemVer
-        run: npx auto pr-check --url ${{ steps.pr-url.outputs.url }}
+      - name: Build CLI
+        run: npm run build:main
+      - name: Release
+        run: npm run release --gitUser @sladg --gitEmail jan@ssoukup.com
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

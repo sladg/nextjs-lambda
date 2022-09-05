@@ -5,6 +5,7 @@
         "target": "ESNext",
         "outDir": "./dist",
         "declaration": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true
     }
 }
