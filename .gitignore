@@ -5,5 +5,3 @@ dist/**
 
 # Temporary build folder.
 nodejs/**
-.next/**
-next.out/**

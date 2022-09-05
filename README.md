@@ -1,8 +1,11 @@
 # NextJS Lambda Utils
 
-This is a set of utils needed for deploying NextJS into AWS Lambda.
-It includes a wrapper for `next/server/image-optimizer` allowing to use S3.
-And includes CLI and custom server handler to integrate with ApiGw.
+This is a project allowing to deploy Next applications (standalone options turned on) to AWS Lambda without hassle.
+
+This is an alternative to existing Lambda@Edge implementation ([see](https://www.npmjs.com/package/@sls-next/lambda-at-edge)) as it has too many limitations (primarily inability to use env vars) and deployments take too long.
+
+This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in seconds (hotswap supported).
+
 
 - [NextJS Lambda Utils](#nextjs-lambda-utils)
   - [TL;DR](#tldr)
@@ -106,7 +109,7 @@ const sharpLayer = new LayerVersion(this, 'SharpDependenciesLayer', {
 
 To provide both image and server handlers with all depdencies (next is using `require.resolve` inside, so it cannot be bundled standalone for now).
 
-We pre-package this layer so it can be included in Lambda without hasle.
+We pre-package this layer so it can be included in Lambda without hassle.
 ```
 import { nextLayerZipPath } from '@sladg/nextjs-lambda'
 

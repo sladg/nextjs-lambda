@@ -6,6 +6,7 @@ import { Code, Function, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda'
 import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
+import packageJson from '../package.json'
 
 import { imageHandlerZipPath, sharpLayerZipPath, nextLayerZipPath } from './consts'
 
@@ -38,14 +39,21 @@ export class NextStandaloneStack extends Stack {
 		})
 
 		const sharpLayer = new LayerVersion(this, 'SharpLayer', {
-			code: Code.fromAsset(props.sharpLayerZipPath ?? sharpLayerZipPath, { assetHash: 'static', assetHashType: AssetHashType.CUSTOM }),
+			code: Code.fromAsset(props.sharpLayerZipPath ?? sharpLayerZipPath, {
+				assetHash: `static-sharp-${packageJson.version}`,
+				assetHashType: AssetHashType.CUSTOM,
+			}),
 		})
 
 		const nextLayer = new LayerVersion(this, 'NextLayer', {
-			code: Code.fromAsset(props.nextLayerZipPath ?? nextLayerZipPath, { assetHash: 'static-next', assetHashType: AssetHashType.CUSTOM }),
+			code: Code.fromAsset(props.nextLayerZipPath ?? nextLayerZipPath, {
+				assetHash: `static-next-${packageJson.version}`,
+				assetHashType: AssetHashType.CUSTOM,
+			}),
 		})
 
 		const assetsBucket = new Bucket(this, 'NextAssetsBucket', {
+			// @NOTE: Considering not having public ACL.
 			publicReadAccess: true,
 			autoDeleteObjects: true,
 			removalPolicy: RemovalPolicy.DESTROY,
@@ -147,8 +155,8 @@ export class NextStandaloneStack extends Stack {
 			sources: [Source.asset(props.assetsZipPath)],
 			accessControl: BucketAccessControl.PUBLIC_READ,
 			// Invalidate all paths after deployment.
-			// distributionPaths: ['/*'],
-			// distribution: this.cfnDistro,
+			distributionPaths: ['/*'],
+			distribution: this.cfnDistro,
 		})
 
 		new CfnOutput(this, 'cfnDistroUrl', { value: this.cfnDistro.distributionDomainName })
