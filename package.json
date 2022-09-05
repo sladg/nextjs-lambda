@@ -23,7 +23,6 @@
     "build:main": "rollup -c",
     "build:next": "./scripts/build-next-layer.sh",
     "build:sharp": "./scripts/build-sharp-layer.sh",
-    "publish": "npm publish",
     "release": "node ./dist/cli.js shipit --gitUser @sladg --gitEmail jan@ssoukup.com"
   },
   "dependencies": {
