@@ -174,6 +174,8 @@ program
 	.action(async (options) => {
 		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail } = options
 
+		console.log('Our config is: ', options)
+
 		const git = simpleGit()
 
 		git.addConfig('user.name', gitUser)
@@ -187,6 +189,8 @@ program
 		const latestCommit = log.latest?.hash
 		const latestTag = tags.latest ?? '0.0.0'
 		const currentTag = latestTag.replace(tagPrefix, '')
+
+		console.log('Current version: ', latestTag)
 
 		if (!isValidTag(latestTag, tagPrefix)) {
 			throw new Error(`Invalid tag found - ${latestTag}!`)
@@ -205,7 +209,7 @@ program
 			throw new Error('No new commits since last tag.')
 		}
 
-		const bumps = []
+		const bumps: BumpType[] = []
 
 		commits.all.forEach(({ message, body }) => {
 			const match = bumpMapping.find(({ test, scanBody }) => (scanBody ? body : message).match(test))
@@ -216,8 +220,11 @@ program
 			}
 		})
 
+		console.log('Bumps: ', bumps)
+
 		// Bump minor in case nothing is found.
 		if (bumps.length < 1 && forceBump) {
+			console.log('Forcing patch bump!')
 			bumps.push(BumpType.Patch)
 		}
 
@@ -225,6 +232,10 @@ program
 		const nextTagWithPrefix = tagPrefix + nextTag
 		const releaseBranch = `${releaseBranchPrefix}${nextTagWithPrefix}`
 		console.log(`Next version is - ${nextTagWithPrefix}!`)
+
+		if (currentTag === nextTag) {
+			throw new Error('Failed to bump version!')
+		}
 
 		const replacementResults = replaceVersionInCommonFiles(currentTag, nextTag)
 		console.log(`Replaced version in files.`, replacementResults)
@@ -236,7 +247,9 @@ program
 			.raw('commit', '--message', `"Release: ${nextTagWithPrefix} ${skipCiFlag}"`)
 			// Create tag and push it to master.
 			.addTag(nextTagWithPrefix)
-			.push(remote.name, branch.current)
+
+		git.push(remote.name, branch.current)
+		git.pushTags()
 
 		// As current branch commit includes skip ci flag, we want to ommit this flag for release branch so pipeline can run (omitting infinite loop).
 		// So we are overwriting last commit message and pushing to release branch.

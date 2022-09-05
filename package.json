@@ -57,9 +57,5 @@
   "engines": {
     "node": ">=16"
   },
-  "engineStrict": true,
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  }
+  "engineStrict": true
 }

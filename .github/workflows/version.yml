@@ -1,3 +1,4 @@
+name: Bump version and fork a release branch
 on:
   push:
     branches: ['master']
@@ -22,8 +23,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build CLI
-        run: npm run build:main
+        run: npm run build
       - name: Release
         run: npm run release --gitUser @sladg --gitEmail jan@ssoukup.com
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}

@@ -1,4 +1,4 @@
-name: 'Check PR for word'
+name: Check PR
 on: [pull_request]
 
 jobs:
@@ -16,9 +16,4 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - uses: kceb/pull-request-url-action@v1
-        id: pr-url
-      - name: Validate SemVer
-        run: npx auto pr-check --url ${{ steps.pr-url.outputs.url }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # TODO: Use CLI guess.
