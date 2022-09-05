@@ -244,7 +244,7 @@ program
 		await git
 			//
 			.add('./*')
-			.raw('commit', '--message', `"Release: ${nextTagWithPrefix} ${skipCiFlag}"`)
+			.raw('commit', '--message', `Release: ${nextTagWithPrefix} ${skipCiFlag}`)
 			// Create tag and push it to master.
 			.addTag(nextTagWithPrefix)
 
@@ -255,7 +255,7 @@ program
 		// So we are overwriting last commit message and pushing to release branch.
 		await git
 			//
-			.raw('commit', '--message', `"Release: ${nextTagWithPrefix}"`, '--amend')
+			.raw('commit', '--message', `Release: ${nextTagWithPrefix}`, '--amend')
 			.push(remote.name, `${branch.current}:${releaseBranch}`)
 
 		// @Note: CI/CD should not be listening for tags in master, it should listen to release branch.
