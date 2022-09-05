@@ -5,20 +5,27 @@ It includes a wrapper for `next/server/image-optimizer` allowing to use S3.
 And includes CLI and custom server handler to integrate with ApiGw.
 
 - [NextJS Lambda Utils](#nextjs-lambda-utils)
+  - [TL;DR](#tldr)
   - [Usage](#usage)
     - [next.config.js](#nextconfigjs)
     - [Server handler](#server-handler)
     - [Image handler](#image-handler)
     - [Via CDK](#via-cdk)
-    - [Sharp](#sharp)
+    - [Sharp layer](#sharp-layer)
+    - [Next layer](#next-layer)
   - [Packaging](#packaging)
     - [Server handler](#server-handler-1)
     - [Static assets](#static-assets)
 - [Versioning](#versioning)
   - [Guess](#guess)
   - [Shipit](#shipit)
-- [TODO](#todo)
 - [Disclaimer](#disclaimer)
+
+## TL;DR
+- In your NextJS project, set output to standalone.
+- Run `npx @sladg/nextjs-lambda pack`
+- Prepare CDK ([see](#via-cdk))
+- Run `cdk deploy`
 
 ## Usage
 
@@ -43,51 +50,9 @@ See:
 
 ### Server handler
 
-```
-next build
-
-npx @sladg/nextjs-lambda pack
-```
-
-Create new lambda function with NODE_16 runtime in AWS.
-
-```
-const dependenciesLayer = new LayerVersion(this, 'DepsLayer', {
-        code: Code.fromAsset(`next.out/dependenciesLayer.zip`),
-    })
-
-const requestHandlerFn = new Function(this, 'LambdaFunction', {
-      code: Code.fromAsset(`next.out/code.zip`, { followSymlinks: SymlinkFollowMode.NEVER }),
-      runtime: Runtime.NODEJS_16_X,
-      handler: 'server-handler.handler',
-      layers: [dependenciesLayer],
-      memorySize: 512,
-      timeout: Duration.seconds(10),
-    })
-```
+This is a Lambda entrypoint to handle non-asset requests. We need a way to start Next in lambda-friendly way and translate ApiGateway event into typical HTTP event. This is handled by server-handler, which sits alongside of next's `server.js` in standalone output.
 
 ### Image handler
-
-Create new lambda function with NODE_16 runtime in AWS.
-
-```
-const sharpLayer: LayerVersion
-const assetsBucket: Bucket
-
-const imageHandlerZip = require.resolve('@sladg/nextjs-lambda/image-handler/zip')
-
-const imageOptimizerFn = new Function(this, 'LambdaFunction', {
-      code: Code.fromAsset(imageHandlerZip),
-      runtime: Runtime.NODEJS_16_X,
-      handler: 'image-handler.handler',
-      layers: [sharpLayer],
-      memorySize: 1024,
-      timeout: Duration.seconds(15),
-      environment: {
-        S3_BUCKET_SOURCE: assetsBucket.bucketName
-      }
-    })
-```
 
 Lambda consumes Api Gateway requests, so we need to create ApiGw proxy (v2) that will trigger Lambda.
 
@@ -95,20 +60,58 @@ Lambda is designed to serve `_next/image*` route in NextJS stack and replaces th
 
 ### Via CDK
 
-See `NextStandaloneLambda` construct in `lib/construct.ts`.
-This is a complete definition which consumes output of `pack` CLI command. It requires 3 zips (assets, dependencies and code) and exposes get methods for all resources to provide a way to set custom routes, set environment variables, etc.
+See `NextStandaloneStack` construct in `lib/construct.ts`.
+
+You can easily create `cdk/app.ts` and use following code:
+```
+#!/usr/bin/env node
+import 'source-map-support/register'
+import * as cdk from 'aws-cdk-lib'
+import * as path from 'path'
+
+import { NextStandaloneStack } from '@sladg/nextjs-lambda'
+
+const assetsZipPath = path.resolve(__dirname, '../next.out/assetsLayer.zip')
+const codeZipPath = path.resolve(__dirname, '../next.out/code.zip')
+const dependenciesZipPath = path.resolve(__dirname, '../next.out/dependenciesLayer.zip')
+
+const app = new cdk.App()
+
+new NextStandaloneStack(app, 'StandaloneNextjsStack-2', {
+	assetsZipPath,
+	codeZipPath,
+	dependenciesZipPath,
+})
+```
+
+This imports pre-made construct, you only need to worry about paths to outputed zip files from CLI `pack` command.
+
+> More granular CDK construct coming soon.
 
 
-### Sharp
+### Sharp layer
 
 Besides handler (wrapper) itself, underlying NextJS also requires sharp binaries.
 To build those, we use `npm install` with some extra parametes. Then we zip all sharp dependencies and compress it to easily importable zip file.
 
 ```
-const code = require.resolve('@sladg/nextjs-lambda/sharp-layer')
+import { sharpLayerZipPath } from '@sladg/nextjs-lambda'
 
-const sharpLayer = new LayerVersion(this, 'SharpLayer', {
-  code: Code.fromAsset(code)
+const sharpLayer = new LayerVersion(this, 'SharpDependenciesLayer', {
+  code: Code.fromAsset(sharpLayerZipPath)
+})
+```
+
+### Next layer
+
+To provide both image and server handlers with all depdencies (next is using `require.resolve` inside, so it cannot be bundled standalone for now).
+
+We pre-package this layer so it can be included in Lambda without hasle.
+```
+import { nextLayerZipPath } from '@sladg/nextjs-lambda'
+
+const nextLayer = new LayerVersion(this, 'NextDependenciesLayer', {
+  code: Code.fromAsset(nextLayerZipPath)
 })
 ```
 
@@ -147,6 +150,8 @@ Cloudfront paths used:
 - `_next/*`
 - `assets/*`
 
+Keep in minda, Cloudfront does not allow for multiple regex patterns in single origin, so using extensions to distinguish image/server handlers is not doable.
+
 # Versioning
 
 This package exposes two CLI functions intended to deal with versioning your application and releasing.
@@ -164,15 +169,6 @@ Similar to guess command, however, it automatically tags a commit on current bra
 Simply call `@sladg/next-lambda shipit` on any branch and be done.
 
 
-# TODO
-
-- Explain scripts used for packaging Next app,
-- Add CDK examples on how to set it up,
-- Export CDK contruct for simple plug-n-play use,
-- Use lib/index.ts as single entry and export all paths/functions from it (including zip paths).
-- Consider using \*.svg, \*.png, \*.jpeg etc. as routing rule for Cloudfront to distinguish between assets and pages.
-- Add command for guessing version bumps from git commits & keywords, existing solutions are horendously huge, we just need a simple version bumping.
-
 # Disclaimer
 
 At this point, advanced features were not tested with this setup. This includes:
@@ -184,3 +180,5 @@ At this point, advanced features were not tested with this setup. This includes:
 - custom babel configuration.
 
 I am looking for advanced projects implementing those features, so we can test them out! Reach out to me!
+
+

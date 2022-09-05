@@ -14,7 +14,8 @@
     "next-utils": "./dist/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "scripts"
   ],
   "scripts": {
     "prebuild": "rm -rf dist",
