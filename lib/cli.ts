@@ -111,6 +111,12 @@ program
 					ignore: ['**/node_modules/**', '*.zip'],
 				},
 				{
+					// Ensure hidden files are included.
+					isGlob: true,
+					cwd: standaloneFolder,
+					path: '.*/**/*',
+				},
+				{
 					isFile: true,
 					path: handlerPath,
 					name: 'handler.js',

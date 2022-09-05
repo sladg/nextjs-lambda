@@ -7,7 +7,7 @@ import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
 
-import { imageHandlerZipPath, sharpLayerZipPath } from './consts'
+import { imageHandlerZipPath, sharpLayerZipPath, nextLayerZipPath } from './consts'
 
 interface NextConstructProps extends StackProps {
 	customServerHandler?: string
@@ -17,6 +17,7 @@ interface NextConstructProps extends StackProps {
 
 	imageHandlerZipPath?: string
 	sharpLayerZipPath?: string
+	nextLayerZipPath?: string
 	codeZipPath: string
 	dependenciesZipPath: string
 	assetsZipPath: string
@@ -40,6 +41,10 @@ export class NextStandaloneStack extends Stack {
 			code: Code.fromAsset(props.sharpLayerZipPath ?? sharpLayerZipPath, { assetHash: 'static', assetHashType: AssetHashType.CUSTOM }),
 		})
 
+		const nextLayer = new LayerVersion(this, 'NextLayer', {
+			code: Code.fromAsset(props.nextLayerZipPath ?? nextLayerZipPath, { assetHash: 'static-next', assetHashType: AssetHashType.CUSTOM }),
+		})
+
 		const assetsBucket = new Bucket(this, 'NextAssetsBucket', {
 			publicReadAccess: true,
 			autoDeleteObjects: true,
@@ -50,7 +55,7 @@ export class NextStandaloneStack extends Stack {
 			code: Code.fromAsset(props.codeZipPath, { followSymlinks: SymlinkFollowMode.NEVER }),
 			runtime: Runtime.NODEJS_16_X,
 			handler: props.customServerHandler ?? 'handler.handler',
-			layers: [depsLayer],
+			layers: [depsLayer, nextLayer],
 			// No need for big memory as image handling is done elsewhere.
 			memorySize: 512,
 			timeout: Duration.seconds(15),
@@ -60,7 +65,7 @@ export class NextStandaloneStack extends Stack {
 			code: Code.fromAsset(props.imageHandlerZipPath ?? imageHandlerZipPath),
 			runtime: Runtime.NODEJS_16_X,
 			handler: props.customImageHandler ?? 'index.handler',
-			layers: [sharpLayer],
+			layers: [sharpLayer, nextLayer],
 			memorySize: 1024,
 			timeout: Duration.seconds(10),
 			environment: {
@@ -142,8 +147,8 @@ export class NextStandaloneStack extends Stack {
 			sources: [Source.asset(props.assetsZipPath)],
 			accessControl: BucketAccessControl.PUBLIC_READ,
 			// Invalidate all paths after deployment.
-			distributionPaths: ['/*'],
-			distribution: this.cfnDistro,
+			// distributionPaths: ['/*'],
+			// distribution: this.cfnDistro,
 		})
 
 		new CfnOutput(this, 'cfnDistroUrl', { value: this.cfnDistro.distributionDomainName })

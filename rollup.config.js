@@ -1,11 +1,12 @@
 import json from '@rollup/plugin-json'
-import AdmZip from 'adm-zip'
-import esbuild from 'esbuild'
-import path from 'path'
 import ts from 'rollup-plugin-ts'
 import pkg from './package.json'
+import { defineConfig } from 'rollup'
+import esbuild from 'esbuild'
+import path from 'path'
+import AdmZip from 'adm-zip'
 
-const pluginStandalone = () => ({
+const standalone = {
 	name: 'standalone',
 	resolveId(source, importer, options) {
 		return source
@@ -17,7 +18,7 @@ const pluginStandalone = () => ({
 				loader: 'ts',
 				resolveDir: path.dirname(id),
 			},
-			external: ['sharp'],
+			external: ['sharp', 'next'],
 			bundle: true,
 			minify: true,
 			write: false,
@@ -35,21 +36,23 @@ const pluginStandalone = () => ({
 
 		return result.outputFiles[0].text
 	},
-})
+	writeBundle(options, bundle) {
+		console.log(options.file)
+		const outputFileName = options.file
 
-const pluginZip = () => ({
-	name: 'zip',
-	async generateOutputs(bundle) {
-		Object.entries(bundle).forEach(async ([chunkName, chunkOpts]) => {
-			console.log(chunkOpts)
-			const zip = new AdmZip()
-			zip.addFile('index.js', chunkOpts.code)
-			this.setAssetSource(chunkOpts.facadeModuleId, zip.toBuffer())
-		})
+		if (!outputFileName.includes('.zip')) {
+			return
+		}
+
+		const chunkCode = Object.values(bundle)[0].code
+
+		const zip = new AdmZip()
+		zip.addFile('index.js', chunkCode)
+		zip.writeZip(outputFileName)
 	},
-})
+}
 
-export default [
+export default defineConfig([
 	{
 		input: 'lib/index.ts',
 		plugins: [json(), ts()],
@@ -63,22 +66,32 @@ export default [
 		plugins: [json(), ts()],
 		output: {
 			format: 'cjs',
-			file: pkg.bin.app,
+			file: pkg.bin['next-utils'],
 			banner: '#!/usr/bin/env node',
 		},
 	},
 	{
 		input: 'lib/standalone/server-handler.ts',
-		plugins: [pluginStandalone(), pluginZip()],
-		output: {
-			file: 'dist/server-handler.zip',
-		},
+		plugins: [standalone],
+		output: [
+			{
+				file: 'dist/server-handler.zip',
+			},
+			{
+				file: 'dist/server-handler.js',
+			},
+		],
 	},
 	{
 		input: 'lib/standalone/image-handler.ts',
-		plugins: [pluginStandalone(), pluginZip()],
-		output: {
-			file: 'dist/image-handler.zip',
-		},
+		plugins: [standalone],
+		output: [
+			{
+				file: 'dist/image-handler.zip',
+			},
+			{
+				file: 'dist/image-handler.js',
+			},
+		],
 	},
-]
+])

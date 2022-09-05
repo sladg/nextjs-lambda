@@ -8,32 +8,29 @@
   },
   "license": "MIT",
   "author": "Jan Soukup <jan@ssoukup.com>",
+  "exports": "./dist/main.js",
+  "types": "./dist/main.d.ts",
   "bin": {
-    "app": "dist/cli.js"
+    "next-utils": "./dist/cli.js"
   },
   "files": [
     "dist"
   ],
-  "exports": "./dist/main.js",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "npm run build:main && npm run build:sharp",
+    "build": "npm run build:main && npm run build:sharp && npm run build:next",
     "build:main": "rollup -c",
+    "build:next": "./scripts/build-next-layer.sh",
     "build:sharp": "./scripts/build-sharp-layer.sh",
-    "release": "node ./dist/cli.js shipit",
-    "publish": "npm publish"
+    "publish": "npm publish",
+    "release": "node ./dist/cli.js shipit"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigatewayv2-alpha": "^2.39.1-alpha.0",
-    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.39.1-alpha.0",
-    "@aws-sdk/client-s3": "^3.142.0",
     "@types/archiver": "^5.3.1",
     "@types/aws-lambda": "^8.10.101",
     "@types/node": "^18.6.3",
     "archiver": "^5.3.1",
-    "aws-cdk-lib": "^2.39.1",
     "commander": "^9.4.0",
-    "constructs": "^10.1.92",
     "replace-in-file": "^6.3.5",
     "serverless-http": "^3.0.2",
     "simple-git": "^3.13.0"
@@ -44,16 +41,22 @@
     "adm-zip": "^0.5.9",
     "critters": "^0.0.16",
     "esbuild": "^0.15.6",
-    "rollup-plugin-ts": "^3.0.2",
-    "typescript": "^4.8.2"
+    "rollup": "^2.79.0",
+    "rollup-plugin-ts": "^3.0.2"
   },
   "peerDependencies": {
-    "next": "^12"
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.39.1-alpha",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.39.1-alpha",
+    "@aws-sdk/client-s3": "^3.142",
+    "aws-cdk-lib": "^2.39",
+    "constructs": "^10",
+    "next": "^12",
+    "typescript": "^4.8"
   },
-  "engineStrict": true,
   "engines": {
     "node": ">=18"
   },
+  "engineStrict": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
