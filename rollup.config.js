@@ -63,7 +63,7 @@ export default defineConfig([
 	},
 	{
 		input: 'lib/cli.ts',
-		plugins: [json(), ts()],
+		plugins: [standalone],
 		output: {
 			format: 'cjs',
 			file: pkg.bin['next-utils'],
