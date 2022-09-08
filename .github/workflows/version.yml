@@ -25,7 +25,7 @@ jobs:
       - name: Build CLI
         run: npm run build
       - name: Release
-        run: npm run release --gitUser @sladg --gitEmail jan@ssoukup.com
+        run: npm run release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: JS-DevTools/npm-publish@v1
