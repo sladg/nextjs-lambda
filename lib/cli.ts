@@ -60,6 +60,7 @@ program
 		const codeOutputPath = path.resolve(outputFolder, 'code.zip')
 
 		// Assets bundle configuration
+		const buildIdPath = path.resolve(commandCwd, './.next/BUILD_ID')
 		const generatedStaticContentPath = path.resolve(commandCwd, '.next/static')
 		const generatedStaticRemapping = '_next/static'
 		const assetsOutputPath = path.resolve(outputFolder, 'assetsLayer.zip')
@@ -79,6 +80,11 @@ program
 		await zipMultipleFoldersOrFiles({
 			outputName: assetsOutputPath,
 			inputDefinition: [
+				{
+					isFile: true,
+					name: 'BUILD_ID',
+					path: buildIdPath,
+				},
 				{
 					path: publicFolder,
 				},
@@ -169,8 +175,8 @@ program
 	.option('-a, --autoPush', 'This will automatically create release branch and tag commit in master.', Boolean, true)
 	.option('-t, --tagPrefix <prefix>', 'Prefix version with string of your choice.', 'v')
 	.option('-r, --releaseBranchPrefix <prefix>', 'Prefix for release branch fork.', 'release/')
-	.option('--gitUser', 'User name to be used for commits.', 'Bender')
-	.option('--gitEmail', 'User email to be used for commits.', 'bender@bot.eu')
+	.option('--gitUser <user>', 'User name to be used for commits.', 'Bender')
+	.option('--gitEmail <email>', 'User email to be used for commits.', 'bender@bot.eu')
 	.action(async (options) => {
 		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail } = options
 
@@ -259,6 +265,7 @@ program
 			.push(remote.name, `${branch.current}:${releaseBranch}`)
 
 		// @Note: CI/CD should not be listening for tags in master, it should listen to release branch.
+		// @TODO: Include commits and commit bodies in release commit so Jira can pick it up.
 
 		console.log(`Successfuly tagged and created new branch - ${releaseBranch}`)
 	})

@@ -70,6 +70,7 @@ mkdir -p $ASSETS_FOLDER
 mkdir -p $ASSETS_FOLDER/_next/static
 cp -r $MY_ROOT/.next/static/* $ASSETS_FOLDER/_next/static/
 cp -r $MY_ROOT/$PUBLIC_FOLDER/* $ASSETS_FOLDER/
+cp .next/BUILD_ID $ASSETS_FOLDER/
 
 echo "Zipping assets."
 cd $ASSETS_FOLDER
