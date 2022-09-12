@@ -4,9 +4,9 @@ import { tmpdir } from 'os'
 import path from 'path'
 import { simpleGit } from 'simple-git'
 import packageJson from '../package.json'
+import { skipCiFlag } from './consts'
 import { bumpCalculator, bumpMapping, BumpType, findInFile, isValidTag, replaceVersionInCommonFiles, zipFolder, zipMultipleFoldersOrFiles } from './utils'
 
-const skipCiFlag = '[skip ci]'
 const commandCwd = process.cwd()
 const nextServerConfigRegex = /(?<=conf: )(.*)(?=,)/
 const scriptDir = path.dirname(__filename)
@@ -268,6 +268,13 @@ program
 		// @TODO: Include commits and commit bodies in release commit so Jira can pick it up.
 
 		console.log(`Successfuly tagged and created new branch - ${releaseBranch}`)
+	})
+
+program
+	.command('deploy')
+	.description('Deploy Next application via CDK')
+	.action(async (options) => {
+		// @TODO: Add support for CLI CDK deployments via provided CDK example.
 	})
 
 program.parse(process.argv)

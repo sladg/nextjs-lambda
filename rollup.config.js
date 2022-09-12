@@ -1,10 +1,9 @@
-import json from '@rollup/plugin-json'
-import ts from 'rollup-plugin-ts'
 import pkg from './package.json'
 import { defineConfig } from 'rollup'
 import esbuild from 'esbuild'
 import path from 'path'
 import AdmZip from 'adm-zip'
+import typescript from 'rollup-plugin-typescript2'
 
 const standalone = {
 	name: 'standalone',
@@ -55,9 +54,9 @@ const standalone = {
 export default defineConfig([
 	{
 		input: 'lib/index.ts',
-		plugins: [json(), ts()],
+		plugins: [typescript({ useTsconfigDeclarationDir: true })],
 		output: {
-			format: 'cjs',
+			format: 'commonjs',
 			file: pkg.exports,
 		},
 	},

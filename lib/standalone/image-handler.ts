@@ -41,10 +41,9 @@ const optimizer = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxy
 			{} as any, // res object is not necessary as it's not actually used.
 			imageParams,
 			nextConfig,
+			false, // not in dev mode
 			requestHandler(sourceBucket),
 		)
-
-		console.log(optimizedResult)
 
 		return {
 			statusCode: 200,

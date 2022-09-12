@@ -2,7 +2,7 @@
 process.chdir(__dirname)
 process.env.NODE_ENV = 'production'
 
-import NextServer from 'next/dist/server/next-server'
+import NextServer, { Options } from 'next/dist/server/next-server'
 import slsHttp from 'serverless-http'
 import path from 'path'
 import { ServerResponse } from 'http'
@@ -10,14 +10,7 @@ import { ServerResponse } from 'http'
 // This will be loaded from custom config parsed via CLI.
 const nextConf = require(`${process.env.NEXT_CONFIG_FILE ?? './config.json'}`)
 
-// Make sure commands gracefully respect termination signals (e.g. from Docker)
-// Allow the graceful termination to be manually configurable
-if (!process.env.NEXT_MANUAL_SIG_HANDLE) {
-	process.on('SIGTERM', () => process.exit(0))
-	process.on('SIGINT', () => process.exit(0))
-}
-
-const config = {
+const config: Options = {
 	hostname: 'localhost',
 	port: Number(process.env.PORT) || 3000,
 	dir: path.join(__dirname),

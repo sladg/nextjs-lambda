@@ -14,6 +14,7 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
     - [Server handler](#server-handler)
     - [Image handler](#image-handler)
     - [Via CDK](#via-cdk)
+      - [Benchmark](#benchmark)
     - [Sharp layer](#sharp-layer)
     - [Next layer](#next-layer)
   - [Packaging](#packaging)
@@ -22,6 +23,7 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 - [Versioning](#versioning)
   - [Guess](#guess)
   - [Shipit](#shipit)
+- [TODO](#todo)
 - [Disclaimer](#disclaimer)
 
 ## TL;DR
@@ -90,6 +92,13 @@ new NextStandaloneStack(app, 'StandaloneNextjsStack-2', {
 This imports pre-made construct, you only need to worry about paths to outputed zip files from CLI `pack` command.
 
 > More granular CDK construct coming soon.
+
+#### Benchmark
+
+Creation of stack: 385sec (6min 25sec)
+Run #2 436sec (7min 16sec)
+Deletion of stack: 262sec (4min 22sec)
+Update of stack:
 
 
 ### Sharp layer
@@ -171,6 +180,10 @@ Similar to guess command, however, it automatically tags a commit on current bra
 
 Simply call `@sladg/next-lambda shipit` on any branch and be done.
 
+# TODO
+
+- Move Next into peer dependency and build layer manually via npx. Parse next version from parent (allow parameter) to ensure compatibility with our implementation.
+- Move CDK into peer dependency and allow for CDK dependencies to not be used / to have version defined in upstream.
 
 # Disclaimer
 

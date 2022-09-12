@@ -9,5 +9,7 @@ nodejs/**
 # Additional files that might existing for testing and dev purposes.
 .next/**
 next.out/**
-cdk/**
 cdk.out/**
+
+cdk.json
+!cdk/cdk.json

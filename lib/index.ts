@@ -1,4 +1,3 @@
-export { NextStandaloneConstruct } from './construct'
 export { imageHandlerZipPath, serverHandlerZipPath, sharpLayerZipPath } from './consts'
 
 export { handler as serverHandler } from './standalone/server-handler'
