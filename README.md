@@ -65,41 +65,24 @@ Lambda is designed to serve `_next/image*` route in NextJS stack and replaces th
 
 ### Via CDK
 
-See `NextStandaloneStack` construct in `lib/construct.ts`.
+See `NextStandaloneStack` construct in `cdk/example.ts`.
 
-You can easily create `cdk/app.ts` and use following code:
-```
-#!/usr/bin/env node
-import 'source-map-support/register'
-import * as cdk from 'aws-cdk-lib'
-import * as path from 'path'
-
-import { NextStandaloneStack } from '@sladg/nextjs-lambda'
-
-const assetsZipPath = path.resolve(__dirname, '../next.out/assetsLayer.zip')
-const codeZipPath = path.resolve(__dirname, '../next.out/code.zip')
-const dependenciesZipPath = path.resolve(__dirname, '../next.out/dependenciesLayer.zip')
-
-const app = new cdk.App()
-
-new NextStandaloneStack(app, 'StandaloneNextjsStack-2', {
-	assetsZipPath,
-	codeZipPath,
-	dependenciesZipPath,
-})
-```
-
-This imports pre-made construct, you only need to worry about paths to outputed zip files from CLI `pack` command.
-
-> More granular CDK construct coming soon.
 
 #### Benchmark
 
-Creation of stack: 385sec (6min 25sec)
-Run #2 436sec (7min 16sec)
-Deletion of stack: 262sec (4min 22sec)
-Update of stack:
+- Creation of stack: 385sec (6min 25sec)
+- Run #2 436sec (7min 16sec)
+- Run #3 383sec (6min 23sec)
 
+
+- Deletion of stack: 262sec (4min 22sec)
+- Run #2 319sec (5m 19sec)
+
+
+- Update of stack: 92sec (1min 32sec)
+- Run #2 5sec (no changes)
+- Run #3 3sec (no changes)
+- Run #4 164sec (2min 44sec)
 
 ### Sharp layer
 
