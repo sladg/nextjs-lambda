@@ -77,7 +77,7 @@ program
 	.command('deploy')
 	.description('Deploy Next application via CDK')
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
-	.option('--tsconfigPath <path>', 'Absolute path to config.', path.resolve(__dirname, '../tsconfig.json'))
+	.option('--tsconfigPath <path>', 'Absolute path to config.', path.resolve(__dirname, '../cdk/tsconfig.json'))
 	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../cdk/app.ts'))
 	.action(async (options) => {
 		const { stackName, appPath, tsconfigPath } = options
