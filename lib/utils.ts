@@ -7,6 +7,7 @@ import { NextUrlWithParsedQuery } from 'next/dist/server/request-meta'
 import { replaceInFileSync } from 'replace-in-file'
 import { Readable } from 'stream'
 import crypto from 'crypto'
+import { exec } from 'child_process'
 
 // Make header keys lowercase to ensure integrity.
 export const normalizeHeaders = (headers: Record<string, any>) =>
@@ -275,4 +276,49 @@ export const md5FileSync = (path: string) => {
 	}
 
 	return hash.digest('hex')
+}
+
+const promise = async (cmd: string) => {
+	return new Promise((resolve, reject) => {
+		exec(cmd, (error, stdout, stderr) => {
+			if (error) {
+				console.error(error)
+				reject()
+			}
+			resolve(null)
+		})
+	})
+}
+
+interface CommandProps {
+	cmd: string
+	path?: string
+}
+
+export const executeAsyncCmd = async ({ cmd, path }: CommandProps) => {
+	if (path) {
+		process.chdir(path)
+	}
+
+	return new Promise((resolve, reject) => {
+		exec(cmd, (error, stdout, stderr) => {
+			if (error) {
+				console.error(`exec error: ${error}`)
+				reject(error)
+			} else {
+				console.log(`stdout: ${stdout}`)
+				console.error(`stderr: ${stderr}`)
+				resolve(stdout)
+			}
+		})
+	})
+}
+
+export const wrapProcess = async (fn: Promise<any>) => {
+	try {
+		await fn
+	} catch (e) {
+		console.error('Process failed with error:', e)
+		process.exit(1)
+	}
 }

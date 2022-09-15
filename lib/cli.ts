@@ -1,16 +1,13 @@
 import { Command } from 'commander'
-import { mkdirSync, rmSync, symlinkSync, writeFileSync } from 'fs'
-import { tmpdir } from 'os'
 import path from 'path'
-import { simpleGit } from 'simple-git'
 import packageJson from '../package.json'
-import { skipCiFlag } from './consts'
-import { bumpCalculator, bumpMapping, BumpType, findInFile, isValidTag, replaceVersionInCommonFiles, zipFolder, zipMultipleFoldersOrFiles } from './utils'
+import { deployHandler } from './cli/deploy'
+import { guessHandler } from './cli/guess'
+import { packHandler } from './cli/pack'
+import { shipitHandler } from './cli/shipit'
+import { wrapProcess } from './utils'
 
 const commandCwd = process.cwd()
-const nextServerConfigRegex = /(?<=conf: )(.*)(?=,)/
-const scriptDir = path.dirname(__filename)
-
 const program = new Command()
 
 program
@@ -35,7 +32,7 @@ program
 	.option(
 		'--handlerPath',
 		'Path to custom handler to be used to handle ApiGw events. By default this is provided for you.',
-		path.resolve(scriptDir, './server-handler.js'),
+		path.resolve(path.dirname(__filename), './server-handler.js'),
 	)
 	.option(
 		'--outputFolder',
@@ -44,103 +41,8 @@ program
 	)
 	.action(async (options) => {
 		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = options
-
-		// @TODO: Validate that output folder exists.
-		// @TODO: Validate server.js exists and we can match data.
-		// @TODO: Validate that public folder is using `assets` subfolder.
-
-		// Dependencies layer configuration
-		const nodeModulesFolderPath = path.resolve(standaloneFolder, './node_modules')
-		const depsLambdaFolder = 'nodejs/node_modules'
-		const lambdaNodeModulesPath = path.resolve('/opt', depsLambdaFolder)
-		const dependenciesOutputPath = path.resolve(outputFolder, 'dependenciesLayer.zip')
-
-		// Code layer configuration
-		const generatedNextServerPath = path.resolve(standaloneFolder, './server.js')
-		const codeOutputPath = path.resolve(outputFolder, 'code.zip')
-
-		// Assets bundle configuration
-		const buildIdPath = path.resolve(commandCwd, './.next/BUILD_ID')
-		const generatedStaticContentPath = path.resolve(commandCwd, '.next/static')
-		const generatedStaticRemapping = '_next/static'
-		const assetsOutputPath = path.resolve(outputFolder, 'assetsLayer.zip')
-
-		// Clean output directory before continuing
-		rmSync(outputFolder, { force: true, recursive: true })
-		mkdirSync(outputFolder)
-
-		// Zip dependencies from standalone output in a layer-compatible format.
-		await zipFolder({
-			outputName: dependenciesOutputPath,
-			folderPath: nodeModulesFolderPath,
-			dir: depsLambdaFolder,
-		})
-
-		// Zip staticly generated assets and public folder.
-		await zipMultipleFoldersOrFiles({
-			outputName: assetsOutputPath,
-			inputDefinition: [
-				{
-					isFile: true,
-					name: 'BUILD_ID',
-					path: buildIdPath,
-				},
-				{
-					path: publicFolder,
-				},
-				{
-					path: generatedStaticContentPath,
-					dir: generatedStaticRemapping,
-				},
-			],
-		})
-
-		// Create a symlink for node_modules so they point to the separately packaged layer.
-		// We need to create symlink because we are not using NodejsFunction in CDK as bundling is custom.
-		const tmpFolder = tmpdir()
-
-		const symlinkPath = path.resolve(tmpFolder, `./node_modules_${Math.random()}`)
-		symlinkSync(lambdaNodeModulesPath, symlinkPath)
-
-		const nextConfig = findInFile(generatedNextServerPath, nextServerConfigRegex)
-		const configPath = path.resolve(tmpFolder, `./config.json_${Math.random()}`)
-		writeFileSync(configPath, nextConfig, 'utf-8')
-
-		// Zip codebase including symlinked node_modules and handler.
-		await zipMultipleFoldersOrFiles({
-			outputName: codeOutputPath,
-			inputDefinition: [
-				{
-					isGlob: true,
-					cwd: standaloneFolder,
-					path: '**/*',
-					ignore: ['**/node_modules/**', '*.zip'],
-				},
-				{
-					// Ensure hidden files are included.
-					isGlob: true,
-					cwd: standaloneFolder,
-					path: '.*/**/*',
-				},
-				{
-					isFile: true,
-					path: handlerPath,
-					name: 'handler.js',
-				},
-				{
-					isFile: true,
-					path: symlinkPath,
-					name: 'node_modules',
-				},
-				{
-					isFile: true,
-					path: configPath,
-					name: 'config.json',
-				},
-			],
-		})
-
-		console.log('Your NextJS project was succefully prepared for Lambda.')
+		console.log('Our config is: ', options)
+		wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, publicFolder, standaloneFolder }))
 	})
 
 program
@@ -151,20 +53,8 @@ program
 	.option('-t, --tagPrefix <prefix>', 'Prefix version with string of your choice', 'v')
 	.action(async (commitMessage, latestVersion, options) => {
 		const { tagPrefix } = options
-
-		if (!isValidTag(latestVersion, tagPrefix)) {
-			throw new Error(`Invalid version found - ${latestVersion}!`)
-		}
-
-		const match = bumpMapping.find(({ test }) => commitMessage.match(test))
-		if (!match) {
-			throw new Error('No mapping for for suplied commit message.')
-		}
-
-		const nextTag = bumpCalculator(latestVersion.replace(tagPrefix, ''), match?.bump)
-		const nextTagWithPrefix = tagPrefix + nextTag
-
-		console.log(nextTagWithPrefix)
+		console.log('Our config is: ', options)
+		wrapProcess(guessHandler({ commitMessage, latestVersion, tagPrefix }))
 	})
 
 program
@@ -179,102 +69,20 @@ program
 	.option('--gitEmail <email>', 'User email to be used for commits.', 'bender@bot.eu')
 	.action(async (options) => {
 		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail } = options
-
 		console.log('Our config is: ', options)
-
-		const git = simpleGit()
-
-		git.addConfig('user.name', gitUser)
-		git.addConfig('user.email', gitEmail)
-
-		const tags = await git.tags()
-		const log = await git.log()
-		const branch = await git.branch()
-		const [remote] = await git.getRemotes()
-
-		const latestCommit = log.latest?.hash
-		const latestTag = tags.latest ?? '0.0.0'
-		const currentTag = latestTag.replace(tagPrefix, '')
-
-		console.log('Current version: ', latestTag)
-
-		if (!isValidTag(latestTag, tagPrefix)) {
-			throw new Error(`Invalid tag found - ${latestTag}!`)
-		}
-
-		if (!latestCommit) {
-			throw new Error('Latest commit was not found!')
-		}
-
-		const commits = await git.log({
-			from: tags.latest,
-			to: latestCommit,
-		})
-
-		if (commits.total < 1 && failOnMissingCommit) {
-			throw new Error('No new commits since last tag.')
-		}
-
-		const bumps: BumpType[] = []
-
-		commits.all.forEach(({ message, body }) => {
-			const match = bumpMapping.find(({ test, scanBody }) => (scanBody ? body : message).match(test))
-			if (!match) {
-				console.warn(`Invalid commit, cannot match bump - ${message}!`)
-			} else {
-				bumps.push(match?.bump)
-			}
-		})
-
-		console.log('Bumps: ', bumps)
-
-		// Bump minor in case nothing is found.
-		if (bumps.length < 1 && forceBump) {
-			console.log('Forcing patch bump!')
-			bumps.push(BumpType.Patch)
-		}
-
-		const nextTag = bumps.reduce((acc, curr) => bumpCalculator(acc, curr), currentTag)
-		const nextTagWithPrefix = tagPrefix + nextTag
-		const releaseBranch = `${releaseBranchPrefix}${nextTagWithPrefix}`
-		console.log(`Next version is - ${nextTagWithPrefix}!`)
-
-		if (currentTag === nextTag) {
-			throw new Error('Failed to bump version!')
-		}
-
-		const replacementResults = replaceVersionInCommonFiles(currentTag, nextTag)
-		console.log(`Replaced version in files.`, replacementResults)
-
-		// Commit changed files (versions) and create a release commit with skip ci flag.
-		await git
-			//
-			.add('./*')
-			.raw('commit', '--message', `Release: ${nextTagWithPrefix} ${skipCiFlag}`)
-			// Create tag and push it to master.
-			.addTag(nextTagWithPrefix)
-
-		git.push(remote.name, branch.current)
-		git.pushTags()
-
-		// As current branch commit includes skip ci flag, we want to ommit this flag for release branch so pipeline can run (omitting infinite loop).
-		// So we are overwriting last commit message and pushing to release branch.
-		await git
-			//
-			.raw('commit', '--message', `Release: ${nextTagWithPrefix}`, '--amend')
-			.push(remote.name, `${branch.current}:${releaseBranch}`)
-
-		// @Note: CI/CD should not be listening for tags in master, it should listen to release branch.
-		// @TODO: Include commits and commit bodies in release commit so Jira can pick it up.
-
-		console.log(`Successfuly tagged and created new branch - ${releaseBranch}`)
+		wrapProcess(shipitHandler({ tagPrefix, gitEmail, gitUser, failOnMissingCommit, forceBump, releaseBranchPrefix }))
 	})
 
 program
 	.command('deploy')
 	.description('Deploy Next application via CDK')
+	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
+	.option('--tsconfigPath <path>', 'Absolute path to config.', path.resolve(__dirname, '../tsconfig.json'))
+	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../cdk/app.ts'))
 	.action(async (options) => {
-		// @TODO: Add support for CLI CDK deployments via provided CDK example.
+		const { stackName, appPath, tsconfigPath } = options
+		console.log('Our config is: ', options)
+		wrapProcess(deployHandler({ stackName, appPath, tsconfigPath }))
 	})
 
 program.parse(process.argv)

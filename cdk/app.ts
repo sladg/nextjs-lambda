@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import 'source-map-support/register'
-
+import * as path from 'path'
 import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha'
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
 import { App, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, SymlinkFollowMode } from 'aws-cdk-lib'
@@ -12,20 +12,25 @@ import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
 
 const app = new App()
 
+const commandCwd = process.cwd()
+const cdkFolder = __dirname
+
+console.log({ commandCwd, cdkFolder })
+
 class NextStandaloneStack extends Stack {
 	constructor(scope: App, id: string, props?: StackProps) {
 		super(scope, id, props)
 
 		const config = {
-			assetsZipPath: './next.out/assetsLayer.zip',
-			codeZipPath: './next.out/code.zip',
-			dependenciesZipPath: './next.out/dependenciesLayer.zip',
+			assetsZipPath: path.resolve(commandCwd, './next.out/assetsLayer.zip'),
+			codeZipPath: path.resolve(commandCwd, './next.out/code.zip'),
+			dependenciesZipPath: path.resolve(commandCwd, './next.out/dependenciesLayer.zip'),
+			sharpLayerZipPath: path.resolve(cdkFolder, '../dist/sharp-layer.zip'),
+			nextLayerZipPath: path.resolve(cdkFolder, '../dist/next-layer.zip'),
+			imageHandlerZipPath: path.resolve(cdkFolder, '../dist/image-handler.zip'),
 			customServerHandler: 'handler.handler',
 			customImageHandler: 'index.handler',
 			cfnViewerCertificate: undefined,
-			sharpLayerZipPath: './dist/sharp-layer.zip',
-			nextLayerZipPath: './dist/next-layer.zip',
-			imageHandlerZipPath: './dist/image-handler.zip',
 			...props,
 		}
 
@@ -164,6 +169,10 @@ class NextStandaloneStack extends Stack {
 	}
 }
 
-new NextStandaloneStack(app, 'StandaloneNextjsStack-Temporary')
+if (!process.env.STACK_NAME) {
+	throw new Error('Name of CDK stack was not specified!')
+}
+
+new NextStandaloneStack(app, process.env.STACK_NAME)
 
 app.synth()

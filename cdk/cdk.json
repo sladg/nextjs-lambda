@@ -1,4 +1,0 @@
-{
-    "app": "npx ts-node --swc --project ../tsconfig.json ./example.ts",
-    "context": {}
-}
