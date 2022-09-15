@@ -31,6 +31,7 @@
     "@aws-cdk/aws-apigatewayv2-alpha": "^2.41.0-alpha.0",
     "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.41.0-alpha.0",
     "@aws-sdk/client-s3": "^3.165",
+    "@swc/core": "^1.3.0",
     "@types/archiver": "^5.3.1",
     "@types/aws-lambda": "^8.10.103",
     "@types/node": "^18.7.16",
@@ -45,7 +46,6 @@
     "simple-git": "^3.14.0"
   },
   "devDependencies": {
-    "@swc/core": "^1.3.0",
     "adm-zip": "^0.5.9",
     "critters": "^0.0.16",
     "esbuild": "^0.15.7",
