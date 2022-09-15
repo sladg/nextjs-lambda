@@ -28,9 +28,10 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 
 ## TL;DR
 - In your NextJS project, set output to standalone.
-- Run `npx @sladg/nextjs-lambda pack`
-- Prepare CDK ([see](#via-cdk))
-- Run `cdk deploy`
+- Run `next build` (will generate standalone next folder).
+- Run `npm run-script env -- next-utils pack` (will create ZIPs).
+- Run `npm run-script env -- next-utils deploy` (will deploy to AWS).
+- Profit 🎉
 
 ## Usage
 
@@ -66,7 +67,7 @@ Lambda is designed to serve `_next/image*` route in NextJS stack and replaces th
 ### Via CDK
 
 See `NextStandaloneStack` construct in `cdk/example.ts`.
-
+Or just use `next-utils deploy` command so you don't have to manage CDK yourself.
 
 #### Benchmark
 
@@ -83,6 +84,7 @@ See `NextStandaloneStack` construct in `cdk/example.ts`.
 - Run #2 5sec (no changes)
 - Run #3 3sec (no changes)
 - Run #4 164sec (2min 44sec)
+- Run #5 62sec (1min 2sec) (no changes, used `next-utils deploy`)
 
 ### Sharp layer
 
