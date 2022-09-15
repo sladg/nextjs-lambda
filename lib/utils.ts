@@ -103,7 +103,7 @@ export const bumpMapping = [
 	},
 	{
 		test: /(.*)(docs:|docs\((.*)\):|doc:|doc\((.*)\):)/,
-		bump: BumpType.Minor,
+		bump: BumpType.Patch,
 	},
 	{
 		test: 'BREAKING CHANGE',
