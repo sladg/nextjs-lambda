@@ -28,6 +28,7 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 
 ## TL;DR
 - In your NextJS project, set output to standalone.
+- Run `npm install @sladg/nextjs-lambda` (will install dependency).
 - Run `next build` (will generate standalone next folder).
 - Run `npm run-script env -- next-utils pack` (will create ZIPs).
 - Run `npm run-script env -- next-utils deploy` (will deploy to AWS).
