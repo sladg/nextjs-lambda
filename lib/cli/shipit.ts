@@ -13,9 +13,9 @@ interface Props {
 
 export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissingCommit, forceBump, releaseBranchPrefix }: Props) => {
 	const git = simpleGit()
-	await git.pull()
 
-	const tags = await git.tags({ '--sort': '-creatordate' })
+	// Fetch tags to ensure we have the latest ones.
+	const tags = await git.fetch(['--tags']).tags({ '--sort': '-creatordate' })
 	const log = await git.log({ '--max-count': 20 })
 	const branch = await git.branch()
 	const [remote] = await git.getRemotes()
@@ -35,6 +35,7 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 		throw new Error('Latest commit was not found!')
 	}
 
+	// @TODO: Fetch all in case from is 0.0.0 (non-existent).
 	const commits = await git.log({
 		from: tags.latest,
 		to: latestCommit,
@@ -57,7 +58,7 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 
 	console.log('Bumps: ', bumps)
 
-	// Bump minor in case nothing is found.
+	// Bump patch in case nothing is found.
 	if (bumps.length < 1 && forceBump) {
 		console.log('Forcing patch bump!')
 		bumps.push(BumpType.Patch)
