@@ -13,12 +13,10 @@ interface Props {
 
 export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissingCommit, forceBump, releaseBranchPrefix }: Props) => {
 	const git = simpleGit()
+	await git.pull()
 
-	git.addConfig('user.name', gitUser)
-	git.addConfig('user.email', gitEmail)
-
-	const tags = await git.tags()
-	const log = await git.log()
+	const tags = await git.tags({ '--sort': '-creatordate' })
+	const log = await git.log({ '--max-count': 20 })
 	const branch = await git.branch()
 	const [remote] = await git.getRemotes()
 
@@ -26,6 +24,7 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 	const latestTag = tags.latest ?? '0.0.0'
 	const currentTag = latestTag.replace(tagPrefix, '')
 
+	console.log('Latest commit: ', latestCommit)
 	console.log('Current version: ', latestTag)
 
 	if (!isValidTag(latestTag, tagPrefix)) {
@@ -63,6 +62,9 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 		console.log('Forcing patch bump!')
 		bumps.push(BumpType.Patch)
 	}
+
+	git.addConfig('user.name', gitUser)
+	git.addConfig('user.email', gitEmail)
 
 	const nextTag = bumps.reduce((acc, curr) => bumpCalculator(acc, curr), currentTag)
 	const nextTagWithPrefix = tagPrefix + nextTag
