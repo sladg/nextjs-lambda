@@ -155,6 +155,7 @@ export const replaceVersionInCommonFiles = (oldVersion: string, newVersion: stri
 			'package-lock.json', // Duplicate because lock file contains two occurences.
 			// 'yarn.lock', Yarn3 lock file does not contain version from package.json
 			'composer.json',
+			'**/composer.json', // Useful for workspaces with nested composer.jsons also including versions.
 			// 'composer.lock', Composer2 lock file does not include version from composer.json
 			'pyproject.toml',
 			'**/__init__.py',

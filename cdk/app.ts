@@ -15,8 +15,6 @@ const app = new App()
 const commandCwd = process.cwd()
 const cdkFolder = __dirname
 
-console.log({ commandCwd, cdkFolder })
-
 class NextStandaloneStack extends Stack {
 	constructor(scope: App, id: string, props?: StackProps) {
 		super(scope, id, props)
