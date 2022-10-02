@@ -39,7 +39,7 @@
     "aws-cdk-lib": "^2.41.0",
     "commander": "^9.4.0",
     "constructs": "^10",
-    "next": "^12.3.0",
+    "next": "^12.1.0",
     "replace-in-file": "^6.3.5",
     "serverless-http": "^3.0.2",
     "simple-git": "^3.14.1"
