@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 import 'source-map-support/register'
 import * as path from 'path'
+import * as packageJson from '../package.json'
+
 import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha'
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
-import { App, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, SymlinkFollowMode } from 'aws-cdk-lib'
+import { App, AssetHashType, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, SymlinkFollowMode } from 'aws-cdk-lib'
 import { CloudFrontAllowedMethods, CloudFrontWebDistribution, OriginAccessIdentity } from 'aws-cdk-lib/aws-cloudfront'
 import { Function } from 'aws-cdk-lib/aws-lambda'
 import { Code, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda'
@@ -32,16 +34,21 @@ class NextStandaloneStack extends Stack {
 			...props,
 		}
 
+		const depsPrefix = `${packageJson.name}-${packageJson.version}`
+
 		const depsLayer = new LayerVersion(this, 'DepsLayer', {
-			code: Code.fromAsset(config.dependenciesZipPath),
+			code: Code.fromAsset(config.dependenciesZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
+			layerVersionName: `${depsPrefix}-deps`,
 		})
 
 		const sharpLayer = new LayerVersion(this, 'SharpLayer', {
-			code: Code.fromAsset(config.sharpLayerZipPath),
+			code: Code.fromAsset(config.sharpLayerZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
+			layerVersionName: `${depsPrefix}-sharp`,
 		})
 
 		const nextLayer = new LayerVersion(this, 'NextLayer', {
-			code: Code.fromAsset(config.nextLayerZipPath),
+			code: Code.fromAsset(config.nextLayerZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
+			layerVersionName: `${depsPrefix}-next`,
 		})
 
 		const serverLambda = new Function(this, 'DefaultNextJs', {
@@ -50,7 +57,7 @@ class NextStandaloneStack extends Stack {
 			}),
 			runtime: Runtime.NODEJS_16_X,
 			handler: config.customServerHandler,
-			layers: [depsLayer, nextLayer],
+			layers: [depsLayer, sharpLayer, nextLayer],
 			// No need for big memory as image handling is done elsewhere.
 			memorySize: 512,
 			timeout: Duration.seconds(15),

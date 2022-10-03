@@ -161,7 +161,7 @@ export const replaceVersionInCommonFiles = (oldVersion: string, newVersion: stri
 			'**/__init__.py',
 		],
 		from: [
-			/\"version\":(.*)"\d+\.\d+\.\d+"/g, // little more generic to allow for incorrect version to be replaced
+			/\"version\":(.*)"\d+\.\d+\.\d+"/, // little more generic to allow for incorrect version to be replaced
 			`"version": "${oldVersion}"`, // npm/php style
 			`"version":"${oldVersion}"`, // uglified npm/php style
 			`version = "${oldVersion}"`, // python style
