@@ -20,22 +20,22 @@ program
 	.command('pack')
 	.description('Package standalone Next12 build into Lambda compatible ZIPs.')
 	.option(
-		'--standaloneFolder',
+		'--standaloneFolder <path>',
 		'Folder including NextJS standalone build. Parental folder should include more folders as well.',
 		path.resolve(commandCwd, '.next/standalone'),
 	)
 	.option(
-		'--publicFolder',
+		'--publicFolder <path>',
 		'Folder where public assets are located, typically this folder is located in root of the project.',
 		path.resolve(commandCwd, './public'),
 	)
 	.option(
-		'--handlerPath',
+		'--handlerPath <path>',
 		'Path to custom handler to be used to handle ApiGw events. By default this is provided for you.',
 		path.resolve(path.dirname(__filename), './server-handler.js'),
 	)
 	.option(
-		'--outputFolder',
+		'--outputFolder <path>',
 		'Path to folder which should be used for outputting bundled ZIP files for your Lambda. It will be cleared before every script run.',
 		path.resolve(commandCwd, './next.out'),
 	)
