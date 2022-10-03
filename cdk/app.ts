@@ -37,15 +37,18 @@ class NextStandaloneStack extends Stack {
 		const depsPrefix = `${packageJson.name}-${packageJson.version}`.replace(/[^a-zA-Z0-9-]/g, '')
 
 		const depsLayer = new LayerVersion(this, 'DepsLayer', {
-			code: Code.fromAsset(config.dependenciesZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
+			// This folder does not use Custom hash as depenendencies are most likely changing every time we deploy.
+			code: Code.fromAsset(config.dependenciesZipPath),
 			description: `${depsPrefix}-deps`,
 		})
 
+		// @TODO: Load Sharp version from source package.json so we respect it.
 		const sharpLayer = new LayerVersion(this, 'SharpLayer', {
 			code: Code.fromAsset(config.sharpLayerZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
 			description: `${depsPrefix}-sharp`,
 		})
 
+		// @TODO: Load Next version from source package.json so we respect it.
 		const nextLayer = new LayerVersion(this, 'NextLayer', {
 			code: Code.fromAsset(config.nextLayerZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
 			description: `${depsPrefix}-next`,
