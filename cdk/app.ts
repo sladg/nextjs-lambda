@@ -34,21 +34,21 @@ class NextStandaloneStack extends Stack {
 			...props,
 		}
 
-		const depsPrefix = `${packageJson.name}-${packageJson.version}`
+		const depsPrefix = `${packageJson.name}-${packageJson.version}`.replace(/[^a-zA-Z0-9-]/g, '')
 
 		const depsLayer = new LayerVersion(this, 'DepsLayer', {
 			code: Code.fromAsset(config.dependenciesZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
-			layerVersionName: `${depsPrefix}-deps`,
+			description: `${depsPrefix}-deps`,
 		})
 
 		const sharpLayer = new LayerVersion(this, 'SharpLayer', {
 			code: Code.fromAsset(config.sharpLayerZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
-			layerVersionName: `${depsPrefix}-sharp`,
+			description: `${depsPrefix}-sharp`,
 		})
 
 		const nextLayer = new LayerVersion(this, 'NextLayer', {
 			code: Code.fromAsset(config.nextLayerZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
-			layerVersionName: `${depsPrefix}-next`,
+			description: `${depsPrefix}-next`,
 		})
 
 		const serverLambda = new Function(this, 'DefaultNextJs', {
