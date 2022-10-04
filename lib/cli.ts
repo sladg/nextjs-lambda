@@ -39,10 +39,12 @@ program
 		'Path to folder which should be used for outputting bundled ZIP files for your Lambda. It will be cleared before every script run.',
 		path.resolve(commandCwd, './next.out'),
 	)
+	.option('--nextFolder <path>', 'Relative path to folder that contains the next project in the case of monorepo.', '.')
+
 	.action(async (options) => {
-		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = options
+		const { standaloneFolder, publicFolder, handlerPath, nextFolder, outputFolder } = options
 		console.log('Our config is: ', options)
-		wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, publicFolder, standaloneFolder }))
+		wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, nextFolder, publicFolder, standaloneFolder }))
 	})
 
 program

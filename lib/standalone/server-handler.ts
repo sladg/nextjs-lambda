@@ -7,15 +7,18 @@ import slsHttp from 'serverless-http'
 import path from 'path'
 import { ServerResponse } from 'http'
 
+const settings = require(`${process.env.SETTINGS_FILE ?? './settings.json'}`)
+
 // This will be loaded from custom config parsed via CLI.
 const nextConf = require(`${process.env.NEXT_CONFIG_FILE ?? './config.json'}`)
 
 const config: Options = {
 	hostname: 'localhost',
 	port: Number(process.env.PORT) || 3000,
-	dir: path.join(__dirname),
+	dir: settings.nextFolder ? path.join(__dirname, settings.nextFolder) : path.join(__dirname),
 	dev: false,
 	customServer: false,
+	minimalMode: true,
 	conf: nextConf,
 }
 

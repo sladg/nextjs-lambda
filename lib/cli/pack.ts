@@ -10,9 +10,10 @@ interface Props {
 	handlerPath: string
 	outputFolder: string
 	commandCwd: string
+	nextFolder: string
 }
 
-export const packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFolder, commandCwd }: Props) => {
+export const packHandler = async ({ handlerPath, outputFolder, publicFolder, nextFolder, standaloneFolder, commandCwd }: Props) => {
 	// @TODO: Validate that output folder exists.
 	// @TODO: Validate server.js exists and we can match data.
 	// @TODO: Validate that public folder is using `assets` subfolder.
@@ -24,7 +25,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	const dependenciesOutputPath = path.resolve(outputFolder, 'dependenciesLayer.zip')
 
 	// Code layer configuration
-	const generatedNextServerPath = path.resolve(standaloneFolder, './server.js')
+	const generatedNextServerPath = path.resolve(standaloneFolder, nextFolder, './server.js')
 	const codeOutputPath = path.resolve(outputFolder, 'code.zip')
 
 	// Assets bundle configuration
@@ -70,9 +71,16 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	const symlinkPath = path.resolve(tmpFolder, `./node_modules_${Math.random()}`)
 	symlinkSync(lambdaNodeModulesPath, symlinkPath)
 
+	const settingsPath = path.resolve(tmpFolder, `./settings.json_${Math.random()}`)
+	writeFileSync(settingsPath, `{ "nextFolder": "${nextFolder}" }`, 'utf-8')
+
 	const nextConfig = findInFile(generatedNextServerPath, nextServerConfigRegex)
 	const configPath = path.resolve(tmpFolder, `./config.json_${Math.random()}`)
 	writeFileSync(configPath, nextConfig, 'utf-8')
+
+	if (nextFolder !== '.' && nextConfig.indexOf('outputFileTracingRoot') < 0) {
+		throw new Error('outputFileTracingRoot is required in the next config file for a monorepo')
+	}
 
 	// Zip codebase including symlinked node_modules and handler.
 	await zipMultipleFoldersOrFiles({
@@ -83,13 +91,6 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 				cwd: standaloneFolder,
 				path: '**/*',
 				ignore: ['**/node_modules/**', '*.zip'],
-			},
-			{
-				// @TODO: use {dot:true} configuration in archiver and remove this.
-				// Ensure hidden files are included.
-				isGlob: true,
-				cwd: standaloneFolder,
-				path: '.*/**/*',
 			},
 			{
 				isFile: true,
@@ -106,6 +107,11 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 				isFile: true,
 				path: configPath,
 				name: 'config.json',
+			},
+			{
+				isFile: true,
+				path: settingsPath,
+				name: 'settings.json',
 			},
 		],
 	})
