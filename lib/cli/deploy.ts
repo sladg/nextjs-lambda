@@ -13,7 +13,7 @@ export const deployHandler = async ({ stackName, tsconfigPath, appPath }: Props)
 	// NPX so ts-node does not need to be a dependency.
 	// All paths are absolute.
 	const cdkApp = `npx ts-node --project ${tsconfigPath} ${appPath}`
-	const cdkCiFlags = `--all --require-approval never --ci`
+	const cdkCiFlags = `--require-approval never --ci`
 
 	await executeAsyncCmd({
 		cmd: `STACK_NAME=${stackName} ${cdkExecutable} deploy --app "${cdkApp}" ${cdkCiFlags}`,
