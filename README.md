@@ -23,16 +23,32 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 - [Versioning](#versioning)
   - [Guess](#guess)
   - [Shipit](#shipit)
-- [TODO](#todo)
-- [Disclaimer](#disclaimer)
 
 ## TL;DR
 - In your NextJS project, set output to standalone.
-- Run `npm install @sladg/nextjs-lambda` (will install dependency).
 - Run `next build` (will generate standalone next folder).
-- Run `npm run-script env -- next-utils pack` (will create ZIPs).
-- Run `npm run-script env -- next-utils deploy` (will deploy to AWS).
+- Run `npx --package @sladg/nextjs-lambda next-utils pack` (will create ZIPs).
+- Run `npx --package @sladg/nextjs-lambda next-utils deploy` (will deploy to AWS).
 - Profit 🎉
+
+
+
+At this point, advanced features were not tested with this setup. This includes:
+
+- [x] Render frontfacing pages in Lambda
+- [x] Render API routes in Lambda
+- [x] Image optimization
+- [x] [GetStaticPaths](https://nextjs.org/docs/basic-features/data-fetching/get-static-paths)
+- [ ] next-intl (i18n)
+- [ ] [GetServerSideProps](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props)
+- [ ] [GetStaticProps](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
+- [ ] [Middleware](https://nextjs.org/docs/advanced-features/middleware)
+- [ ] [ISR and fallbacks](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration)
+- [ ] [Streaming](https://nextjs.org/docs/advanced-features/react-18/streaming)
+- [ ] Custom babel configuration
+
+I am looking for advanced projects implementing those features, so we can test them out! Reach out to me!
+
 
 ## Usage
 
@@ -50,7 +66,6 @@ This should work fine for single-repositories with yarn/npm/pnpm.
 In case you are using monorepo/workspaces, be aware! Producing standalone build is tricky due to dependencies being spread out and not contained within single `node_modules` folder, making it complicated for `SWC` to properly produce required dependencies. This would most likely result in deployment failing with HTTP 500, internal error, as some required dependency is not in place.
 
 See:
-
 - https://github.com/vercel/next.js/issues/36386
 - https://github.com/vercel/next.js/discussions/32223
 
@@ -72,20 +87,23 @@ Or just use `next-utils deploy` command so you don't have to manage CDK yourself
 
 #### Benchmark
 
-- Creation of stack: 385sec (6min 25sec)
-- Run #2 436sec (7min 16sec)
-- Run #3 383sec (6min 23sec)
+Creation of stack:
+- Run #1 **385sec** (6min 25sec)
+- Run #2 **436sec** (7min 16sec)
+- Run #3 **383sec** (6min 23sec)
 
+Deletion of stack:
+- Run #1 **262sec** (4min 22sec)
+- Run #2 **319sec** (5m 19sec)
 
-- Deletion of stack: 262sec (4min 22sec)
-- Run #2 319sec (5m 19sec)
+Update of stack:
+- Run #1 **92sec** (1min 32sec)
+- Run #2 **5sec** (no changes)
+- Run #3 **3sec** (no changes)
+- Run #4 **164sec** (2min 44sec)
+- Run #5 **62sec** (1min 2sec) (no changes, used `next-utils deploy`)
 
-
-- Update of stack: 92sec (1min 32sec)
-- Run #2 5sec (no changes)
-- Run #3 3sec (no changes)
-- Run #4 164sec (2min 44sec)
-- Run #5 62sec (1min 2sec) (no changes, used `next-utils deploy`)
+We are looking at 6-8min for creation and 1-3min for update. This is a huge improvement over existing Lambda@Edge implementation.
 
 ### Sharp layer
 
@@ -165,23 +183,3 @@ Simple CLI command that takes commit message and current version and outputs (st
 Similar to guess command, however, it automatically tags a commit on current branch and creates release branch for you so hooking up pipelines is as simple as it can be. Version is automatically bumped in common NPM and PHP files (package.json, package-lock.json and composer.json).
 
 Simply call `@sladg/next-lambda shipit` on any branch and be done.
-
-# TODO
-
-- Move Next into peer dependency and build layer manually via npx. Parse next version from parent (allow parameter) to ensure compatibility with our implementation.
-- Move CDK into peer dependency and allow for CDK dependencies to not be used / to have version defined in upstream.
-
-# Disclaimer
-
-At this point, advanced features were not tested with this setup. This includes:
-
-- `GetServerSideProps`,
-- middleware,
-- ISR and fallbacks,
-- streaming,
-- custom babel configuration.
-
-I am looking for advanced projects implementing those features, so we can test them out! Reach out to me!
-
-
-
