@@ -41,7 +41,7 @@
     "constructs": "^10",
     "next": "^12.3.0",
     "replace-in-file": "^6.3.5",
-    "serverless-http": "^3.0.2",
+    "serverless-http": "^3.0.3",
     "simple-git": "^3.14.1"
   },
   "devDependencies": {
