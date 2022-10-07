@@ -37,6 +37,7 @@ const server = slsHttp(
 	{
 		// We have separate function for handling images. Assets are handled by S3.
 		binary: false,
+		basePath: process.env.NEXTJS_LAMBDA_BASE_PATH
 	},
 )
 
