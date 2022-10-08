@@ -1,6 +1,13 @@
 #!/bin/sh
 set -e
 
+# -------------- DISLAIMER --------------
+# This is just original shell version of CLI command pack.
+# It might be useful for people looking to replicate this functionality on their own.
+# Or for purposes of quickly understanding the inner workings.
+# It is not up-to-date nor maintained.
+# ---------------------------------------
+
 # Current root for reference.
 MY_ROOT=$(pwd)
 SCRIPT_PATH="$(

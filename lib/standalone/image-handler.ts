@@ -1,7 +1,3 @@
-// ! Make sure this comes before the fist import
-process.env.NEXT_SHARP_PATH = require.resolve('sharp')
-process.env.NODE_ENV = 'production'
-
 import type { APIGatewayProxyEventV2, APIGatewayProxyStructuredResultV2 } from 'aws-lambda'
 import { defaultConfig, NextConfigComplete } from 'next/dist/server/config-shared'
 import { imageOptimizer as nextImageOptimizer, ImageOptimizerCache } from 'next/dist/server/image-optimizer'
@@ -24,6 +20,8 @@ const nextConfig = {
 	},
 }
 
+// We don't need serverless-http neither basePath configuration as endpoint works as single route API.
+// Images are handled via header and query param information.
 const optimizer = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyStructuredResultV2> => {
 	try {
 		if (!sourceBucket) {

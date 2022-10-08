@@ -22,14 +22,14 @@ class NextStandaloneStack extends Stack {
 		super(scope, id, props)
 
 		const config = {
+			apigwServerPath: '/_server',
+			apigwImagePath: '/_image',
 			assetsZipPath: path.resolve(commandCwd, './next.out/assetsLayer.zip'),
 			codeZipPath: path.resolve(commandCwd, './next.out/code.zip'),
 			dependenciesZipPath: path.resolve(commandCwd, './next.out/dependenciesLayer.zip'),
-			sharpLayerZipPath: path.resolve(cdkFolder, '../dist/sharp-layer.zip'),
-			nextLayerZipPath: path.resolve(cdkFolder, '../dist/next-layer.zip'),
 			imageHandlerZipPath: path.resolve(cdkFolder, '../dist/image-handler.zip'),
 			customServerHandler: 'handler.handler',
-			customImageHandler: 'index.handler',
+			customImageHandler: 'handler.handler',
 			cfnViewerCertificate: undefined,
 			...props,
 		}
@@ -42,28 +42,19 @@ class NextStandaloneStack extends Stack {
 			description: `${depsPrefix}-deps`,
 		})
 
-		// @TODO: Load Sharp version from source package.json so we respect it.
-		const sharpLayer = new LayerVersion(this, 'SharpLayer', {
-			code: Code.fromAsset(config.sharpLayerZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
-			description: `${depsPrefix}-sharp`,
-		})
-
-		// @TODO: Load Next version from source package.json so we respect it.
-		const nextLayer = new LayerVersion(this, 'NextLayer', {
-			code: Code.fromAsset(config.nextLayerZipPath, { assetHashType: AssetHashType.CUSTOM, assetHash: depsPrefix }),
-			description: `${depsPrefix}-next`,
-		})
-
 		const serverLambda = new Function(this, 'DefaultNextJs', {
 			code: Code.fromAsset(config.codeZipPath, {
 				followSymlinks: SymlinkFollowMode.NEVER,
 			}),
 			runtime: Runtime.NODEJS_16_X,
 			handler: config.customServerHandler,
-			layers: [depsLayer, sharpLayer, nextLayer],
+			layers: [depsLayer],
 			// No need for big memory as image handling is done elsewhere.
 			memorySize: 512,
 			timeout: Duration.seconds(15),
+			environment: {
+				NEXTJS_LAMBDA_BASE_PATH: config.apigwServerPath,
+			},
 		})
 
 		const assetsBucket = new Bucket(this, 'NextAssetsBucket', {
@@ -77,7 +68,6 @@ class NextStandaloneStack extends Stack {
 			code: Code.fromAsset(config.imageHandlerZipPath),
 			runtime: Runtime.NODEJS_16_X,
 			handler: config.customImageHandler,
-			layers: [sharpLayer, nextLayer],
 			memorySize: 1024,
 			timeout: Duration.seconds(10),
 			environment: {
@@ -87,15 +77,12 @@ class NextStandaloneStack extends Stack {
 
 		assetsBucket.grantRead(imageLambda)
 
-		const serverApigatewayProxy = new HttpApi(this, 'ServerProxy', {
-			createDefaultStage: true,
-			defaultIntegration: new HttpLambdaIntegration('LambdaApigwIntegration', serverLambda),
-		})
+		const apigatewayProxy = new HttpApi(this, 'ServerProxy')
 
-		const imageApigatewayProxy = new HttpApi(this, 'ImagesProxy', {
-			createDefaultStage: true,
-			defaultIntegration: new HttpLambdaIntegration('ImagesApigwIntegration', imageLambda),
-		})
+		// We could do parameter mapping here and remove prefix from path.
+		// However passing env var (basePath) is easier to use, understand and integrate to other solutions.
+		apigatewayProxy.addRoutes({ path: `${config.apigwServerPath}/{proxy+}`, integration: new HttpLambdaIntegration('LambdaApigwIntegration', serverLambda) })
+		apigatewayProxy.addRoutes({ path: `${config.apigwImagePath}/{proxy+}`, integration: new HttpLambdaIntegration('ImagesApigwIntegration', imageLambda) })
 
 		const s3AssetsIdentity = new OriginAccessIdentity(this, 'OAICfnDistroS3', {
 			comment: 'Allows CloudFront to access S3 bucket with assets',
@@ -123,7 +110,8 @@ class NextStandaloneStack extends Stack {
 						},
 					],
 					customOriginSource: {
-						domainName: `${serverApigatewayProxy.apiId}.execute-api.${this.region}.amazonaws.com`,
+						originPath: config.apigwServerPath,
+						domainName: `${apigatewayProxy.apiId}.execute-api.${this.region}.amazonaws.com`,
 					},
 				},
 				{
@@ -137,7 +125,8 @@ class NextStandaloneStack extends Stack {
 						},
 					],
 					customOriginSource: {
-						domainName: `${imageApigatewayProxy.apiId}.execute-api.${this.region}.amazonaws.com`,
+						originPath: config.apigwImagePath,
+						domainName: `${apigatewayProxy.apiId}.execute-api.${this.region}.amazonaws.com`,
 					},
 				},
 				{
@@ -171,8 +160,7 @@ class NextStandaloneStack extends Stack {
 
 		new CfnOutput(this, 'cfnDistroUrl', { value: cfnDistro.distributionDomainName })
 		new CfnOutput(this, 'cfnDistroId', { value: cfnDistro.distributionId })
-		new CfnOutput(this, 'defaultApiGwUrl', { value: serverApigatewayProxy.apiEndpoint })
-		new CfnOutput(this, 'imagesApiGwUrl', { value: imageApigatewayProxy.apiEndpoint })
+		new CfnOutput(this, 'apiGwUrl', { value: apigatewayProxy.apiEndpoint })
 		new CfnOutput(this, 'assetsBucketUrl', { value: assetsBucket.bucketDomainName })
 	}
 }

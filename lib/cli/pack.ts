@@ -85,6 +85,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 				ignore: ['**/node_modules/**', '*.zip'],
 			},
 			{
+				// @TODO: use {dot:true} configuration in archiver and remove this.
 				// Ensure hidden files are included.
 				isGlob: true,
 				cwd: standaloneFolder,
@@ -96,6 +97,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 				name: 'handler.js',
 			},
 			{
+				// @TODO: Verify this as it seems like symlink is not needed when layer is in /opt/nodejs/node_modules
 				isFile: true,
 				path: symlinkPath,
 				name: 'node_modules',

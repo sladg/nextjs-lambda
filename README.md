@@ -31,23 +31,21 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 - Run `npx --package @sladg/nextjs-lambda next-utils deploy` (will deploy to AWS).
 - Profit 🎉
 
-
-
-At this point, advanced features were not tested with this setup. This includes:
+---
 
 - [x] Render frontfacing pages in Lambda
 - [x] Render API routes in Lambda
 - [x] Image optimization
+- [x] NextJS headers (next.config.js)
 - [x] [GetStaticPaths](https://nextjs.org/docs/basic-features/data-fetching/get-static-paths)
-- [ ] next-intl (i18n)
-- [ ] [GetServerSideProps](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props)
-- [ ] [GetStaticProps](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
-- [ ] [Middleware](https://nextjs.org/docs/advanced-features/middleware)
+- [x] next-intl (i18n)
+- [x] [Middleware](https://nextjs.org/docs/advanced-features/middleware)
+- [x] [GetServerSideProps](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props)
+- [x] [GetStaticProps](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
+- [x] NextJS rewrites (next.config.js)
 - [ ] [ISR and fallbacks](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration)
 - [ ] [Streaming](https://nextjs.org/docs/advanced-features/react-18/streaming)
 - [ ] Custom babel configuration
-
-I am looking for advanced projects implementing those features, so we can test them out! Reach out to me!
 
 
 ## Usage

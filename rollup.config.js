@@ -17,7 +17,7 @@ const standalone = {
 				loader: 'ts',
 				resolveDir: path.dirname(id),
 			},
-			external: ['sharp', 'next', 'aws-cdk'],
+			external: ['sharp', 'next', 'aws-sdk'],
 			bundle: true,
 			minify: true,
 			write: false,
@@ -81,16 +81,18 @@ export default defineConfig([
 			},
 		],
 	},
-	{
-		input: 'lib/standalone/image-handler.ts',
-		plugins: [standalone],
-		output: [
-			{
-				file: 'dist/image-handler.zip',
-			},
-			{
-				file: 'dist/image-handler.js',
-			},
-		],
-	},
+	// @NOTE: Moved away from Rollup as Webpack is more efficient in bundling internal require.resolve calls.
+	// Resulting in no need for layers and smaller bundle overall.
+	// {
+	// 	input: 'lib/standalone/image-handler.ts',
+	// 	plugins: [standalone],
+	// 	output: [
+	// 		{
+	// 			file: 'dist/image-handler.zip',
+	// 		},
+	// 		{
+	// 			file: 'dist/image-handler.js',
+	// 		},
+	// 	],
+	// },
 ])
