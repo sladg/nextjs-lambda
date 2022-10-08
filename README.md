@@ -15,8 +15,6 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
     - [Image handler](#image-handler)
     - [Via CDK](#via-cdk)
       - [Benchmark](#benchmark)
-    - [Sharp layer](#sharp-layer)
-    - [Next layer](#next-layer)
   - [Packaging](#packaging)
     - [Server handler](#server-handler-1)
     - [Static assets](#static-assets)
@@ -46,6 +44,7 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 - [ ] [ISR and fallbacks](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration)
 - [ ] [Streaming](https://nextjs.org/docs/advanced-features/react-18/streaming)
 - [ ] Custom babel configuration
+- [ ] Bundle Sharp together with image optimizer so Next uses it.
 
 
 ## Usage
@@ -103,39 +102,13 @@ Update of stack:
 
 We are looking at 6-8min for creation and 1-3min for update. This is a huge improvement over existing Lambda@Edge implementation.
 
-### Sharp layer
-
-Besides handler (wrapper) itself, underlying NextJS also requires sharp binaries.
-To build those, we use `npm install` with some extra parametes. Then we zip all sharp dependencies and compress it to easily importable zip file.
-
-```
-import { sharpLayerZipPath } from '@sladg/nextjs-lambda'
-
-const sharpLayer = new LayerVersion(this, 'SharpDependenciesLayer', {
-  code: Code.fromAsset(sharpLayerZipPath)
-})
-```
-
-### Next layer
-
-To provide both image and server handlers with all depdencies (next is using `require.resolve` inside, so it cannot be bundled standalone for now).
-
-We pre-package this layer so it can be included in Lambda without hassle.
-```
-import { nextLayerZipPath } from '@sladg/nextjs-lambda'
-
-const nextLayer = new LayerVersion(this, 'NextDependenciesLayer', {
-  code: Code.fromAsset(nextLayerZipPath)
-})
-```
-
 ## Packaging
 
 In order to succefully deploy, you firstly need to include `target: 'standalone'` in your `next.config.js` setup.
 Make sure to use NextJS in version 12 or above so this is properly supported.
 
 Once target is set, you can go on and use your `next build` command as you normally would.
-To package everything, make sure to be in your project root folder and next folder `.next` and `public` exist. Packaging is done via NPM CLI command of `@slack/nextjs-lambda package`.
+To package everything, make sure to be in your project root folder and next folder `.next` and `public` exist. Packaging is done via NPM CLI command of `@slack/nextjs-lambda pack`.
 
 It will create `next.out/` folder with 3 zip packages. One zip Lambda's code, one is dependencies layer and one is assets layer.
 

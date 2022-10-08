@@ -17,7 +17,7 @@ const standalone = {
 				loader: 'ts',
 				resolveDir: path.dirname(id),
 			},
-			external: ['sharp', 'next', 'aws-sdk'],
+			external: ['sharp', 'next', 'aws-cdk', 'aws-sdk'],
 			bundle: true,
 			minify: true,
 			write: false,

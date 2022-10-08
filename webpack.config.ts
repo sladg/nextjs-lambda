@@ -22,13 +22,17 @@ const webpackConfig: Configuration = {
 				exclude: /node_modules/,
 				use: { loader: 'swc-loader' },
 			},
-			{
-				test: /\.node$/,
-				loader: 'node-loader',
-			},
 		],
 	},
-	plugins: [new ZipPlugin({ path: path.resolve(__dirname, 'dist'), filename: 'image-handler.zip' })],
+	externals: {
+		sharp: 'commonjs sharp',
+	},
+	plugins: [
+		new ZipPlugin({
+			path: path.resolve(__dirname, 'dist'),
+			filename: 'image-handler.zip',
+		}),
+	],
 }
 
 export default webpackConfig

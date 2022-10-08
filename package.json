@@ -51,7 +51,6 @@
     "esbuild": "^0.15.7",
     "rollup": "^2.79.0",
     "rollup-plugin-typescript2": "^0.33.0",
-    "sharp": "^0.31.1",
     "swc-loader": "^0.2.3",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
