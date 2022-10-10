@@ -1,11 +1,9 @@
-#!/usr/bin/env node
-import 'source-map-support/register'
-import * as path from 'path'
-import * as packageJson from '../package.json'
+import path from 'path'
+import packageJson from '../package.json'
 
 import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha'
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
-import { App, AssetHashType, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, SymlinkFollowMode } from 'aws-cdk-lib'
+import { App, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, SymlinkFollowMode } from 'aws-cdk-lib'
 import { CloudFrontAllowedMethods, CloudFrontWebDistribution, OriginAccessIdentity } from 'aws-cdk-lib/aws-cloudfront'
 import { Function } from 'aws-cdk-lib/aws-lambda'
 import { Code, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda'

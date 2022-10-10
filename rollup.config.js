@@ -4,6 +4,7 @@ import esbuild from 'esbuild'
 import path from 'path'
 import AdmZip from 'adm-zip'
 import typescript from 'rollup-plugin-typescript2'
+import json from '@rollup/plugin-json'
 
 const standalone = {
 	name: 'standalone',
@@ -64,7 +65,7 @@ export default defineConfig([
 		input: 'lib/cli.ts',
 		plugins: [standalone],
 		output: {
-			format: 'cjs',
+			format: 'commonjs',
 			file: pkg.bin['next-utils'],
 			banner: '#!/usr/bin/env node',
 		},
@@ -80,6 +81,14 @@ export default defineConfig([
 				file: 'dist/server-handler.js',
 			},
 		],
+	},
+	{
+		input: 'lib/cdk-app.ts',
+		plugins: [typescript({ useTsconfigDeclarationDir: true, tsconfig: './tsconfig.json' }), json()],
+		output: {
+			format: 'commonjs',
+			file: 'dist/cdk-app.js',
+		},
 	},
 	// @NOTE: Moved away from Rollup as Webpack is more efficient in bundling internal require.resolve calls.
 	// Resulting in no need for layers and smaller bundle overall.

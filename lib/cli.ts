@@ -77,12 +77,11 @@ program
 	.command('deploy')
 	.description('Deploy Next application via CDK')
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
-	.option('--tsconfigPath <path>', 'Absolute path to config.', path.resolve(__dirname, '../cdk/tsconfig.json'))
-	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../cdk/app.ts'))
+	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk-app.js'))
 	.action(async (options) => {
-		const { stackName, appPath, tsconfigPath } = options
+		const { stackName, appPath } = options
 		console.log('Our config is: ', options)
-		wrapProcess(deployHandler({ stackName, appPath, tsconfigPath }))
+		wrapProcess(deployHandler({ stackName, appPath }))
 	})
 
 program.parse(process.argv)
