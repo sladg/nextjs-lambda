@@ -9,10 +9,8 @@ interface Props {
 const cdkExecutable = require.resolve('aws-cdk/bin/cdk')
 
 export const deployHandler = async ({ stackName, tsconfigPath, appPath }: Props) => {
-	// Not using SWC as it's problematic on NPX (postinstall fails).
-	// NPX so ts-node does not need to be a dependency.
 	// All paths are absolute.
-	const cdkApp = `npx ts-node --project ${tsconfigPath} ${appPath}`
+	const cdkApp = `node -r ts-node/register --project ${tsconfigPath} ${appPath}`
 	const cdkCiFlags = `--require-approval never --ci`
 
 	await executeAsyncCmd({

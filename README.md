@@ -42,6 +42,7 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 - [x] [GetServerSideProps](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props)
 - [x] [GetStaticProps](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
 - [x] NextJS rewrites (next.config.js)
+- [x] Monorepo support
 - [ ] [ISR and fallbacks](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration)
 - [ ] [Streaming](https://nextjs.org/docs/advanced-features/react-18/streaming)
 - [ ] Custom babel configuration
