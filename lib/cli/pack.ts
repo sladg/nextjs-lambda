@@ -2,7 +2,7 @@ import { mkdirSync, rmSync, symlinkSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 import { nextServerConfigRegex } from '../consts'
-import { findInFile, zipFolder, zipMultipleFoldersOrFiles } from '../utils'
+import { findInFile, findPathToNestedFile, validateFolderExists, validatePublicFolderStructure, zipFolder, zipMultipleFoldersOrFiles } from '../utils'
 
 interface Props {
 	standaloneFolder: string
@@ -12,26 +12,37 @@ interface Props {
 	commandCwd: string
 }
 
+const staticNames = {
+	nodeFolder: 'node_modules',
+	nextServer: 'server.js',
+	packageJson: 'package.json',
+	dependenciesZip: 'dependenciesLayer.zip',
+	assetsZip: 'assetsLayer.zip',
+	codeZip: 'code.zip',
+}
+
 export const packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFolder, commandCwd }: Props) => {
-	// @TODO: Validate that output folder exists.
-	// @TODO: Validate server.js exists and we can match data.
-	// @TODO: Validate that public folder is using `assets` subfolder.
+	validatePublicFolderStructure(publicFolder)
+	validateFolderExists(standaloneFolder)
 
 	// Dependencies layer configuration
-	const nodeModulesFolderPath = path.resolve(standaloneFolder, './node_modules')
+	const nodeModulesFolderPath = path.resolve(standaloneFolder, staticNames.nodeFolder)
 	const depsLambdaFolder = 'nodejs/node_modules'
 	const lambdaNodeModulesPath = path.resolve('/opt', depsLambdaFolder)
-	const dependenciesOutputPath = path.resolve(outputFolder, 'dependenciesLayer.zip')
-
-	// Code layer configuration
-	const generatedNextServerPath = path.resolve(standaloneFolder, './server.js')
-	const codeOutputPath = path.resolve(outputFolder, 'code.zip')
+	const dependenciesOutputPath = path.resolve(outputFolder, staticNames.dependenciesZip)
 
 	// Assets bundle configuration
 	const buildIdPath = path.resolve(commandCwd, './.next/BUILD_ID')
 	const generatedStaticContentPath = path.resolve(commandCwd, '.next/static')
 	const generatedStaticRemapping = '_next/static'
-	const assetsOutputPath = path.resolve(outputFolder, 'assetsLayer.zip')
+	const assetsOutputPath = path.resolve(outputFolder, staticNames.assetsZip)
+
+	const pathToNextOutput = findPathToNestedFile(staticNames.nextServer, standaloneFolder)
+
+	// Code layer configuration
+	const generatedNextServerPath = path.resolve(pathToNextOutput, staticNames.nextServer)
+	const packageJsonPath = path.resolve(standaloneFolder, staticNames.packageJson)
+	const codeOutputPath = path.resolve(outputFolder, staticNames.codeZip)
 
 	// Clean output directory before continuing
 	rmSync(outputFolder, { force: true, recursive: true })
@@ -79,17 +90,16 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 		outputName: codeOutputPath,
 		inputDefinition: [
 			{
-				isGlob: true,
-				cwd: standaloneFolder,
-				path: '**/*',
-				ignore: ['**/node_modules/**', '*.zip'],
+				isFile: true,
+				path: packageJsonPath,
+				name: 'package.json',
 			},
 			{
-				// @TODO: use {dot:true} configuration in archiver and remove this.
-				// Ensure hidden files are included.
 				isGlob: true,
-				cwd: standaloneFolder,
-				path: '.*/**/*',
+				dot: true,
+				cwd: pathToNextOutput,
+				path: '**/*',
+				ignore: ['**/node_modules/**', '*.zip', '**/package.json'],
 			},
 			{
 				isFile: true,

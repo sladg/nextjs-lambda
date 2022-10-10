@@ -12,6 +12,7 @@
         "strict": true,
         "moduleResolution": "node",
         "noImplicitAny": true,
+        "sourceMap": true,
         "strictNullChecks": true,
         "noImplicitThis": true,
         "alwaysStrict": true,

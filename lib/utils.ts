@@ -1,13 +1,13 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import archiver from 'archiver'
-import { closeSync, createWriteStream, openSync, readFileSync, readSync, symlinkSync } from 'fs'
-import { IOptions as GlobOptions } from 'glob'
+import { exec } from 'child_process'
+import crypto from 'crypto'
+import { closeSync, createWriteStream, existsSync, openSync, readdirSync, readFileSync, readSync, symlinkSync } from 'fs'
+import glob, { IOptions as GlobOptions } from 'glob'
 import { IncomingMessage, ServerResponse } from 'http'
 import { NextUrlWithParsedQuery } from 'next/dist/server/request-meta'
 import { replaceInFileSync } from 'replace-in-file'
 import { Readable } from 'stream'
-import crypto from 'crypto'
-import { exec } from 'child_process'
 
 // Make header keys lowercase to ensure integrity.
 export const normalizeHeaders = (headers: Record<string, any>) =>
@@ -106,7 +106,7 @@ export const bumpMapping = [
 		bump: BumpType.Patch,
 	},
 	{
-		test: 'BREAKING CHANGE',
+		test: /BREAKING CHANGE/i,
 		bump: BumpType.Major,
 		scanBody: true,
 	},
@@ -281,18 +281,6 @@ export const md5FileSync = (path: string) => {
 	return hash.digest('hex')
 }
 
-const promise = async (cmd: string) => {
-	return new Promise((resolve, reject) => {
-		exec(cmd, (error, stdout, stderr) => {
-			if (error) {
-				console.error(error)
-				reject()
-			}
-			resolve(null)
-		})
-	})
-}
-
 interface CommandProps {
 	cmd: string
 	path?: string
@@ -304,15 +292,19 @@ export const executeAsyncCmd = async ({ cmd, path }: CommandProps) => {
 	}
 
 	return new Promise((resolve, reject) => {
-		exec(cmd, (error, stdout, stderr) => {
+		const sh = exec(cmd, (error, stdout, stderr) => {
 			if (error) {
-				console.error(`exec error: ${error}`)
 				reject(error)
 			} else {
-				console.log(`stdout: ${stdout}`)
-				console.error(`stderr: ${stderr}`)
 				resolve(stdout)
 			}
+		})
+
+		sh.stdout?.on('data', (data) => {
+			console.log(`stdout: ${data}`)
+		})
+		sh.stderr?.on('data', (data) => {
+			console.error(`stderr: ${data}`)
 		})
 	})
 }
@@ -323,5 +315,36 @@ export const wrapProcess = async (fn: Promise<any>) => {
 	} catch (e) {
 		console.error('Process failed with error:', e)
 		process.exit(1)
+	}
+}
+
+export const findPathToNestedFile = (filename: string, inPath: string): string => {
+	const results = glob.sync(`**/${filename}`, { cwd: inPath, ignore: ['**/node_modules/**'], realpath: true })
+
+	if (!results[0]) {
+		throw new Error(`Could not find file: ${filename} in your Next output.`)
+	}
+
+	return results[0].replace(filename, '')
+}
+
+export const validatePublicFolderStructure = (publicFolderPath: string) => {
+	// If public folder does not exist, ignore.
+	if (!existsSync(publicFolderPath)) {
+		return
+	}
+
+	const paths = readdirSync(publicFolderPath)
+	paths.forEach((publicPath) => {
+		if (publicPath !== 'assets') {
+			throw new Error('Public folder assets must be nested in public/assets folder.')
+		}
+	})
+}
+
+export const validateFolderExists = (folderPath: string) => {
+	const exists = existsSync(folderPath)
+	if (!exists) {
+		throw new Error(`Folder: ${folderPath} does not exist!`)
 	}
 }
