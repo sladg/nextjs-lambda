@@ -51,6 +51,10 @@ class NextStandaloneStack extends Stack {
 			memorySize: 512,
 			timeout: Duration.seconds(15),
 			environment: {
+				// Set env vars based on what's available in environment.
+				...Object.entries(process.env)
+					.filter(([key]) => key.startsWith('NEXT_'))
+					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
 				NEXTJS_LAMBDA_BASE_PATH: config.apigwServerPath,
 			},
 		})
@@ -100,10 +104,10 @@ class NextStandaloneStack extends Stack {
 						{
 							allowedMethods: CloudFrontAllowedMethods.ALL,
 							isDefaultBehavior: true,
-							forwardedValues: { queryString: true },
+							forwardedValues: { queryString: true, headers: ['Accept', 'Host', 'User-Agent', 'Authorization'] },
 						},
 						{
-							allowedMethods: CloudFrontAllowedMethods.ALL,
+							allowedMethods: CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
 							pathPattern: '_next/data/*',
 						},
 					],
@@ -117,7 +121,7 @@ class NextStandaloneStack extends Stack {
 					behaviors: [
 						{
 							// Should use caching based on query params.
-							allowedMethods: CloudFrontAllowedMethods.ALL,
+							allowedMethods: CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
 							pathPattern: '_next/image*',
 							forwardedValues: { queryString: true },
 						},

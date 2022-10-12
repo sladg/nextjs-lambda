@@ -14,6 +14,7 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
     - [Monorepos](#monorepos)
     - [Server handler](#server-handler)
     - [Image handler](#image-handler)
+    - [Environment variables](#environment-variables)
     - [Via CDK](#via-cdk)
       - [Benchmark](#benchmark)
   - [Packaging](#packaging)
@@ -61,6 +62,8 @@ Loading of assets and static content is handled via Cloudfront and S3 origin, so
 
 The only requirement is to change your Next12 config to produce standalone output via `output: 'standalone'` and turn off compressions `compress: false`.
 
+In case you want to control caching (for example to not cache API routes), you can use `headers` option in `next.config.js`. Cloudfront will respect those headers and cache accordingly. You can set caching based on methods, paths or headers (useful for setting cache control in case of user logins).
+
 ### Monorepos
 
 In case you are using monorepo, there are few more requirements.
@@ -80,6 +83,20 @@ This is a Lambda entrypoint to handle non-asset requests. We need a way to start
 Lambda consumes ApiGateway requests, so we need to create ApiGw proxy (v2) that will trigger Lambda.
 
 Lambda is designed to serve `_next/image*` route in NextJS stack and replaces the default handler so we can optimize caching and memory limits for page renders and image optimization.
+
+### Environment variables
+If using CDK, you can easily pass environment variables to Lambda. If `.env` file is present during build time, this will get picked up and passed to Lambda as file.
+
+If env variables with prefix `NEXT_` are present during deployment time, those will get picked up and passed as environment variables to Lambda.
+
+The priority for resolving env variables is as follows (stopping when found):
+- `process.env`
+- `.env.$(NODE_ENV).local`
+- `.env.local (Not checked when NODE_ENV is test.)`
+- `.env.$(NODE_ENV)`
+- `.env`
+
+With this, you can pass `.env` files during build time and overwrite / extend the configuration during depoyment time. You can also control what gets passed to frontend part of application by using `NEXT_PUBLIC_` prefix.
 
 ### Via CDK
 
