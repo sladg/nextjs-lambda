@@ -104,7 +104,8 @@ class NextStandaloneStack extends Stack {
 						{
 							allowedMethods: CloudFrontAllowedMethods.ALL,
 							isDefaultBehavior: true,
-							forwardedValues: { queryString: true, headers: ['Accept', 'Host', 'User-Agent', 'Authorization'] },
+							// @NOTE: Host cannot be used as ApiGw expects Cloudfront's host header.
+							forwardedValues: { queryString: true, headers: ['Accept', 'User-Agent', 'Authorization'] },
 						},
 						{
 							allowedMethods: CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
