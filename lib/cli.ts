@@ -40,8 +40,8 @@ program
 		path.resolve(commandCwd, './next.out'),
 	)
 	.action(async (options) => {
-		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = options
 		console.log('Our config is: ', options)
+		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = options
 		wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, publicFolder, standaloneFolder }))
 	})
 
@@ -52,8 +52,8 @@ program
 	.argument('<latestVersion>', 'Your existing app version which should be used for calculation of next version.')
 	.option('-t, --tagPrefix <prefix>', 'Prefix version with string of your choice', 'v')
 	.action(async (commitMessage, latestVersion, options) => {
-		const { tagPrefix } = options
 		console.log('Our config is: ', options)
+		const { tagPrefix } = options
 		wrapProcess(guessHandler({ commitMessage, latestVersion, tagPrefix }))
 	})
 
@@ -68,8 +68,8 @@ program
 	.option('--gitUser <user>', 'User name to be used for commits.', 'Bender')
 	.option('--gitEmail <email>', 'User email to be used for commits.', 'bender@bot.eu')
 	.action(async (options) => {
-		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail } = options
 		console.log('Our config is: ', options)
+		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail } = options
 		wrapProcess(shipitHandler({ tagPrefix, gitEmail, gitUser, failOnMissingCommit, forceBump, releaseBranchPrefix }))
 	})
 
@@ -78,10 +78,11 @@ program
 	.description('Deploy Next application via CDK')
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
 	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk-app.js'))
+	.option('--bootstrap', 'Bootstrap CDK stack.', false)
 	.action(async (options) => {
-		const { stackName, appPath } = options
 		console.log('Our config is: ', options)
-		wrapProcess(deployHandler({ stackName, appPath }))
+		const { stackName, appPath, bootstrap } = options
+		wrapProcess(deployHandler({ stackName, appPath, bootstrap }))
 	})
 
 program.parse(process.argv)
