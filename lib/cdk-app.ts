@@ -3,7 +3,7 @@ import packageJson from '../package.json'
 
 import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha'
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
-import { App, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, SymlinkFollowMode } from 'aws-cdk-lib'
+import { App, CfnOutput, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib'
 import { CloudFrontAllowedMethods, CloudFrontWebDistribution, OriginAccessIdentity } from 'aws-cdk-lib/aws-cloudfront'
 import { Function } from 'aws-cdk-lib/aws-lambda'
 import { Code, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda'
@@ -41,9 +41,7 @@ class NextStandaloneStack extends Stack {
 		})
 
 		const serverLambda = new Function(this, 'DefaultNextJs', {
-			code: Code.fromAsset(config.codeZipPath, {
-				followSymlinks: SymlinkFollowMode.NEVER,
-			}),
+			code: Code.fromAsset(config.codeZipPath),
 			runtime: Runtime.NODEJS_16_X,
 			handler: config.customServerHandler,
 			layers: [depsLayer],
@@ -92,10 +90,10 @@ class NextStandaloneStack extends Stack {
 
 		assetsBucket.grantRead(s3AssetsIdentity)
 
-		const cfnDistro = new CloudFrontWebDistribution(this, 'TestApigwDistro', {
+		const cfnDistro = new CloudFrontWebDistribution(this, 'NextCfnProxy', {
 			// Must be set, because cloufront would use index.html which would not match in NextJS routes.
 			defaultRootObject: '',
-			comment: 'ApiGwLambda Proxy for NextJS',
+			comment: 'Cloudfront for NextJS app',
 			viewerCertificate: config.cfnViewerCertificate,
 			originConfigs: [
 				{

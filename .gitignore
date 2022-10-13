@@ -3,6 +3,7 @@ node_modules/**
 !.env.example
 dist/**
 .webpack
+.vscode
 
 # Temporary build folder.
 nodejs/**
@@ -19,3 +20,5 @@ cdk.json
 .yarn/**
 
 **/cdk.out
+
+examples/*

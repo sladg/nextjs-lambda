@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync, symlinkSync, writeFileSync } from 'fs'
+import { mkdirSync, rmSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 import { nextServerConfigRegex } from '../consts'
@@ -28,7 +28,6 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	// Dependencies layer configuration
 	const nodeModulesFolderPath = path.resolve(standaloneFolder, staticNames.nodeFolder)
 	const depsLambdaFolder = 'nodejs/node_modules'
-	const lambdaNodeModulesPath = path.resolve('/opt', depsLambdaFolder)
 	const dependenciesOutputPath = path.resolve(outputFolder, staticNames.dependenciesZip)
 
 	// Assets bundle configuration
@@ -74,18 +73,13 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 		],
 	})
 
-	// Create a symlink for node_modules so they point to the separately packaged layer.
-	// We need to create symlink because we are not using NodejsFunction in CDK as bundling is custom.
 	const tmpFolder = tmpdir()
-
-	const symlinkPath = path.resolve(tmpFolder, `./node_modules_${Math.random()}`)
-	symlinkSync(lambdaNodeModulesPath, symlinkPath)
 
 	const nextConfig = findInFile(generatedNextServerPath, nextServerConfigRegex)
 	const configPath = path.resolve(tmpFolder, `./config.json_${Math.random()}`)
 	writeFileSync(configPath, nextConfig, 'utf-8')
 
-	// Zip codebase including symlinked node_modules and handler.
+	// Zip codebase including handler.
 	await zipMultipleFoldersOrFiles({
 		outputName: codeOutputPath,
 		inputDefinition: [
@@ -105,12 +99,6 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 				isFile: true,
 				path: handlerPath,
 				name: 'handler.js',
-			},
-			{
-				// @TODO: Verify this as it seems like symlink is not needed when layer is in /opt/nodejs/node_modules
-				isFile: true,
-				path: symlinkPath,
-				name: 'node_modules',
 			},
 			{
 				isFile: true,
