@@ -23,7 +23,8 @@
     "build": "npm run build:main && npm run build:image",
     "build:image": "webpack --mode=production",
     "build:main": "rollup -c",
-    "release": "node ./dist/cli.js shipit --gitUser @sladg --gitEmail jan@ssoukup.com"
+    "release": "node ./dist/cli.js shipit --gitUser @sladg --gitEmail jan@ssoukup.com",
+    "changelog": "node ./dist/cli.js changelog"
   },
   "dependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "^2.41.0-alpha.0",
@@ -31,12 +32,14 @@
     "@types/archiver": "^5.3.1",
     "@types/aws-lambda": "^8.10.103",
     "@types/node": "^18.7.16",
+    "@types/semver-sort": "^0.0.1",
     "archiver": "^5.3.1",
     "aws-cdk": "^2.44.0",
     "aws-cdk-lib": "^2.44.0",
     "commander": "^9.4.0",
     "constructs": "^10",
     "replace-in-file": "^6.3.5",
+    "semver-sort": "^1.0.0",
     "simple-git": "^3.14.1"
   },
   "devDependencies": {

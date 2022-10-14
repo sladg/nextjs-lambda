@@ -1,6 +1,7 @@
 import { Command } from 'commander'
 import path from 'path'
 import packageJson from '../package.json'
+import { changelogHandler } from './cli/changelog'
 import { deployHandler } from './cli/deploy'
 import { guessHandler } from './cli/guess'
 import { packHandler } from './cli/pack'
@@ -83,6 +84,16 @@ program
 		console.log('Our config is: ', options)
 		const { stackName, appPath, bootstrap } = options
 		wrapProcess(deployHandler({ stackName, appPath, bootstrap }))
+	})
+
+program
+	.command('changelog')
+	.description('Generate changelog from Git, assuming tag being a release. INTERNAL USE ONLY for now.')
+	.option('--outputFile <path>', 'Path to file where changelog should be written.', path.resolve(commandCwd, './CHANGELOG.md'))
+	.action(async (options) => {
+		console.log('Our config is: ', options)
+		const { outputFile } = options
+		wrapProcess(changelogHandler({ outputFile }))
 	})
 
 program.parse(process.argv)
