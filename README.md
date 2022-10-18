@@ -64,6 +64,15 @@ The only requirement is to change your Next12 config to produce standalone outpu
 
 In case you want to control caching (for example to not cache API routes), you can use `headers` option in `next.config.js`. Cloudfront will respect those headers and cache accordingly. You can set caching based on methods, paths or headers (useful for setting cache control in case of user logins).
 
+Sometimes, Next will transpile some modules as ESM and some modules as CJS. This is not supported by Lambda, so we need to transpile all modules to CJS. This can be done by adding `experimental.esmExternals: false` to `next.config.js`. You will need this when Lambda is giving you Internal Error and Cloudwatch logs tell you that `import('XYZ')` cannot be resolved.
+
+It is also possible to use `"type": "module"` in `package.json` with combination of naming your next config `next.config.mjs`, however this feature is currently not  tested.
+
+See:
+- https://github.com/vercel/next.js/pull/33637
+- https://github.com/vercel/next.js/issues/24334
+- https://github.com/vercel/next.js/issues/34412
+
 ### Monorepos
 
 In case you are using monorepo, there are few more requirements.
