@@ -1,5 +1,10 @@
 # Changelog
-Current version: 3.16.0
+Current version: 3.16.1
+
+
+## [v3.16.1](https://github.com/sladg/nextjs-lambda/releases/tag/v3.16.0...v3.16.1)
+
+* doc(esm): improved documentation on esm module usage [[735d18d6ebc979c4ce06777502171e1922b1018f](https://github.com/sladg/nextjs-lambda/commit/735d18d6ebc979c4ce06777502171e1922b1018f)]
 
 
 ## [v3.16.0](https://github.com/sladg/nextjs-lambda/releases/tag/v3.15.0...v3.16.0)
@@ -301,6 +306,7 @@ Current version: 3.16.0
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/releases/tag/v0.1.0)
 
+* feat(lambda-config): CLI configuration for memory and timeout [[b176d0a0a618092ac7f6a7931c2c7fd58d57d087](https://github.com/sladg/nextjs-lambda/commit/b176d0a0a618092ac7f6a7931c2c7fd58d57d087)]
 * doc(esm): improved documentation on esm module usage [[735d18d6ebc979c4ce06777502171e1922b1018f](https://github.com/sladg/nextjs-lambda/commit/735d18d6ebc979c4ce06777502171e1922b1018f)]
 * feat(changelog): new cli option introduced, changelog generation implemented into pipeline #32 [[7423f62a908d2c27fdba40ec5a709cfbacada89b](https://github.com/sladg/nextjs-lambda/commit/7423f62a908d2c27fdba40ec5a709cfbacada89b)]
 * feat(cdk): bootstrap option added for deployments [[4fe52f49df466f52c92aa5a90b5c96bdbe0d3523](https://github.com/sladg/nextjs-lambda/commit/4fe52f49df466f52c92aa5a90b5c96bdbe0d3523)]
