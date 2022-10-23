@@ -80,10 +80,12 @@ program
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
 	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk-app.js'))
 	.option('--bootstrap', 'Bootstrap CDK stack.', false)
+	.option('--lambdaTimeout <sec>', 'Set timeout for lambda function handling server requirests', Number, 15)
+	.option('--lambdaMemory <mb>', 'Set memory for lambda function handling server requirests', Number, 512)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
-		const { stackName, appPath, bootstrap } = options
-		wrapProcess(deployHandler({ stackName, appPath, bootstrap }))
+		const { stackName, appPath, bootstrap, lambdaTimeout, lambdaMemory } = options
+		wrapProcess(deployHandler({ stackName, appPath, bootstrap, lambdaTimeout, lambdaMemory }))
 	})
 
 program

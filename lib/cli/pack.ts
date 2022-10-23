@@ -47,6 +47,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	rmSync(outputFolder, { force: true, recursive: true })
 	mkdirSync(outputFolder)
 
+	// @TODO: We need to include nested node_modules in case of mono-repos.
 	// Zip dependencies from standalone output in a layer-compatible format.
 	await zipFolder({
 		outputName: dependenciesOutputPath,
