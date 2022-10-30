@@ -83,7 +83,7 @@ export default defineConfig([
 		],
 	},
 	{
-		input: 'lib/cdk-app.ts',
+		input: 'lib/cdk/app.ts',
 		plugins: [typescript({ useTsconfigDeclarationDir: true, tsconfig: './tsconfig.json' }), json()],
 		output: {
 			format: 'commonjs',
