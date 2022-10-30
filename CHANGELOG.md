@@ -1,5 +1,10 @@
 # Changelog
-Current version: 3.16.1
+Current version: 3.17.0
+
+
+## [v3.17.0](https://github.com/sladg/nextjs-lambda/releases/tag/v3.16.1...v3.17.0)
+
+* feat(lambda-config): CLI configuration for memory and timeout [[b176d0a0a618092ac7f6a7931c2c7fd58d57d087](https://github.com/sladg/nextjs-lambda/commit/b176d0a0a618092ac7f6a7931c2c7fd58d57d087)]
 
 
 ## [v3.16.1](https://github.com/sladg/nextjs-lambda/releases/tag/v3.16.0...v3.16.1)
@@ -306,6 +311,7 @@ Current version: 3.16.1
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/releases/tag/v0.1.0)
 
+* ref(cdk): allowed for domain names, rewriten and upgraded, more modular and importable [[4b12360bbc1ff7d6a1cb9b65c31f6ab4446a9ef2](https://github.com/sladg/nextjs-lambda/commit/4b12360bbc1ff7d6a1cb9b65c31f6ab4446a9ef2)]
 * feat(lambda-config): CLI configuration for memory and timeout [[b176d0a0a618092ac7f6a7931c2c7fd58d57d087](https://github.com/sladg/nextjs-lambda/commit/b176d0a0a618092ac7f6a7931c2c7fd58d57d087)]
 * doc(esm): improved documentation on esm module usage [[735d18d6ebc979c4ce06777502171e1922b1018f](https://github.com/sladg/nextjs-lambda/commit/735d18d6ebc979c4ce06777502171e1922b1018f)]
 * feat(changelog): new cli option introduced, changelog generation implemented into pipeline #32 [[7423f62a908d2c27fdba40ec5a709cfbacada89b](https://github.com/sladg/nextjs-lambda/commit/7423f62a908d2c27fdba40ec5a709cfbacada89b)]
