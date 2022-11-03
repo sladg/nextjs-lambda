@@ -72,7 +72,18 @@ program
 	.action(async (options) => {
 		console.log('Our config is: ', options)
 		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail, changelog } = options
-		wrapProcess(shipitHandler({ tagPrefix, gitEmail, gitUser, failOnMissingCommit, forceBump, releaseBranchPrefix, generateChangelog: changelog }))
+		wrapProcess(
+			shipitHandler({
+				tagPrefix,
+				gitEmail,
+				gitUser,
+				failOnMissingCommit,
+				forceBump,
+				releaseBranchPrefix,
+				generateChangelog: changelog,
+				changelogPath: path.resolve(commandCwd, './CHANGELOG.md'),
+			}),
+		)
 	})
 
 program
@@ -95,7 +106,7 @@ program
 	.command('changelog')
 	.description('Generate changelog from Git, assuming tag being a release.')
 	.option('--outputFile <path>', 'Path to file where changelog should be written.', path.resolve(commandCwd, './CHANGELOG.md'))
-	.option('--gitBaseUrl <url>', 'Absolute URL to ', undefined)
+	.option('--gitBaseUrl <url>', 'Absolute URL to your git project', undefined)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
 		const { outputFile, gitBaseUrl } = options

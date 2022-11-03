@@ -11,9 +11,19 @@ interface Props {
 	releaseBranchPrefix: string
 	forceBump: boolean
 	generateChangelog: boolean
+	changelogPath: string
 }
 
-export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissingCommit, forceBump, releaseBranchPrefix, generateChangelog }: Props) => {
+export const shipitHandler = async ({
+	gitEmail,
+	gitUser,
+	tagPrefix,
+	failOnMissingCommit,
+	forceBump,
+	releaseBranchPrefix,
+	generateChangelog,
+	changelogPath,
+}: Props) => {
 	const git = simpleGit()
 
 	// Fetch tags to ensure we have the latest ones.
@@ -94,7 +104,7 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 	if (generateChangelog) {
 		console.log('Generating changelog...')
 
-		await changelogHandler({ outputFile: './CHANGELOG.md' })
+		await changelogHandler({ outputFile: changelogPath })
 		await git.add('./*').raw('commit', '--amend', '--no-edit')
 	}
 

@@ -28,14 +28,9 @@ export const changelogHandler = async ({ outputFile, gitBaseUrl }: Props) => {
 		throw new Error('Could not determine git base URL!')
 	}
 
-	const log = await git.log({ '--max-count': 20 })
 	await git.fetch(['--tags'])
 
 	const tags = await git.tags()
-
-	console.log('Last commits: ', log)
-	console.log('Last tags: ', tags)
-
 	const sortedTags = sortTagsDescending(tags.all)
 
 	// Sorted from newest to oldest (highest version to lowest).
@@ -66,7 +61,6 @@ export const changelogHandler = async ({ outputFile, gitBaseUrl }: Props) => {
 	const changelog: string[] = []
 
 	changelog.push('# Changelog')
-	changelog.push(`Current version: ${packageJson.version}`)
 
 	result.forEach((a) => {
 		changelog.push('\n')
@@ -75,7 +69,6 @@ export const changelogHandler = async ({ outputFile, gitBaseUrl }: Props) => {
 		const logs = a.log as DefaultLogFields[]
 
 		logs.forEach((b) => {
-			console.log(b.refs)
 			changelog.push(`* ${b.message} \[[${b.hash}](${getCommitLink(gitUrl, b.hash)})\]`)
 		})
 	})
