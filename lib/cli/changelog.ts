@@ -1,7 +1,7 @@
 import { DefaultLogFields, simpleGit } from 'simple-git'
-import semverSort from 'semver-sort'
 import { writeFileSync } from 'fs'
 import packageJson from '../../package.json'
+import { sortTagsDescending } from '../utils'
 
 interface Props {
 	outputFile: string
@@ -18,7 +18,7 @@ export const changelogHandler = async ({ outputFile }: Props) => {
 	console.log(log)
 	console.log(tags)
 
-	const sortedTags = semverSort.desc(tags.all)
+	const sortedTags = sortTagsDescending(tags.all)
 
 	// Sorted from newest to oldest (highest version to lowest).
 	const tagsWithLog = sortedTags.map(async (tag, index, arr) => {

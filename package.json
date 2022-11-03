@@ -32,14 +32,14 @@
     "@types/archiver": "^5.3.1",
     "@types/aws-lambda": "^8.10.103",
     "@types/node": "^18.7.16",
-    "@types/semver-sort": "^0.0.1",
+    "@types/semver": "^7.3.13",
     "archiver": "^5.3.1",
     "aws-cdk": "^2.44.0",
     "aws-cdk-lib": "^2.44.0",
     "commander": "^9.4.0",
     "constructs": "^10",
     "replace-in-file": "^6.3.5",
-    "semver-sort": "^1.0.0",
+    "semver": "^7.3.8",
     "simple-git": "^3.14.1"
   },
   "devDependencies": {

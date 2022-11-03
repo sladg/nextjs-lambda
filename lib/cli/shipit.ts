@@ -1,6 +1,6 @@
 import { simpleGit } from 'simple-git'
 import { skipCiFlag } from '../consts'
-import { bumpCalculator, bumpMapping, BumpType, isValidTag, replaceVersionInCommonFiles } from '../utils'
+import { bumpCalculator, bumpMapping, BumpType, findHighestTag, isValidTag, replaceVersionInCommonFiles } from '../utils'
 
 interface Props {
 	gitUser: string
@@ -21,7 +21,8 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 	const [remote] = await git.getRemotes()
 
 	const latestCommit = log.latest?.hash
-	const latestTag = tags.latest ?? '0.0.0'
+
+	const latestTag = findHighestTag(tags.all)
 	const currentTag = latestTag.replace(tagPrefix, '')
 
 	console.log('Latest commit: ', latestCommit)
