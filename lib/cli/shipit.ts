@@ -82,11 +82,6 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 	const replacementResults = replaceVersionInCommonFiles(currentTag, nextTag)
 	console.log(`Replaced version in files.`, replacementResults)
 
-	if (generateChangelog) {
-		console.log('Generating changelog...')
-		await changelogHandler({ outputFile: './CHANGELOG.md' })
-	}
-
 	// Commit changed files (versions) and create a release commit with skip ci flag.
 	await git
 		//
@@ -94,6 +89,14 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 		.raw('commit', '--message', `Release: ${nextTagWithPrefix} ${skipCiFlag}`)
 		// Create tag and push it to master.
 		.addTag(nextTagWithPrefix)
+
+	// If flag is passed, changelog is genrated and added after new tag is created.
+	if (generateChangelog) {
+		console.log('Generating changelog...')
+
+		await changelogHandler({ outputFile: './CHANGELOG.md' })
+		await git.add('./*').raw('commit', '--amend', '--no-edit')
+	}
 
 	git.push(remote.name, branch.current)
 	git.pushTags()

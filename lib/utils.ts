@@ -291,3 +291,29 @@ export const sortTagsDescending = (tags: string[]) =>
 	})
 
 export const findHighestTag = (tags: string[]) => sortTagsDescending(tags)[0]
+
+export const getCommitLink = (remoteUrl: string, commit: string) => {
+	if (remoteUrl.includes('bitbucket.org')) {
+		return `${remoteUrl}/commits/${commit}`
+	}
+
+	if (remoteUrl.includes('github.com')) {
+		return `${remoteUrl}/commit/${commit})`
+	}
+
+	return null
+}
+
+export const getCompareLink = (remoteUrl: string, previous: string, next: string) => {
+	if (remoteUrl.includes('bitbucket.org')) {
+		const formattedPrevious = previous ? `${previous}%0D${next}` : next
+		return `${remoteUrl}/branches/compare/${formattedPrevious}`
+	}
+
+	if (remoteUrl.includes('github.com')) {
+		const formattedPath = previous ? `${previous}...${next}` : next
+		return `${remoteUrl}/releases/tag/${formattedPath}`
+	}
+
+	return null
+}

@@ -93,12 +93,13 @@ program
 
 program
 	.command('changelog')
-	.description('Generate changelog from Git, assuming tag being a release. INTERNAL USE ONLY for now.')
+	.description('Generate changelog from Git, assuming tag being a release.')
 	.option('--outputFile <path>', 'Path to file where changelog should be written.', path.resolve(commandCwd, './CHANGELOG.md'))
+	.option('--gitBaseUrl <url>', 'Absolute URL to ', undefined)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
-		const { outputFile } = options
-		wrapProcess(changelogHandler({ outputFile }))
+		const { outputFile, gitBaseUrl } = options
+		wrapProcess(changelogHandler({ outputFile, gitBaseUrl }))
 	})
 
 program.parse(process.argv)

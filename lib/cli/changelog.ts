@@ -1,14 +1,32 @@
 import { DefaultLogFields, simpleGit } from 'simple-git'
 import { writeFileSync } from 'fs'
 import packageJson from '../../package.json'
-import { sortTagsDescending } from '../utils'
+import { getCommitLink, getCompareLink, sortTagsDescending } from '../utils'
 
 interface Props {
 	outputFile: string
+	gitBaseUrl?: string
 }
 
-export const changelogHandler = async ({ outputFile }: Props) => {
+const isGithub = !!process.env.GITHUB_REPOSITORY && !!process.env.GITHUB_SERVER_URL
+const isBitbucket = !!process.env.BITBUCKET_GIT_HTTP_ORIGIN
+const isGitlab = !!process.env.CI_PROJECT_URL
+
+const httpGitUrl = isGithub
+	? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`
+	: isBitbucket
+	? process.env.BITBUCKET_GIT_HTTP_ORIGIN
+	: isGitlab
+	? process.env.CI_PROJECT_URL
+	: null
+
+export const changelogHandler = async ({ outputFile, gitBaseUrl }: Props) => {
 	const git = simpleGit()
+
+	const gitUrl = gitBaseUrl ?? httpGitUrl
+	if (!gitUrl) {
+		throw new Error('Could not determine git base URL!')
+	}
 
 	const log = await git.log({ '--max-count': 20 })
 	await git.fetch(['--tags'])
@@ -16,7 +34,7 @@ export const changelogHandler = async ({ outputFile }: Props) => {
 	const tags = await git.tags()
 
 	console.log('Last commits: ', log)
-	console.log('Last tags: ',tags)
+	console.log('Last tags: ', tags)
 
 	const sortedTags = sortTagsDescending(tags.all)
 
@@ -35,14 +53,11 @@ export const changelogHandler = async ({ outputFile }: Props) => {
 		// Make them unique.
 		const authors = filteredLog.reduce((acc, curr) => ({ ...acc, [curr.author_email]: `[${curr.author_name}](mailto:${curr.author_email})` }), {})
 
-		// Ensure that first commit have correct URL as there is no comparison.
-		const formattedPath = lowerTag ? `${lowerTag}...${tag}` : tag
-
 		return {
 			tag,
 			log: filteredLog,
 			authors: Object.values(authors),
-			urlToGitDiff: `https://github.com/sladg/nextjs-lambda/releases/tag/${formattedPath}`,
+			urlToGitDiff: getCompareLink(gitUrl, lowerTag, tag),
 		}
 	})
 
@@ -61,7 +76,7 @@ export const changelogHandler = async ({ outputFile }: Props) => {
 
 		logs.forEach((b) => {
 			console.log(b.refs)
-			changelog.push(`* ${b.message} \[[${b.hash}](https://github.com/sladg/nextjs-lambda/commit/${b.hash})\]`)
+			changelog.push(`* ${b.message} \[[${b.hash}](${getCommitLink(gitUrl, b.hash)})\]`)
 		})
 	})
 
