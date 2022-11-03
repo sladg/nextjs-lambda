@@ -1,5 +1,11 @@
 # Changelog
-Current version: 3.18.0
+Current version: 3.18.2
+
+
+## [v3.18.2](https://github.com/sladg/nextjs-lambda/releases/tag/v3.18.0...v3.18.2)
+
+* fix(shipit): better validation of semver tags [[4f1d7c50df1d96567d3985e475cf596456c9b54a](https://github.com/sladg/nextjs-lambda/commit/4f1d7c50df1d96567d3985e475cf596456c9b54a)]
+* fix(shipit): better validation of semver tags [[965e7767afe1321c68ebb0f4c85b67c4e08bb5fa](https://github.com/sladg/nextjs-lambda/commit/965e7767afe1321c68ebb0f4c85b67c4e08bb5fa)]
 
 
 ## [v3.18.0](https://github.com/sladg/nextjs-lambda/releases/tag/v3.17.0...v3.18.0)
@@ -316,6 +322,7 @@ Current version: 3.18.0
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/releases/tag/v0.1.0)
 
+* feat(changelog): updated changelog command and added call to shipit [[301c7c398f65a3ceca6e336492a2e385a3374156](https://github.com/sladg/nextjs-lambda/commit/301c7c398f65a3ceca6e336492a2e385a3374156)]
 * fix(shipit): better validation of semver tags [[4f1d7c50df1d96567d3985e475cf596456c9b54a](https://github.com/sladg/nextjs-lambda/commit/4f1d7c50df1d96567d3985e475cf596456c9b54a)]
 * fix(shipit): better validation of semver tags [[965e7767afe1321c68ebb0f4c85b67c4e08bb5fa](https://github.com/sladg/nextjs-lambda/commit/965e7767afe1321c68ebb0f4c85b67c4e08bb5fa)]
 * ref(cdk): allowed for domain names, rewriten and upgraded, more modular and importable [[4b12360bbc1ff7d6a1cb9b65c31f6ab4446a9ef2](https://github.com/sladg/nextjs-lambda/commit/4b12360bbc1ff7d6a1cb9b65c31f6ab4446a9ef2)]
