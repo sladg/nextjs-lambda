@@ -1,5 +1,9 @@
 # Changelog
-Current version: 3.19.0
+
+
+## [v3.20.1](https://github.com/sladg/nextjs-lambda/releases/tag/v3.20.0...v3.20.1)
+
+* fix(changelog): improvements to generation [[40862e505436fd4b58cf0ac8a2640845caefddf5](https://github.com/sladg/nextjs-lambda/commit/40862e505436fd4b58cf0ac8a2640845caefddf5))]
 
 
 ## [v3.20.0](https://github.com/sladg/nextjs-lambda/releases/tag/v3.19.0...v3.20.0)
@@ -332,6 +336,7 @@ Current version: 3.19.0
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/releases/tag/v0.1.0)
 
+* fix(changelog): improvements to generation [[40862e505436fd4b58cf0ac8a2640845caefddf5](https://github.com/sladg/nextjs-lambda/commit/40862e505436fd4b58cf0ac8a2640845caefddf5))]
 * ref(changelog): allow for dynamic URLs and bitbuckets [[906d830c8bc98b00a7e28e90e3387b5e119ec512](https://github.com/sladg/nextjs-lambda/commit/906d830c8bc98b00a7e28e90e3387b5e119ec512))]
 * feat(changelog): updated changelog command and added call to shipit [[301c7c398f65a3ceca6e336492a2e385a3374156](https://github.com/sladg/nextjs-lambda/commit/301c7c398f65a3ceca6e336492a2e385a3374156))]
 * fix(shipit): better validation of semver tags [[4f1d7c50df1d96567d3985e475cf596456c9b54a](https://github.com/sladg/nextjs-lambda/commit/4f1d7c50df1d96567d3985e475cf596456c9b54a))]
