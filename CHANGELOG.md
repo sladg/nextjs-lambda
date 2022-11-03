@@ -1,5 +1,10 @@
 # Changelog
-Current version: 3.17.0
+Current version: 3.18.0
+
+
+## [v3.18.0](https://github.com/sladg/nextjs-lambda/releases/tag/v3.17.0...v3.18.0)
+
+* ref(cdk): allowed for domain names, rewriten and upgraded, more modular and importable [[4b12360bbc1ff7d6a1cb9b65c31f6ab4446a9ef2](https://github.com/sladg/nextjs-lambda/commit/4b12360bbc1ff7d6a1cb9b65c31f6ab4446a9ef2)]
 
 
 ## [v3.17.0](https://github.com/sladg/nextjs-lambda/releases/tag/v3.16.1...v3.17.0)
@@ -311,6 +316,8 @@ Current version: 3.17.0
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/releases/tag/v0.1.0)
 
+* fix(shipit): better validation of semver tags [[4f1d7c50df1d96567d3985e475cf596456c9b54a](https://github.com/sladg/nextjs-lambda/commit/4f1d7c50df1d96567d3985e475cf596456c9b54a)]
+* fix(shipit): better validation of semver tags [[965e7767afe1321c68ebb0f4c85b67c4e08bb5fa](https://github.com/sladg/nextjs-lambda/commit/965e7767afe1321c68ebb0f4c85b67c4e08bb5fa)]
 * ref(cdk): allowed for domain names, rewriten and upgraded, more modular and importable [[4b12360bbc1ff7d6a1cb9b65c31f6ab4446a9ef2](https://github.com/sladg/nextjs-lambda/commit/4b12360bbc1ff7d6a1cb9b65c31f6ab4446a9ef2)]
 * feat(lambda-config): CLI configuration for memory and timeout [[b176d0a0a618092ac7f6a7931c2c7fd58d57d087](https://github.com/sladg/nextjs-lambda/commit/b176d0a0a618092ac7f6a7931c2c7fd58d57d087)]
 * doc(esm): improved documentation on esm module usage [[735d18d6ebc979c4ce06777502171e1922b1018f](https://github.com/sladg/nextjs-lambda/commit/735d18d6ebc979c4ce06777502171e1922b1018f)]
