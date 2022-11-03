@@ -23,6 +23,7 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 - [Versioning](#versioning)
   - [Guess](#guess)
   - [Shipit](#shipit)
+  - [Changelog](#changelog)
 
 ## TL;DR
 - In your NextJS project, set output to standalone.
@@ -186,3 +187,7 @@ Simple CLI command that takes commit message and current version and outputs (st
 Similar to guess command, however, it automatically tags a commit on current branch and creates release branch for you so hooking up pipelines is as simple as it can be. Version is automatically bumped in common NPM and PHP files (package.json, package-lock.json and composer.json).
 
 Simply call `@sladg/next-lambda shipit` on any branch and be done.
+
+## Changelog
+
+Simple utility that compares two tags and outputs commits between those two tags. It's intended to be used in CI/CD pipelines to generate changelog for release notes. If you are using using `shipit` command, use `--changelog` flag instead.

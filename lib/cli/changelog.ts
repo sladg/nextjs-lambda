@@ -15,8 +15,8 @@ export const changelogHandler = async ({ outputFile }: Props) => {
 
 	const tags = await git.tags()
 
-	console.log(log)
-	console.log(tags)
+	console.log('Last commits: ', log)
+	console.log('Last tags: ',tags)
 
 	const sortedTags = sortTagsDescending(tags.all)
 

@@ -23,8 +23,7 @@
     "build": "npm run build:main && npm run build:image",
     "build:image": "webpack --mode=production",
     "build:main": "rollup -c",
-    "release": "node ./dist/cli.js shipit --gitUser @sladg --gitEmail jan@ssoukup.com",
-    "changelog": "node ./dist/cli.js changelog"
+    "release": "node ./dist/cli.js shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
   },
   "dependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "^2.41.0-alpha.0",

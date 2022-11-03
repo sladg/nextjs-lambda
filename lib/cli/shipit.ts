@@ -1,6 +1,7 @@
 import { simpleGit } from 'simple-git'
 import { skipCiFlag } from '../consts'
 import { bumpCalculator, bumpMapping, BumpType, findHighestTag, isValidTag, replaceVersionInCommonFiles } from '../utils'
+import { changelogHandler } from './changelog'
 
 interface Props {
 	gitUser: string
@@ -9,9 +10,10 @@ interface Props {
 	failOnMissingCommit: boolean
 	releaseBranchPrefix: string
 	forceBump: boolean
+	generateChangelog: boolean
 }
 
-export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissingCommit, forceBump, releaseBranchPrefix }: Props) => {
+export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissingCommit, forceBump, releaseBranchPrefix, generateChangelog }: Props) => {
 	const git = simpleGit()
 
 	// Fetch tags to ensure we have the latest ones.
@@ -79,6 +81,11 @@ export const shipitHandler = async ({ gitEmail, gitUser, tagPrefix, failOnMissin
 
 	const replacementResults = replaceVersionInCommonFiles(currentTag, nextTag)
 	console.log(`Replaced version in files.`, replacementResults)
+
+	if (generateChangelog) {
+		console.log('Generating changelog...')
+		await changelogHandler({ outputFile: './CHANGELOG.md' })
+	}
 
 	// Commit changed files (versions) and create a release commit with skip ci flag.
 	await git

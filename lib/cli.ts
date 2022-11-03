@@ -68,10 +68,11 @@ program
 	.option('-r, --releaseBranchPrefix <prefix>', 'Prefix for release branch fork.', 'release/')
 	.option('--gitUser <user>', 'User name to be used for commits.', 'Bender')
 	.option('--gitEmail <email>', 'User email to be used for commits.', 'bender@bot.eu')
+	.option('--changelog', 'Generate changelog.', false)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
-		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail } = options
-		wrapProcess(shipitHandler({ tagPrefix, gitEmail, gitUser, failOnMissingCommit, forceBump, releaseBranchPrefix }))
+		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail, changelog } = options
+		wrapProcess(shipitHandler({ tagPrefix, gitEmail, gitUser, failOnMissingCommit, forceBump, releaseBranchPrefix, generateChangelog: changelog }))
 	})
 
 program
