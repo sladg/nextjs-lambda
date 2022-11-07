@@ -312,7 +312,7 @@ export const getCompareLink = (remoteUrl: string, previous: string, next: string
 
 	if (remoteUrl.includes('github.com')) {
 		const formattedPath = previous ? `${previous}...${next}` : next
-		return `${remoteUrl}/releases/tag/${formattedPath}`
+		return `${remoteUrl}/compare/${formattedPath}`
 	}
 
 	return null

@@ -77,9 +77,6 @@ export const shipitHandler = async ({
 		bumps.push(BumpType.Patch)
 	}
 
-	git.addConfig('user.name', gitUser)
-	git.addConfig('user.email', gitEmail)
-
 	const nextTag = bumps.reduce((acc, curr) => bumpCalculator(acc, curr), currentTag)
 	const nextTagWithPrefix = tagPrefix + nextTag
 	const releaseBranch = `${releaseBranchPrefix}${nextTagWithPrefix}`
@@ -96,6 +93,8 @@ export const shipitHandler = async ({
 	await git
 		//
 		.add('./*')
+		.addConfig('user.name', gitUser)
+		.addConfig('user.email', gitEmail)
 		.raw('commit', '--message', `Release: ${nextTagWithPrefix} ${skipCiFlag}`)
 		// Create tag and push it to master.
 		.addTag(nextTagWithPrefix)
@@ -105,7 +104,12 @@ export const shipitHandler = async ({
 		console.log('Generating changelog...')
 
 		await changelogHandler({ outputFile: changelogPath })
-		await git.add('./*').raw('commit', '--amend', '--no-edit')
+		await git
+			//
+			.add(changelogPath)
+			.addConfig('user.name', gitUser)
+			.addConfig('user.email', gitEmail)
+			.raw('commit', '--amend', '--no-edit')
 	}
 
 	git.push(remote.name, branch.current)
@@ -115,6 +119,8 @@ export const shipitHandler = async ({
 	// So we are overwriting last commit message and pushing to release branch.
 	await git
 		//
+		.addConfig('user.name', gitUser)
+		.addConfig('user.email', gitEmail)
 		.raw('commit', '--message', `Release: ${nextTagWithPrefix}`, '--amend')
 		.push(remote.name, `${branch.current}:${releaseBranch}`)
 
