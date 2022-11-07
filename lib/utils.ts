@@ -306,7 +306,7 @@ export const getCommitLink = (remoteUrl: string, commit: string) => {
 
 export const getCompareLink = (remoteUrl: string, previous: string, next: string) => {
 	if (remoteUrl.includes('bitbucket.org')) {
-		const formattedPrevious = previous ? `${previous}%0D${next}` : next
+		const formattedPrevious = previous ? `${next}%0D${previous}` : next
 		return `${remoteUrl}/branches/compare/${formattedPrevious}`
 	}
 
