@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v3.20.3](https://github.com/sladg/nextjs-lambda/compare/v3.20.2...v3.20.3)
+
+* fix(changelog): correctly generate comparison URL for bitbucket [[c03707e01710b540ffd20ac5a4e27cc0b8e42627](https://github.com/sladg/nextjs-lambda/commit/c03707e01710b540ffd20ac5a4e27cc0b8e42627))]
+
+
 ## [v3.20.2](https://github.com/sladg/nextjs-lambda/compare/v3.20.1...v3.20.2)
 
 * fix(changelog): fixed URL for comparison, improved commit author syntax [[78eef8991854dfc6769b407497976fb07b566617](https://github.com/sladg/nextjs-lambda/commit/78eef8991854dfc6769b407497976fb07b566617))]
@@ -341,6 +346,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* fix(changelog): correctly generate comparison URL for bitbucket [[c03707e01710b540ffd20ac5a4e27cc0b8e42627](https://github.com/sladg/nextjs-lambda/commit/c03707e01710b540ffd20ac5a4e27cc0b8e42627))]
 * fix(changelog): fixed URL for comparison, improved commit author syntax [[78eef8991854dfc6769b407497976fb07b566617](https://github.com/sladg/nextjs-lambda/commit/78eef8991854dfc6769b407497976fb07b566617))]
 * fix(changelog): improvements to generation [[40862e505436fd4b58cf0ac8a2640845caefddf5](https://github.com/sladg/nextjs-lambda/commit/40862e505436fd4b58cf0ac8a2640845caefddf5))]
 * ref(changelog): allow for dynamic URLs and bitbuckets [[906d830c8bc98b00a7e28e90e3387b5e119ec512](https://github.com/sladg/nextjs-lambda/commit/906d830c8bc98b00a7e28e90e3387b5e119ec512))]
