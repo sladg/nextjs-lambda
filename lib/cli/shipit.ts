@@ -96,7 +96,6 @@ export const shipitHandler = async ({
 		.addConfig('user.name', gitUser)
 		.addConfig('user.email', gitEmail)
 		.raw('commit', '--message', `Release: ${nextTagWithPrefix} ${skipCiFlag}`)
-		// Create tag and push it to master.
 		.addTag(nextTagWithPrefix)
 
 	// If flag is passed, changelog is genrated and added after new tag is created.
@@ -112,8 +111,12 @@ export const shipitHandler = async ({
 			.raw('commit', '--amend', '--no-edit')
 	}
 
-	git.push(remote.name, branch.current)
-	git.pushTags()
+	await git
+		//
+		.addConfig('user.name', gitUser)
+		.addConfig('user.email', gitEmail)
+		.push(remote.name, branch.current)
+		.pushTags()
 
 	// As current branch commit includes skip ci flag, we want to ommit this flag for release branch so pipeline can run (omitting infinite loop).
 	// So we are overwriting last commit message and pushing to release branch.

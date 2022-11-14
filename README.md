@@ -137,10 +137,10 @@ We are looking at 6-8min for creation and 1-3min for update. This is a huge impr
 
 ## Packaging
 
-In order to succefully deploy, you firstly need to include `target: 'standalone'` in your `next.config.js` setup. Secondly, any compression should be turned off as AWS is taking care of that. See `compress: false` in your config.
+In order to succefully deploy, you firstly need to include `output: 'standalone'` in your `next.config.js` setup. Secondly, any compression should be turned off as AWS is taking care of that. See `compress: false` in your config.
 Make sure to use NextJS in version 12 or above so this is properly supported.
 
-Once target is set, you can go on and use your `next build` command as you normally would.
+Once output is set, you can go on and use your `next build` command as you normally would.
 To package everything, make sure to be in your project root folder and next folder `.next` and `public` exist. Packaging is done via NPM CLI command of `@slack/nextjs-lambda pack`.
 
 It will create `next.out/` folder with 3 zip packages. One zip Lambda's code, one is dependencies layer and one is assets layer.
