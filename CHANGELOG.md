@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v3.20.4](https://github.com/sladg/nextjs-lambda/compare/v3.20.3...v3.20.4)
+
+* doc(readme): fixed documentation for next.config.js and improved syntax for pushes to git [[bce1981c605d4db06ff15ebb39f5e7750460d823](https://github.com/sladg/nextjs-lambda/commit/bce1981c605d4db06ff15ebb39f5e7750460d823))]
+
+
 ## [v3.20.3](https://github.com/sladg/nextjs-lambda/compare/v3.20.2...v3.20.3)
 
 * fix(changelog): correctly generate comparison URL for bitbucket [[c03707e01710b540ffd20ac5a4e27cc0b8e42627](https://github.com/sladg/nextjs-lambda/commit/c03707e01710b540ffd20ac5a4e27cc0b8e42627))]
@@ -346,6 +351,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* doc(readme): fixed documentation for next.config.js and improved syntax for pushes to git [[bce1981c605d4db06ff15ebb39f5e7750460d823](https://github.com/sladg/nextjs-lambda/commit/bce1981c605d4db06ff15ebb39f5e7750460d823))]
 * fix(changelog): correctly generate comparison URL for bitbucket [[c03707e01710b540ffd20ac5a4e27cc0b8e42627](https://github.com/sladg/nextjs-lambda/commit/c03707e01710b540ffd20ac5a4e27cc0b8e42627))]
 * fix(changelog): fixed URL for comparison, improved commit author syntax [[78eef8991854dfc6769b407497976fb07b566617](https://github.com/sladg/nextjs-lambda/commit/78eef8991854dfc6769b407497976fb07b566617))]
 * fix(changelog): improvements to generation [[40862e505436fd4b58cf0ac8a2640845caefddf5](https://github.com/sladg/nextjs-lambda/commit/40862e505436fd4b58cf0ac8a2640845caefddf5))]
