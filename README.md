@@ -61,7 +61,7 @@ Loading of assets and static content is handled via Cloudfront and S3 origin, so
 
 ### next.config.js
 
-The only requirement is to change your Next12 config to produce standalone output via `output: 'standalone'` and turn off compressions `compress: false`.
+The only requirement is to change your Next13 config to produce standalone output via `output: 'standalone'` and turn off compressions `compress: false`.
 
 In case you want to control caching (for example to not cache API routes), you can use `headers` option in `next.config.js`. Cloudfront will respect those headers and cache accordingly. You can set caching based on methods, paths or headers (useful for setting cache control in case of user logins).
 
@@ -137,8 +137,8 @@ We are looking at 6-8min for creation and 1-3min for update. This is a huge impr
 
 ## Packaging
 
-In order to succefully deploy, you firstly need to include `output: 'standalone'` in your `next.config.js` setup. Secondly, any compression should be turned off as AWS is taking care of that. See `compress: false` in your config.
-Make sure to use NextJS in version 12 or above so this is properly supported.
+In order to successfully deploy, you firstly need to include `output: 'standalone'` in your `next.config.js` setup. Secondly, any compression should be turned off as AWS is taking care of that. See `compress: false` in your config.
+Make sure to use NextJS in version 13 or above so this is properly supported.
 
 Once output is set, you can go on and use your `next build` command as you normally would.
 To package everything, make sure to be in your project root folder and next folder `.next` and `public` exist. Packaging is done via NPM CLI command of `@slack/nextjs-lambda pack`.
