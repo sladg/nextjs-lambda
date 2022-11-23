@@ -36,10 +36,7 @@ const server = slsHttp(
 	},
 	{
 		// We have separate function for handling images. Assets are handled by S3.
-		// If you wish to return binary data from an API route then set process.env.BINARY_CONTENT_TYPES to be a
-		// comma-separated list of Content-Types to be treated as binary data.
-		// c.f. https://github.com/dougmoscrop/serverless-http/blob/master/lib/provider/aws/is-binary.js for details on
-		// how this works.
+                binary: true,
 		provider: 'aws',
 		basePath: process.env.NEXTJS_LAMBDA_BASE_PATH,
 	},
