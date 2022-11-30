@@ -1,11 +1,11 @@
 import { DefaultLogFields, simpleGit } from 'simple-git'
 import { writeFileSync } from 'fs'
-import packageJson from '../../package.json'
 import { getCommitLink, getCompareLink, sortTagsDescending } from '../utils'
 
 interface Props {
 	outputFile: string
 	gitBaseUrl?: string
+	nextTag?: string
 }
 
 const isGithub = !!process.env.GITHUB_REPOSITORY && !!process.env.GITHUB_SERVER_URL
@@ -20,7 +20,7 @@ const httpGitUrl = isGithub
 	? process.env.CI_PROJECT_URL
 	: null
 
-export const changelogHandler = async ({ outputFile, gitBaseUrl }: Props) => {
+export const changelogHandler = async ({ outputFile, gitBaseUrl, nextTag }: Props) => {
 	const git = simpleGit()
 
 	const gitUrl = gitBaseUrl ?? httpGitUrl
@@ -31,14 +31,18 @@ export const changelogHandler = async ({ outputFile, gitBaseUrl }: Props) => {
 	await git.fetch(['--tags'])
 
 	const tags = await git.tags()
+	const commits = await git.log()
 	const sortedTags = sortTagsDescending(tags.all)
+	const sortedNormalizedTags = nextTag ? [nextTag, ...sortedTags] : sortedTags
 
 	// Sorted from newest to oldest (highest version to lowest).
-	const tagsWithLog = sortedTags.map(async (tag, index, arr) => {
+	const tagsWithLog = sortedNormalizedTags.map(async (tag, index, arr) => {
 		const lowerTag = arr[index + 1]
 		const higherTag = arr[index - 1]
 
-		const log = await git.log({ from: lowerTag, to: tag })
+		const latestTag = sortedTags.includes(tag) ? tag : commits.latest?.hash
+
+		const log = await git.log({ from: lowerTag, to: latestTag })
 		const filteredLog = log.all
 			// Remove automatic commits (typically generated inside pipeline)
 			.filter((a) => !a.message.includes('[skip ci]'))

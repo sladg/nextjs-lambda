@@ -8,6 +8,7 @@ interface Props {
 	gitEmail: string
 	tagPrefix: string
 	failOnMissingCommit: boolean
+	failOnMissingTag: boolean
 	releaseBranchPrefix: string
 	forceBump: boolean
 	generateChangelog: boolean
@@ -19,12 +20,16 @@ export const shipitHandler = async ({
 	gitUser,
 	tagPrefix,
 	failOnMissingCommit,
+	failOnMissingTag,
 	forceBump,
 	releaseBranchPrefix,
 	generateChangelog,
 	changelogPath,
 }: Props) => {
-	const git = simpleGit()
+	const gitWithoutAuthor = simpleGit()
+	const git = gitWithoutAuthor.addConfig('user.name', gitUser).addConfig('user.email', gitEmail)
+
+	// @TODO: Implement check so if no valid tag exists, it will tag first commit in repo.
 
 	// Fetch tags to ensure we have the latest ones.
 	const tags = await git.fetch(['--tags']).tags({ '--sort': '-creatordate' })
@@ -89,41 +94,25 @@ export const shipitHandler = async ({
 	const replacementResults = replaceVersionInCommonFiles(currentTag, nextTag)
 	console.log(`Replaced version in files.`, replacementResults)
 
+	// If flag is passed, changelog is generated and added.
+	if (generateChangelog) {
+		console.log('Generating changelog...')
+		await changelogHandler({ outputFile: changelogPath, nextTag: nextTagWithPrefix })
+	}
+
 	// Commit changed files (versions) and create a release commit with skip ci flag.
 	await git
 		//
 		.add('./*')
-		.addConfig('user.name', gitUser)
-		.addConfig('user.email', gitEmail)
-		.raw('commit', '--message', `Release: ${nextTagWithPrefix} ${skipCiFlag}`)
+		.commit(`Release: ${nextTagWithPrefix} ${skipCiFlag}`)
 		.addTag(nextTagWithPrefix)
 
-	// If flag is passed, changelog is genrated and added after new tag is created.
-	if (generateChangelog) {
-		console.log('Generating changelog...')
-
-		await changelogHandler({ outputFile: changelogPath })
-		await git
-			//
-			.add(changelogPath)
-			.addConfig('user.name', gitUser)
-			.addConfig('user.email', gitEmail)
-			.raw('commit', '--amend', '--no-edit')
-	}
-
-	await git
-		//
-		.addConfig('user.name', gitUser)
-		.addConfig('user.email', gitEmail)
-		.push(remote.name, branch.current)
-		.pushTags()
+	await git.push(remote.name, branch.current).pushTags()
 
 	// As current branch commit includes skip ci flag, we want to ommit this flag for release branch so pipeline can run (omitting infinite loop).
 	// So we are overwriting last commit message and pushing to release branch.
 	await git
 		//
-		.addConfig('user.name', gitUser)
-		.addConfig('user.email', gitEmail)
 		.raw('commit', '--message', `Release: ${nextTagWithPrefix}`, '--amend')
 		.push(remote.name, `${branch.current}:${releaseBranch}`)
 

@@ -62,6 +62,7 @@ program
 	.command('shipit')
 	.description('Get last tag, calculate bump version for all commits that happened and create release branch.')
 	.option('--failOnMissingCommit', 'In case commit has not happened since last tag (aka. we are on latest tag) fail.', Boolean, true)
+	.option('--failOnMissingTag', 'In case no tags exist that are in semver version format fail.', false)
 	.option('-f, --forceBump', 'In case no compatible commits found, use patch as fallback and ensure bump happens.', Boolean, true)
 	.option('-a, --autoPush', 'This will automatically create release branch and tag commit in master.', Boolean, true)
 	.option('-t, --tagPrefix <prefix>', 'Prefix version with string of your choice.', 'v')
@@ -71,13 +72,14 @@ program
 	.option('--changelog', 'Generate changelog.', false)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
-		const { tagPrefix, failOnMissingCommit, releaseBranchPrefix, forceBump, gitUser, gitEmail, changelog } = options
+		const { tagPrefix, failOnMissingCommit, failOnMissingTag, releaseBranchPrefix, forceBump, gitUser, gitEmail, changelog } = options
 		wrapProcess(
 			shipitHandler({
 				tagPrefix,
 				gitEmail,
 				gitUser,
 				failOnMissingCommit,
+				failOnMissingTag,
 				forceBump,
 				releaseBranchPrefix,
 				generateChangelog: changelog,
