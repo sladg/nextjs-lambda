@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v3.20.6](https://github.com/sladg/nextjs-lambda/compare/v3.20.5...v3.20.6)
+
+* fix(changelog): simplified logic for generating changelog, fixed issue with bigger repos [[71aac13dca8b079d1efba4963e35082bb70e57ce](https://github.com/sladg/nextjs-lambda/commit/71aac13dca8b079d1efba4963e35082bb70e57ce))]
+
+
 ## [v3.20.5](https://github.com/sladg/nextjs-lambda/compare/v3.20.4...v3.20.5)
 
 * #56 Allow an API route to return binary data  (#57) [[c8a66a4dac692b5fa1cf664d14cbe5cc91f5a860](https://github.com/sladg/nextjs-lambda/commit/c8a66a4dac692b5fa1cf664d14cbe5cc91f5a860))]
@@ -356,6 +361,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* fix(changelog): simplified logic for generating changelog, fixed issue with bigger repos [[71aac13dca8b079d1efba4963e35082bb70e57ce](https://github.com/sladg/nextjs-lambda/commit/71aac13dca8b079d1efba4963e35082bb70e57ce))]
 * #56 Allow an API route to return binary data  (#57) [[c8a66a4dac692b5fa1cf664d14cbe5cc91f5a860](https://github.com/sladg/nextjs-lambda/commit/c8a66a4dac692b5fa1cf664d14cbe5cc91f5a860))]
 * doc(readme): fixed documentation for next.config.js and improved syntax for pushes to git [[bce1981c605d4db06ff15ebb39f5e7750460d823](https://github.com/sladg/nextjs-lambda/commit/bce1981c605d4db06ff15ebb39f5e7750460d823))]
 * fix(changelog): correctly generate comparison URL for bitbucket [[c03707e01710b540ffd20ac5a4e27cc0b8e42627](https://github.com/sladg/nextjs-lambda/commit/c03707e01710b540ffd20ac5a4e27cc0b8e42627))]
