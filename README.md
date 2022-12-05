@@ -76,12 +76,22 @@ See:
 
 ### Monorepos
 
-In case you are using monorepo, there are few more requirements.
-Firstly, you need to setup `outputFileTracing` in your `next.config.js` see: https://github.com/vercel/next.js/issues/36386#issuecomment-1137665939.
+**Yarn monorepo**
 
-Secondly, you need to setup `hoistingLimits: workspace`. We need `node_modules` to actually contain all the dependencies in order for NextJS to pick them up for standalone build.
+In case you are using monorepo, there are few more requirements.
+Firstly, you need to setup `outputFileTracingRoot: path.join(__dirname, '../../')` in your `next.config.js` see: https://github.com/vercel/next.js/issues/36386#issuecomment-1137665939.
+
+Secondly, you need to setup `hoistingLimits: workspace` . We need `node_modules` to actually contain all the dependencies in order for NextJS to pick them up for standalone build.
 
 Tested with Turbo@1.5.5 and Yarn@3.2.4
+
+---
+
+**Npm monorepo**
+
+Pure npm@8 monorepo works as well without needing to deal with specific dependencies, however, keep in mind that our packaging merges both root `node_modules` as well as package's `node_modules` together, so if different versions are present, they will be overwritten.
+
+Specify `outputFileTracingRoot: path.join(__dirname, '../../'),` in your `next.config.js` together with `externalDir: true` (in case you are importing dependencies from outside of your package).
 
 
 ### Server handler

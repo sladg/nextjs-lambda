@@ -25,18 +25,19 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	validatePublicFolderStructure(publicFolder)
 	validateFolderExists(standaloneFolder)
 
+	const pathToNextOutput = findPathToNestedFile(staticNames.nextServer, standaloneFolder)
+
 	// Dependencies layer configuration
 	const nodeModulesFolderPath = path.resolve(standaloneFolder, staticNames.nodeFolder)
 	const depsLambdaFolder = 'nodejs/node_modules'
 	const dependenciesOutputPath = path.resolve(outputFolder, staticNames.dependenciesZip)
+	const nestedDependenciesOutputPath = dependenciesOutputPath.includes(pathToNextOutput) ? null : path.resolve(pathToNextOutput, staticNames.nodeFolder)
 
 	// Assets bundle configuration
 	const buildIdPath = path.resolve(commandCwd, './.next/BUILD_ID')
 	const generatedStaticContentPath = path.resolve(commandCwd, '.next/static')
 	const generatedStaticRemapping = '_next/static'
 	const assetsOutputPath = path.resolve(outputFolder, staticNames.assetsZip)
-
-	const pathToNextOutput = findPathToNestedFile(staticNames.nextServer, standaloneFolder)
 
 	// Code layer configuration
 	const generatedNextServerPath = path.resolve(pathToNextOutput, staticNames.nextServer)
@@ -47,12 +48,24 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	rmSync(outputFolder, { force: true, recursive: true })
 	mkdirSync(outputFolder)
 
-	// @TODO: We need to include nested node_modules in case of mono-repos.
 	// Zip dependencies from standalone output in a layer-compatible format.
-	await zipFolder({
+	// In case monorepo is used, include nested node_modules folder which might include additional dependencies.
+	await zipMultipleFoldersOrFiles({
 		outputName: dependenciesOutputPath,
-		folderPath: nodeModulesFolderPath,
-		dir: depsLambdaFolder,
+		inputDefinition: [
+			{
+				path: nodeModulesFolderPath,
+				dir: depsLambdaFolder,
+			},
+			...(nestedDependenciesOutputPath
+				? [
+						{
+							path: nestedDependenciesOutputPath,
+							dir: depsLambdaFolder,
+						},
+				  ]
+				: []),
+		],
 	})
 
 	// Zip staticly generated assets and public folder.
