@@ -95,7 +95,11 @@ const optimizer = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxy
 			statusCode: 200,
 			body: optimizedResult.buffer.toString('base64'),
 			isBase64Encoded: true,
-			headers: { Vary: 'Accept', 'Content-Type': optimizedResult.contentType },
+			headers: { 
+				Vary: 'Accept', 
+				'Content-Type': optimizedResult.contentType,
+				'Cache-Control': optimizedResult.maxAge,
+			},
 		}
 	} catch (error: any) {
 		console.error(error)
