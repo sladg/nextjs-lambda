@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v3.22.0](https://github.com/sladg/nextjs-lambda/compare/v3.21.0...v3.22.0)
+
+* build(deps): bump simple-git from 3.14.1 to 3.15.0 (#61) [[1f7c1e8868b4f39e7b8fca16c7fba5244b0aa5b0](https://github.com/sladg/nextjs-lambda/commit/1f7c1e8868b4f39e7b8fca16c7fba5244b0aa5b0))]
+
+
 ## [v3.21.0](https://github.com/sladg/nextjs-lambda/compare/v3.20.6...v3.21.0)
 
 * feat(monorepo): merge node_modules for monorepo usecases to ensure dependencies are present [[90bc42e449f46f8880e260631a89ba048b533332](https://github.com/sladg/nextjs-lambda/commit/90bc42e449f46f8880e260631a89ba048b533332))]
@@ -366,6 +371,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* build(deps): bump simple-git from 3.14.1 to 3.15.0 (#61) [[1f7c1e8868b4f39e7b8fca16c7fba5244b0aa5b0](https://github.com/sladg/nextjs-lambda/commit/1f7c1e8868b4f39e7b8fca16c7fba5244b0aa5b0))]
 * feat(monorepo): merge node_modules for monorepo usecases to ensure dependencies are present [[90bc42e449f46f8880e260631a89ba048b533332](https://github.com/sladg/nextjs-lambda/commit/90bc42e449f46f8880e260631a89ba048b533332))]
 * fix(changelog): simplified logic for generating changelog, fixed issue with bigger repos [[71aac13dca8b079d1efba4963e35082bb70e57ce](https://github.com/sladg/nextjs-lambda/commit/71aac13dca8b079d1efba4963e35082bb70e57ce))]
 * #56 Allow an API route to return binary data  (#57) [[c8a66a4dac692b5fa1cf664d14cbe5cc91f5a860](https://github.com/sladg/nextjs-lambda/commit/c8a66a4dac692b5fa1cf664d14cbe5cc91f5a860))]
