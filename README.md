@@ -10,8 +10,8 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 ## TL;DR
 - In your NextJS project, set output to standalone.
 - Run `next build` (will generate standalone next folder).
-- Run `npx --package @sladg/nextjs-lambda next-utils pack` (will create ZIPs).
-- Run `npx --package @sladg/nextjs-lambda next-utils deploy` (will deploy to AWS).
+- Run `npx --package @sladg/nextjs-lambda utils pack` (will create ZIPs).
+- Run `npx --package @sladg/nextjs-lambda utils deploy` (will deploy to AWS).
 - Profit 🎉
 
 ```
@@ -86,7 +86,7 @@ Frontend environment variables are automatically resolved during build time! You
 ### Via CDK
 
 See `NextStandaloneStack` construct in `lib/cdk-app.ts`.
-Or just use `next-utils deploy` command so you don't have to manage CDK yourself. See CLI help command for all congiruation, notably, it's possible to set Timeout and Memory for lambda from CLI. It is advised to always use custom `--stackName` in `deploy` command as it will affect names of all resources and will help you distinguish between different environments/applications.
+Or just use `utils deploy` command so you don't have to manage CDK yourself. See CLI help command for all congiruation, notably, it's possible to set Timeout and Memory for lambda from CLI. It is advised to always use custom `--stackName` in `deploy` command as it will affect names of all resources and will help you distinguish between different environments/applications.
 
 ## Packaging
 

@@ -11,7 +11,7 @@
   "exports": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
   "bin": {
-    "next-utils": "./dist/cli.js"
+    "utils": "./dist/cli.js"
   },
   "files": [
     "dist"
@@ -24,7 +24,7 @@
     "build:main": "tsup lib/index.ts --dts lib/index.ts",
     "build:handler": "tsup lib/server-handler/index.ts --out-dir dist/server-handler && bestzip dist/server-handler.zip dist/server-handler && rm -r dist/server-handler",
     "commit": "npx --package cz-emoji-conventional --package commitizen -- cz",
-    "release": "npx --package @sladg/release-utils run shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
+    "release": "npx --package @sladg/release-utils utils shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
   },
   "dependencies": {
     "@sladg/imaginex-lambda": "^0.2.4",
