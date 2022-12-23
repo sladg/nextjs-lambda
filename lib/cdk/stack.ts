@@ -1,6 +1,6 @@
 import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha'
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
-import { App, CfnOutput, Duration, RemovalPolicy, Stack } from 'aws-cdk-lib'
+import { App, AssetHashType, CfnOutput, Duration, RemovalPolicy, Stack } from 'aws-cdk-lib'
 import { DnsValidatedCertificate, ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import {
 	AllowedMethods,
@@ -57,6 +57,8 @@ export class NextStandaloneStack extends Stack {
 			codePath: config.imageHandlerZipPath,
 			handler: config.customImageHandler,
 			assetsBucket: this.assetsBucket,
+			lambdaHash: config.imageLambdaHash,
+			layerPath: config.imageLayerZipPath,
 		})
 
 		this.serverLambda = this.setupServerLambda({
@@ -162,15 +164,27 @@ export class NextStandaloneStack extends Stack {
 		return serverLambda
 	}
 
-	setupImageLambda({ assetsBucket, codePath, handler }: SetupImageLambdaProps) {
+	setupImageLambda({ assetsBucket, codePath, handler, layerPath, lambdaHash }: SetupImageLambdaProps) {
+		const depsLayer = new LayerVersion(this, 'ImageOptimizationLayer', {
+			code: Code.fromAsset(layerPath, {
+				assetHash: lambdaHash + '_layer',
+				assetHashType: AssetHashType.CUSTOM,
+			}),
+		})
+
 		const imageLambda = new Function(this, 'ImageOptimizationNextJs', {
-			code: Code.fromAsset(codePath),
-			runtime: Runtime.NODEJS_16_X,
-			handler,
-			memorySize: 1024,
+			code: Code.fromAsset(codePath, {
+				assetHash: lambdaHash + '_code',
+				assetHashType: AssetHashType.CUSTOM,
+			}),
+			// @NOTE: Make sure to keep python3.8 as binaries seems to be messed for other versions.
+			runtime: Runtime.PYTHON_3_8,
+			handler: handler,
+			memorySize: 256,
 			timeout: Duration.seconds(10),
+			layers: [depsLayer],
 			environment: {
-				S3_SOURCE_BUCKET: assetsBucket.bucketName,
+				S3_BUCKET_NAME: assetsBucket.bucketName,
 			},
 		})
 

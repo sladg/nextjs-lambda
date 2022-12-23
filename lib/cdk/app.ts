@@ -1,6 +1,8 @@
 import { App } from 'aws-cdk-lib'
 import path from 'path'
 import { NextStandaloneStack } from './stack'
+import imaginex from '@sladg/imaginex-lambda'
+import imaginexPackage from '@sladg/imaginex-lambda/package.json'
 
 const app = new App()
 
@@ -10,18 +12,23 @@ if (!process.env.STACK_NAME) {
 
 const commandCwd = process.cwd()
 
-// This is configured in rollup as exported file is in dist folder.
-const cdkFolder = __dirname
-
 new NextStandaloneStack(app, process.env.STACK_NAME, {
-	apigwServerPath: '/_server',
-	apigwImagePath: '/_image',
+	// NextJS lambda specific config
 	assetsZipPath: path.resolve(commandCwd, './next.out/assetsLayer.zip'),
 	codeZipPath: path.resolve(commandCwd, './next.out/code.zip'),
 	dependenciesZipPath: path.resolve(commandCwd, './next.out/dependenciesLayer.zip'),
-	imageHandlerZipPath: path.resolve(cdkFolder, '../dist/image-handler.zip'),
 	customServerHandler: 'handler.handler',
-	customImageHandler: 'handler.handler',
+
+	// Image lambda specific config
+	imageHandlerZipPath: imaginex.optimizerCodePath,
+	imageLayerZipPath: imaginex.optimizerLayerPath,
+	imageLambdaHash: imaginexPackage.version,
+	customImageHandler: imaginex.handler,
+
+	// Lambda & AWS config
+	apigwServerPath: '/_server',
+	apigwImagePath: '/_image',
+
 	lambdaTimeout: process.env.LAMBDA_TIMEOUT ? Number(process.env.LAMBDA_TIMEOUT) : 15,
 	lambdaMemory: process.env.LAMBDA_MEMORY ? Number(process.env.LAMBDA_MEMORY) : 1024,
 	hostedZone: process.env.HOSTED_ZONE ?? undefined,

@@ -90,18 +90,4 @@ export default defineConfig([
 			file: 'dist/cdk-app.js',
 		},
 	},
-	// @NOTE: Moved away from Rollup as Webpack is more efficient in bundling internal require.resolve calls.
-	// Resulting in no need for layers and smaller bundle overall.
-	// {
-	// 	input: 'lib/standalone/image-handler.ts',
-	// 	plugins: [standalone],
-	// 	output: [
-	// 		{
-	// 			file: 'dist/image-handler.zip',
-	// 		},
-	// 		{
-	// 			file: 'dist/image-handler.js',
-	// 		},
-	// 	],
-	// },
 ])

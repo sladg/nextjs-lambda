@@ -19,6 +19,8 @@ export interface SetupImageLambdaProps {
 	codePath: string
 	handler: string
 	assetsBucket: Bucket
+	layerPath: string
+	lambdaHash: string
 }
 
 export interface SetupApiGwProps {
@@ -44,6 +46,8 @@ export interface CustomStackProps extends StackProps {
 	codeZipPath: string
 	dependenciesZipPath: string
 	imageHandlerZipPath: string
+	imageLayerZipPath: string
+	imageLambdaHash: string
 	customServerHandler: string
 	customImageHandler: string
 	lambdaTimeout: number

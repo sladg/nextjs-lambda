@@ -58,6 +58,11 @@ export const bumpMapping = [
 		bump: BumpType.Patch,
 	},
 	{
+		test: /(.*)(BREAKING CHANGE:|BREAKING CHANGE\((.*)\):)/,
+		bump: BumpType.Major,
+		scanBody: true,
+	},
+	{
 		test: /BREAKING CHANGE/i,
 		bump: BumpType.Major,
 		scanBody: true,
