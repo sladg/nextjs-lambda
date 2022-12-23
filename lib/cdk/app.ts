@@ -17,7 +17,7 @@ new NextStandaloneStack(app, process.env.STACK_NAME, {
 	assetsZipPath: path.resolve(commandCwd, './next.out/assetsLayer.zip'),
 	codeZipPath: path.resolve(commandCwd, './next.out/code.zip'),
 	dependenciesZipPath: path.resolve(commandCwd, './next.out/dependenciesLayer.zip'),
-	customServerHandler: 'handler.handler',
+	customServerHandler: 'index.handler',
 
 	// Image lambda specific config
 	imageHandlerZipPath: imaginex.optimizerCodePath,

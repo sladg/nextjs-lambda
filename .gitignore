@@ -1,24 +1,8 @@
-node_modules/**
 .env*
 !.env.example
-dist/**
-.webpack
+
 .vscode
 
-# Temporary build folder.
-nodejs/**
-
-# Additional files that might existing for testing and dev purposes.
-.next/**
-next.out/**
-cdk.out/**
-
-cdk.json
-!cdk/cdk.json
-
-.yarn*
-.yarn/**
-
-**/cdk.out
-
+node_modules/**
+dist/**
 examples/*

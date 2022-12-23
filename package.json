@@ -14,43 +14,37 @@
     "next-utils": "./dist/cli.js"
   },
   "files": [
-    "dist",
-    "scripts",
-    "cdk"
+    "dist"
   ],
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "rollup -c",
-    "release": "node ./dist/cli.js shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
+    "build": "npm run build:cli && npm run build:main && npm run build:cdk && npm run build:handler",
+    "build:cdk": "tsup lib/cdk/app.ts --dts lib/cdk/app.ts",
+    "build:cli": "tsup lib/cli.ts",
+    "build:main": "tsup lib/index.ts --dts lib/index.ts",
+    "build:handler": "tsup lib/server-handler/index.ts --out-dir dist/server-handler && bestzip dist/server-handler.zip dist/server-handler && rm -r dist/server-handler",
+    "commit": "npx --package cz-emoji-conventional --package commitizen -- cz",
+    "release": "npx --package @sladg/release-utils run shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigatewayv2-alpha": "^2.41.0-alpha.0",
-    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.41.0-alpha.0",
     "@sladg/imaginex-lambda": "^0.2.4",
     "@types/archiver": "^5.3.1",
-    "@types/node": "^18.7.16",
-    "@types/semver": "^7.3.13",
-    "archiver": "^5.3.1",
-    "aws-cdk": "^2.44.0",
-    "aws-cdk-lib": "^2.44.0",
-    "commander": "^9.4.0",
-    "constructs": "^10",
-    "replace-in-file": "^6.3.5",
-    "semver": "^7.3.8",
-    "semver-regex": "^4.0.5",
-    "simple-git": "^3.14.1"
+    "@types/node": "^18.7.16"
   },
   "devDependencies": {
-    "@rollup/plugin-json": "^5.0.0",
-    "adm-zip": "^0.5.9",
-    "critters": "^0.0.16",
-    "esbuild": "^0.15.7",
-    "next": "^12.2",
-    "rollup": "^2.79.0",
-    "rollup-plugin-typescript2": "^0.33.0",
+    "archiver": "^5.3.1",
+    "bestzip": "^2.2.1",
+    "commander": "^9.4.0",
     "serverless-http": "^3.0.3",
-    "tslib": "^2.4.0",
+    "tsup": "^6.5.0",
     "typescript": "^4.8.2"
+  },
+  "peerDependencies": {
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.41.0-alpha",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.41.0-alpha",
+    "aws-cdk": "^2.41.0",
+    "aws-cdk-lib": "^2.41.0",
+    "next": "^12.2 || ^13"
   },
   "engines": {
     "node": ">=16.15"
