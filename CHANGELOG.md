@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v3.23.0](https://github.com/sladg/nextjs-lambda/compare/v3.22.0...v3.23.0)
+
+* feat(imaginex): implemented [[ca9960423b42bab9e8818dc18dd63b6f6439ddfc](https://github.com/sladg/nextjs-lambda/commit/ca9960423b42bab9e8818dc18dd63b6f6439ddfc))]
+
+
 ## [v3.22.0](https://github.com/sladg/nextjs-lambda/compare/v3.21.0...v3.22.0)
 
 * build(deps): bump simple-git from 3.14.1 to 3.15.0 (#61) [[1f7c1e8868b4f39e7b8fca16c7fba5244b0aa5b0](https://github.com/sladg/nextjs-lambda/commit/1f7c1e8868b4f39e7b8fca16c7fba5244b0aa5b0))]
@@ -371,6 +376,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* feat(imaginex): implemented [[ca9960423b42bab9e8818dc18dd63b6f6439ddfc](https://github.com/sladg/nextjs-lambda/commit/ca9960423b42bab9e8818dc18dd63b6f6439ddfc))]
 * build(deps): bump simple-git from 3.14.1 to 3.15.0 (#61) [[1f7c1e8868b4f39e7b8fca16c7fba5244b0aa5b0](https://github.com/sladg/nextjs-lambda/commit/1f7c1e8868b4f39e7b8fca16c7fba5244b0aa5b0))]
 * feat(monorepo): merge node_modules for monorepo usecases to ensure dependencies are present [[90bc42e449f46f8880e260631a89ba048b533332](https://github.com/sladg/nextjs-lambda/commit/90bc42e449f46f8880e260631a89ba048b533332))]
 * fix(changelog): simplified logic for generating changelog, fixed issue with bigger repos [[71aac13dca8b079d1efba4963e35082bb70e57ce](https://github.com/sladg/nextjs-lambda/commit/71aac13dca8b079d1efba4963e35082bb70e57ce))]
