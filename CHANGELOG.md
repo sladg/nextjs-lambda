@@ -1,6 +1,12 @@
 # Changelog
 
 
+## [v5.1.0](https://github.com/sladg/nextjs-lambda/compare/v4.0.2...v5.1.0)
+
+* 🐛 fix(cli): command renamed to shorter version [[a95c70584b1cd0334117cac65ceadc039ca206f0](https://github.com/sladg/nextjs-lambda/commit/a95c70584b1cd0334117cac65ceadc039ca206f0))]
+* ♻️ refactor(app): package split, minified build process, removed outdated parts [[704fe0257ea6605c371e4b2190e2c44ec292dcb5](https://github.com/sladg/nextjs-lambda/commit/704fe0257ea6605c371e4b2190e2c44ec292dcb5))]
+
+
 ## [v4.0.2](https://github.com/sladg/nextjs-lambda/compare/v4.0.1...v4.0.2)
 
 * fix(dependency): upgrade dependency to fix import issue [[ddd425de7fd677020cb6ece92c5560f2b7efe915](https://github.com/sladg/nextjs-lambda/commit/ddd425de7fd677020cb6ece92c5560f2b7efe915))]
@@ -390,6 +396,8 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* 🐛 fix(cli): command renamed to shorter version [[a95c70584b1cd0334117cac65ceadc039ca206f0](https://github.com/sladg/nextjs-lambda/commit/a95c70584b1cd0334117cac65ceadc039ca206f0))]
+* ♻️ refactor(app): package split, minified build process, removed outdated parts [[704fe0257ea6605c371e4b2190e2c44ec292dcb5](https://github.com/sladg/nextjs-lambda/commit/704fe0257ea6605c371e4b2190e2c44ec292dcb5))]
 * fix(dependency): upgrade dependency to fix import issue [[ddd425de7fd677020cb6ece92c5560f2b7efe915](https://github.com/sladg/nextjs-lambda/commit/ddd425de7fd677020cb6ece92c5560f2b7efe915))]
 * doc(readme): updated [[a616d872a0ef253a43a78add139b1b5767496387](https://github.com/sladg/nextjs-lambda/commit/a616d872a0ef253a43a78add139b1b5767496387))]
 * feat(imaginex): implemented [[ca9960423b42bab9e8818dc18dd63b6f6439ddfc](https://github.com/sladg/nextjs-lambda/commit/ca9960423b42bab9e8818dc18dd63b6f6439ddfc))]
