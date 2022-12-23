@@ -45,10 +45,10 @@ This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in sec
 - [x] [GetStaticProps](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
 - [x] NextJS rewrites (next.config.js)
 - [x] Monorepo support
+- [x] <del>Bundle Sharp together with image optimizer so Next uses it.</del> Custom python optimizer used.
 - [ ] [ISR and fallbacks](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration)
 - [ ] [Streaming](https://nextjs.org/docs/advanced-features/react-18/streaming)
 - [ ] Custom babel configuration
-- [ ] Bundle Sharp together with image optimizer so Next uses it.
 
 
 ## Usage
@@ -103,6 +103,8 @@ This is a Lambda entrypoint to handle non-asset requests. We need a way to start
 Lambda consumes ApiGateway requests, so we need to create ApiGw proxy (v2) that will trigger Lambda.
 
 Lambda is designed to serve `_next/image*` route in NextJS stack and replaces the default handler so we can optimize caching and memory limits for page renders and image optimization.
+
+Optimizer used: [imaginex](https://github.com/sladg/imaginex-lambda)
 
 ### Environment variables
 If using CDK, you can easily pass environment variables to Lambda. If `.env` file is present during build time, this will get picked up and passed to Lambda as file.
