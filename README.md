@@ -85,7 +85,7 @@ Frontend environment variables are automatically resolved during build time! You
 
 ### Via CDK
 
-See `NextStandaloneStack` construct in `lib/cdk-app.ts`.
+See `NextStandaloneStack` construct in `lib/cdk/app.ts`.
 Or just use `utils deploy` command so you don't have to manage CDK yourself. See CLI help command for all congiruation, notably, it's possible to set Timeout and Memory for lambda from CLI. It is advised to always use custom `--stackName` in `deploy` command as it will affect names of all resources and will help you distinguish between different environments/applications.
 
 ## Packaging

@@ -19,7 +19,7 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "npm run build:cli && npm run build:main && npm run build:cdk && npm run build:handler",
-    "build:cdk": "tsup lib/cdk/app.ts --dts lib/cdk/app.ts",
+    "build:cdk": "tsup lib/cdk/app.ts --out-dir dist/cdk",
     "build:cli": "tsup lib/cli.ts",
     "build:main": "tsup lib/index.ts --dts lib/index.ts",
     "build:handler": "tsup lib/server-handler/index.ts --out-dir dist/server-handler && bestzip dist/server-handler.zip dist/server-handler && rm -r dist/server-handler",
