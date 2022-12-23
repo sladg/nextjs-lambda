@@ -1,8 +1,7 @@
 import { App } from 'aws-cdk-lib'
 import path from 'path'
 import { NextStandaloneStack } from './stack'
-import imaginex from '@sladg/imaginex-lambda'
-import imaginexPackage from '@sladg/imaginex-lambda/package.json'
+import { handler, name, optimizerCodePath, optimizerLayerPath, version } from '@sladg/imaginex-lambda'
 
 const app = new App()
 
@@ -20,10 +19,10 @@ new NextStandaloneStack(app, process.env.STACK_NAME, {
 	customServerHandler: 'index.handler',
 
 	// Image lambda specific config
-	imageHandlerZipPath: imaginex.optimizerCodePath,
-	imageLayerZipPath: imaginex.optimizerLayerPath,
-	imageLambdaHash: imaginexPackage.version,
-	customImageHandler: imaginex.handler,
+	imageHandlerZipPath: optimizerCodePath,
+	imageLayerZipPath: optimizerLayerPath,
+	imageLambdaHash: `${name}_${version}`,
+	customImageHandler: handler,
 
 	// Lambda & AWS config
 	apigwServerPath: '/_server',
