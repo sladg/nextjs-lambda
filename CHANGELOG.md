@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v5.1.3](https://github.com/sladg/nextjs-lambda/compare/v5.1.2...v5.1.3)
+
+* 🐛 fix(server-handler): fixed wrong path of server-handler and cleaned unused zip version [[ec3fccc94a7344782288865fe3d64968b6ef1de7](https://github.com/sladg/nextjs-lambda/commit/ec3fccc94a7344782288865fe3d64968b6ef1de7))]
+
+
 ## [v5.1.2](https://github.com/sladg/nextjs-lambda/compare/v5.1.1...v5.1.2)
 
 * 🐛 fix(image lambda): fix of image lambda hash, incorrectly exported value [[f875703ded9fb06c11557ff46c92da4da587d6cb](https://github.com/sladg/nextjs-lambda/commit/f875703ded9fb06c11557ff46c92da4da587d6cb))]
@@ -406,6 +411,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* 🐛 fix(server-handler): fixed wrong path of server-handler and cleaned unused zip version [[ec3fccc94a7344782288865fe3d64968b6ef1de7](https://github.com/sladg/nextjs-lambda/commit/ec3fccc94a7344782288865fe3d64968b6ef1de7))]
 * 🐛 fix(image lambda): fix of image lambda hash, incorrectly exported value [[f875703ded9fb06c11557ff46c92da4da587d6cb](https://github.com/sladg/nextjs-lambda/commit/f875703ded9fb06c11557ff46c92da4da587d6cb))]
 * 🐛 fix(cdk): fixed missmatch in naming of output files [[86b5f488a5c3f3a0b688d30cc67cb80ee28de936](https://github.com/sladg/nextjs-lambda/commit/86b5f488a5c3f3a0b688d30cc67cb80ee28de936))]
 * 🐛 fix(cli): command renamed to shorter version [[a95c70584b1cd0334117cac65ceadc039ca206f0](https://github.com/sladg/nextjs-lambda/commit/a95c70584b1cd0334117cac65ceadc039ca206f0))]

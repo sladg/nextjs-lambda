@@ -1,6 +1,6 @@
 {
   "name": "@sladg/nextjs-lambda",
-  "version": "5.1.2",
+  "version": "5.1.3",
   "description": "Plug-and-play lambda for replacing default NextJS image optimization handler.",
   "repository": {
     "type": "git",
