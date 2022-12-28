@@ -22,7 +22,7 @@
     "build:cdk": "tsup lib/cdk/app.ts --out-dir dist/cdk",
     "build:cli": "tsup lib/cli.ts",
     "build:main": "tsup lib/index.ts --dts lib/index.ts",
-    "build:handler": "tsup lib/server-handler/index.ts --out-dir dist/server-handler && bestzip dist/server-handler.zip dist/server-handler && rm -r dist/server-handler",
+    "build:handler": "tsup lib/server-handler/index.ts --out-dir dist/server-handler",
     "commit": "npx --package cz-emoji-conventional --package commitizen -- cz",
     "release": "npx --package @sladg/release-utils utils shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
   },
@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "archiver": "^5.3.1",
-    "bestzip": "^2.2.1",
     "commander": "^9.4.0",
     "serverless-http": "^3.0.3",
     "tsup": "^6.5.0",
