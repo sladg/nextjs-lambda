@@ -112,7 +112,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 			{
 				isFile: true,
 				path: handlerPath,
-				name: 'handler.js',
+				name: 'index.js',
 			},
 			{
 				isFile: true,
