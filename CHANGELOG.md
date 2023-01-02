@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v5.1.5](https://github.com/sladg/nextjs-lambda/compare/v5.1.4...v5.1.5)
+
+* 🐛 fix(cdk envs): pass env variables to CDK commands so it's accepted on Windows as valid syntax [[26099a1a9ff633e01c349b0693bec0c5fb687b78](https://github.com/sladg/nextjs-lambda/commit/26099a1a9ff633e01c349b0693bec0c5fb687b78))]
+
+
 ## [v5.1.4](https://github.com/sladg/nextjs-lambda/compare/v5.1.3...v5.1.4)
 
 * 🐛 fix(naming): correct name of handler for lambda after packaging [[bc607c5ebae7b53241b24f3d71b190a6b25e1dcd](https://github.com/sladg/nextjs-lambda/commit/bc607c5ebae7b53241b24f3d71b190a6b25e1dcd))]
@@ -416,6 +421,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* 🐛 fix(cdk envs): pass env variables to CDK commands so it's accepted on Windows as valid syntax [[26099a1a9ff633e01c349b0693bec0c5fb687b78](https://github.com/sladg/nextjs-lambda/commit/26099a1a9ff633e01c349b0693bec0c5fb687b78))]
 * 🐛 fix(naming): correct name of handler for lambda after packaging [[bc607c5ebae7b53241b24f3d71b190a6b25e1dcd](https://github.com/sladg/nextjs-lambda/commit/bc607c5ebae7b53241b24f3d71b190a6b25e1dcd))]
 * 🐛 fix(server-handler): fixed wrong path of server-handler and cleaned unused zip version [[ec3fccc94a7344782288865fe3d64968b6ef1de7](https://github.com/sladg/nextjs-lambda/commit/ec3fccc94a7344782288865fe3d64968b6ef1de7))]
 * 🐛 fix(image lambda): fix of image lambda hash, incorrectly exported value [[f875703ded9fb06c11557ff46c92da4da587d6cb](https://github.com/sladg/nextjs-lambda/commit/f875703ded9fb06c11557ff46c92da4da587d6cb))]
