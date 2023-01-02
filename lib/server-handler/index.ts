@@ -23,6 +23,8 @@ const getErrMessage = (e: any) => ({ message: 'Server failed to respond.', detai
 
 const nextHandler = new NextServer(config).getRequestHandler()
 
+type Handler = (event: Object, context: Object) => Promise<Object>
+
 const server = slsHttp(
 	async (req: any, res: ServerResponse) => {
 		await nextHandler(req, res).catch((e) => {
@@ -42,4 +44,4 @@ const server = slsHttp(
 	},
 )
 
-export const handler = server
+export const handler = server as Handler

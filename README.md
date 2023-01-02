@@ -31,22 +31,21 @@ module.exports = {
 ```
 
 
-
-- [x] Render frontfacing pages in Lambda
-- [x] Render API routes in Lambda
-- [x] Image optimization
-- [x] NextJS headers (next.config.js)
-- [x] [GetStaticPaths](https://nextjs.org/docs/basic-features/data-fetching/get-static-paths)
-- [x] next-intl (i18n)
-- [x] [Middleware](https://nextjs.org/docs/advanced-features/middleware)
-- [x] [GetServerSideProps](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props)
-- [x] [GetStaticProps](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
-- [x] NextJS rewrites (next.config.js)
-- [x] Monorepo support
-- [x] <del>Bundle Sharp together with image optimizer so Next uses it.</del> Custom python optimizer used.
+- [x] Render frontfacing pages in Lambda,
+- [x] Render API routes in Lambda,
+- [x] Image optimization,
+- [x] NextJS headers (next.config.js),
+- [x] [GetStaticPaths](https://nextjs.org/docs/basic-features/data-fetching/get-static-paths),
+- [x] next-intl (i18n),
+- [x] [Middleware](https://nextjs.org/docs/advanced-features/middleware),
+- [x] [GetServerSideProps](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props),
+- [x] [GetStaticProps](https://nextjs.org/docs/basic-features/data-fetching/get-static-props),
+- [x] NextJS rewrites (next.config.js),
+- [x] Monorepo support,
+- [x] <del>Bundle Sharp together with image optimizer so Next uses it.</del>  Custom python optimizer used,
+- [x] <del>Custom babel configuration</del>  Not possible with Next standalone output,
 - [ ] [ISR and fallbacks](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration)
 - [ ] [Streaming](https://nextjs.org/docs/advanced-features/react-18/streaming)
-- [ ] Custom babel configuration
 
 
 ## Usage
@@ -87,6 +86,8 @@ Frontend environment variables are automatically resolved during build time! You
 
 See `NextStandaloneStack` construct in `lib/cdk/app.ts`.
 Or just use `utils deploy` command so you don't have to manage CDK yourself. See CLI help command for all congiruation, notably, it's possible to set Timeout and Memory for lambda from CLI. It is advised to always use custom `--stackName` in `deploy` command as it will affect names of all resources and will help you distinguish between different environments/applications.
+
+If you want to use it programatically, see [this guide](./docs/CDK.md).
 
 ## Packaging
 
