@@ -16,21 +16,24 @@ export const deployHandler = async ({ stackName, appPath, bootstrap, lambdaMemor
 	// All paths are absolute.
 	const cdkApp = `node ${appPath}`
 	const cdkCiFlags = `--require-approval never --ci`
-	const envConfig = [
-		`STACK_NAME=${stackName}`,
-		lambdaMemory ? `LAMBDA_MEMORY=${lambdaMemory}` : '',
-		lambdaTimeout ? `LAMBDA_TIMEOUT=${lambdaTimeout}` : '',
-		hostedZone ? `HOSTED_ZONE=${hostedZone}` : '',
-		domainNamePrefix ? `DNS_PREFIX=${domainNamePrefix}` : '',
-	].join(' ')
+
+	const variables = {
+		STACK_NAME: stackName,
+		...(lambdaMemory && { LAMBDA_MEMORY: lambdaMemory.toString() }),
+		...(lambdaTimeout && { LAMBDA_TIMEOUT: lambdaTimeout.toString() }),
+		...(hostedZone && { HOSTED_ZONE: hostedZone }),
+		...(domainNamePrefix && { DNS_PREFIX: domainNamePrefix }),
+	}
 
 	if (bootstrap) {
 		await executeAsyncCmd({
-			cmd: `${envConfig} ${cdkExecutable} bootstrap --app "${cdkApp}"`,
+			cmd: `${cdkExecutable} bootstrap --app "${cdkApp}"`,
+			env: variables,
 		})
 	}
 
 	await executeAsyncCmd({
-		cmd: `${envConfig} ${cdkExecutable} deploy --app "${cdkApp}" ${cdkCiFlags}`,
+		cmd: `${cdkExecutable} deploy --app "${cdkApp}" ${cdkCiFlags}`,
+		env: variables,
 	})
 }

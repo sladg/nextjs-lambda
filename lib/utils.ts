@@ -79,15 +79,16 @@ export const zipMultipleFoldersOrFiles = async ({ outputName, inputDefinition }:
 interface CommandProps {
 	cmd: string
 	path?: string
+	env?: Record<string, string>
 }
 
-export const executeAsyncCmd = async ({ cmd, path }: CommandProps) => {
+export const executeAsyncCmd = async ({ cmd, path, env }: CommandProps) => {
 	if (path) {
 		process.chdir(path)
 	}
 
 	return new Promise((resolve, reject) => {
-		const sh = exec(cmd, (error, stdout, stderr) => {
+		const sh = exec(cmd, { env: { ...process.env, ...env } }, (error, stdout, stderr) => {
 			if (error) {
 				reject(error)
 			} else {
