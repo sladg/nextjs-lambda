@@ -8,8 +8,8 @@
   },
   "license": "MIT",
   "author": "Jan Soukup <jan@ssoukup.com>",
-  "exports": "./dist/lib/index.js",
-  "types": "./dist/lib/index.d.ts",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
     "utils": "./dist/cli.js"
   },
