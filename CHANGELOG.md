@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v5.2.0](https://github.com/sladg/nextjs-lambda/compare/v5.1.6...v5.2.0)
+
+* ♻️ refactor(cdk): improved documentation, exported functions to allow for more granular usage [[c3df26e6699f25e1005168f4b134650a13a69bd6](https://github.com/sladg/nextjs-lambda/commit/c3df26e6699f25e1005168f4b134650a13a69bd6))]
+
+
 ## [v5.1.6](https://github.com/sladg/nextjs-lambda/compare/v5.1.5...v5.1.6)
 
 * 🐛 fix(imports): correct exported file for programatic importing [[93eb14d87b7b068fb7e9a69d77854b28588f75f5](https://github.com/sladg/nextjs-lambda/commit/93eb14d87b7b068fb7e9a69d77854b28588f75f5))]
@@ -426,6 +431,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* ♻️ refactor(cdk): improved documentation, exported functions to allow for more granular usage [[c3df26e6699f25e1005168f4b134650a13a69bd6](https://github.com/sladg/nextjs-lambda/commit/c3df26e6699f25e1005168f4b134650a13a69bd6))]
 * 🐛 fix(imports): correct exported file for programatic importing [[93eb14d87b7b068fb7e9a69d77854b28588f75f5](https://github.com/sladg/nextjs-lambda/commit/93eb14d87b7b068fb7e9a69d77854b28588f75f5))]
 * 🐛 fix(cdk envs): pass env variables to CDK commands so it's accepted on Windows as valid syntax [[26099a1a9ff633e01c349b0693bec0c5fb687b78](https://github.com/sladg/nextjs-lambda/commit/26099a1a9ff633e01c349b0693bec0c5fb687b78))]
 * 🐛 fix(naming): correct name of handler for lambda after packaging [[bc607c5ebae7b53241b24f3d71b190a6b25e1dcd](https://github.com/sladg/nextjs-lambda/commit/bc607c5ebae7b53241b24f3d71b190a6b25e1dcd))]
