@@ -6,13 +6,16 @@ interface Props {
 	bootstrap: boolean
 	lambdaMemory?: number
 	lambdaTimeout?: number
+	imageLambdaMemory?: number
+	imageLambdaTimeout?: number
+	customApiDomain?: string
 	hostedZone?: string
 	domainNamePrefix?: string
 }
 
 const cdkExecutable = require.resolve('aws-cdk/bin/cdk')
 
-export const deployHandler = async ({ stackName, appPath, bootstrap, lambdaMemory, lambdaTimeout, domainNamePrefix, hostedZone }: Props) => {
+export const deployHandler = async ({ stackName, appPath, bootstrap, lambdaMemory, lambdaTimeout, imageLambdaMemory, imageLambdaTimeout, domainNamePrefix, hostedZone, customApiDomain }: Props) => {
 	// All paths are absolute.
 	const cdkApp = `node ${appPath}`
 	const cdkCiFlags = `--require-approval never --ci`
@@ -21,8 +24,11 @@ export const deployHandler = async ({ stackName, appPath, bootstrap, lambdaMemor
 		STACK_NAME: stackName,
 		...(lambdaMemory && { LAMBDA_MEMORY: lambdaMemory.toString() }),
 		...(lambdaTimeout && { LAMBDA_TIMEOUT: lambdaTimeout.toString() }),
+		...(imageLambdaMemory && { IMAGE_LAMBDA_MEMORY: imageLambdaMemory.toString() }),
+		...(imageLambdaTimeout && { IMAGE_LAMBDA_TIMEOUT: imageLambdaTimeout.toString() }),
 		...(hostedZone && { HOSTED_ZONE: hostedZone }),
 		...(domainNamePrefix && { DNS_PREFIX: domainNamePrefix }),
+		...(customApiDomain && { CUSTOM_API_DOMAIN: customApiDomain }),
 	}
 
 	if (bootstrap) {
