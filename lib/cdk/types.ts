@@ -17,4 +17,5 @@ export interface CustomStackProps extends StackProps {
 	imageLambdaMemory?: number
 	hostedZone?: string
 	dnsPrefix?: string
+	customApiDomain?: string
 }

@@ -8,6 +8,7 @@ import {
 	CachePolicy,
 	CacheQueryStringBehavior,
 	Distribution,
+	IOrigin,
 	PriceClass,
 	ViewerProtocolPolicy,
 } from 'aws-cdk-lib/aws-cloudfront'
@@ -21,9 +22,10 @@ export interface SetupCfnDistroProps {
 	imageBasePath: string
 	serverBasePath: string
 	assetsBucket: Bucket
+	customApiOrigin?: IOrigin
 }
 
-export const setupCfnDistro = (scope: Stack, { apiGateway, imageBasePath, serverBasePath, assetsBucket, domainName, certificate }: SetupCfnDistroProps) => {
+export const setupCfnDistro = (scope: Stack, { apiGateway, imageBasePath, serverBasePath, assetsBucket, domainName, certificate, customApiOrigin }: SetupCfnDistroProps) => {
 	const apiGwDomainName = `${apiGateway.apiId}.execute-api.${scope.region}.amazonaws.com`
 
 	const serverOrigin = new HttpOrigin(apiGwDomainName, { originPath: serverBasePath })
@@ -80,7 +82,7 @@ export const setupCfnDistro = (scope: Stack, { apiGateway, imageBasePath, server
 		additionalBehaviors: {
 			'/api*': {
 				...defaultOptions,
-				origin: serverOrigin,
+				origin: customApiOrigin ?? serverOrigin,
 				allowedMethods: AllowedMethods.ALLOW_ALL,
 				cachePolicy: apiCachePolicy,
 			},
