@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [v5.5.0](https://github.com/sladg/nextjs-lambda/compare/v5.2.0...v5.5.0)
+
+* fix(cli): typo fixed [[49bb7fb749f5a7670911337dc03a9d006286c49f](https://github.com/sladg/nextjs-lambda/commit/49bb7fb749f5a7670911337dc03a9d006286c49f))]
+* feat(cli): adds flags to image lambda and API domain customization [[f4920f81f4a6e11e15213ead32c4eba4aa2aa9b7](https://github.com/sladg/nextjs-lambda/commit/f4920f81f4a6e11e15213ead32c4eba4aa2aa9b7))]
+* feat(cdk): enables customization of the API domain [[2f724a809b7141c06aa7808042cb0457fde51681](https://github.com/sladg/nextjs-lambda/commit/2f724a809b7141c06aa7808042cb0457fde51681))]
+* feat(cdk): enables customization of image lamdba memory and timeout [[688fd7f94ffb762bea479a51f81c45cabb8a00d2](https://github.com/sladg/nextjs-lambda/commit/688fd7f94ffb762bea479a51f81c45cabb8a00d2))]
+
+
 ## [v5.2.0](https://github.com/sladg/nextjs-lambda/compare/v5.1.6...v5.2.0)
 
 * ♻️ refactor(cdk): improved documentation, exported functions to allow for more granular usage [[c3df26e6699f25e1005168f4b134650a13a69bd6](https://github.com/sladg/nextjs-lambda/commit/c3df26e6699f25e1005168f4b134650a13a69bd6))]
@@ -431,6 +439,10 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* fix(cli): typo fixed [[49bb7fb749f5a7670911337dc03a9d006286c49f](https://github.com/sladg/nextjs-lambda/commit/49bb7fb749f5a7670911337dc03a9d006286c49f))]
+* feat(cli): adds flags to image lambda and API domain customization [[f4920f81f4a6e11e15213ead32c4eba4aa2aa9b7](https://github.com/sladg/nextjs-lambda/commit/f4920f81f4a6e11e15213ead32c4eba4aa2aa9b7))]
+* feat(cdk): enables customization of the API domain [[2f724a809b7141c06aa7808042cb0457fde51681](https://github.com/sladg/nextjs-lambda/commit/2f724a809b7141c06aa7808042cb0457fde51681))]
+* feat(cdk): enables customization of image lamdba memory and timeout [[688fd7f94ffb762bea479a51f81c45cabb8a00d2](https://github.com/sladg/nextjs-lambda/commit/688fd7f94ffb762bea479a51f81c45cabb8a00d2))]
 * ♻️ refactor(cdk): improved documentation, exported functions to allow for more granular usage [[c3df26e6699f25e1005168f4b134650a13a69bd6](https://github.com/sladg/nextjs-lambda/commit/c3df26e6699f25e1005168f4b134650a13a69bd6))]
 * 🐛 fix(imports): correct exported file for programatic importing [[93eb14d87b7b068fb7e9a69d77854b28588f75f5](https://github.com/sladg/nextjs-lambda/commit/93eb14d87b7b068fb7e9a69d77854b28588f75f5))]
 * 🐛 fix(cdk envs): pass env variables to CDK commands so it's accepted on Windows as valid syntax [[26099a1a9ff633e01c349b0693bec0c5fb687b78](https://github.com/sladg/nextjs-lambda/commit/26099a1a9ff633e01c349b0693bec0c5fb687b78))]
