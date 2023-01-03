@@ -2,6 +2,7 @@ import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha'
 import { App, Stack } from 'aws-cdk-lib'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
+import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { Function } from 'aws-cdk-lib/aws-lambda'
 import { HostedZone, IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { Bucket } from 'aws-cdk-lib/aws-s3'
@@ -76,6 +77,7 @@ export class NextStandaloneStack extends Stack {
 			serverBasePath: config.apigwServerPath,
 			domainName: config.dnsPrefix ? `${config.dnsPrefix}.${config.hostedZone}` : config.hostedZone,
 			certificate: this.cfnCertificate,
+			customApiOrigin: config.customApiDomain ? new HttpOrigin(config.customApiDomain) : undefined,
 		})
 
 		this.uploadStaticAssets({

@@ -38,6 +38,7 @@ new NextStandaloneStack(app, process.env.STACK_NAME, {
 	imageLambdaMemory: process.env.LAMBDA_MEMORY ? Number(process.env.IMAGE_LAMBDA_MEMORY) : IMAGE_LAMBDA_DEFAULT_MEMORY,
 	hostedZone: process.env.HOSTED_ZONE ?? undefined,
 	dnsPrefix: process.env.DNS_PREFIX ?? undefined,
+	customApiDomain: process.env.CUSTOM_API_DOMAIN ?? undefined,
 	env: {
 		account: process.env.CDK_DEFAULT_ACCOUNT,
 		region: process.env.CDK_DEFAULT_REGION,
