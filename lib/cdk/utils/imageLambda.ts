@@ -8,9 +8,14 @@ export interface SetupImageLambdaProps {
 	assetsBucket: Bucket
 	layerPath: string
 	lambdaHash: string
+	memory?: number
+	timeout?: number
 }
 
-export const setupImageLambda = (scope: Stack, { assetsBucket, codePath, handler, layerPath, lambdaHash }: SetupImageLambdaProps) => {
+export const DEFAULT_MEMORY = 256
+export const DEFAULT_TIMEOUT = 10
+
+export const setupImageLambda = (scope: Stack, { assetsBucket, codePath, handler, layerPath, lambdaHash, memory = DEFAULT_MEMORY, timeout = DEFAULT_TIMEOUT }: SetupImageLambdaProps) => {
 	const depsLayer = new LayerVersion(scope, 'ImageOptimizationLayer', {
 		code: Code.fromAsset(layerPath, {
 			assetHash: lambdaHash + '_layer',
@@ -26,8 +31,8 @@ export const setupImageLambda = (scope: Stack, { assetsBucket, codePath, handler
 		// @NOTE: Make sure to keep python3.8 as binaries seems to be messed for other versions.
 		runtime: Runtime.PYTHON_3_8,
 		handler: handler,
-		memorySize: 256,
-		timeout: Duration.seconds(10),
+		memorySize: memory,
+		timeout: Duration.seconds(timeout),
 		layers: [depsLayer],
 		environment: {
 			S3_BUCKET_NAME: assetsBucket.bucketName,

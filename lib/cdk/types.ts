@@ -13,6 +13,8 @@ export interface CustomStackProps extends StackProps {
 	customImageHandler: string
 	lambdaTimeout: number
 	lambdaMemory: number
+	imageLambdaTimeout?: number
+	imageLambdaMemory?: number
 	hostedZone?: string
 	dnsPrefix?: string
 }

@@ -42,6 +42,8 @@ export class NextStandaloneStack extends Stack {
 			assetsBucket: this.assetsBucket,
 			lambdaHash: config.imageLambdaHash,
 			layerPath: config.imageLayerZipPath,
+			timeout: config.imageLambdaTimeout,
+			memory: config.imageLambdaMemory,
 		})
 
 		this.serverLambda = this.setupServerLambda({
