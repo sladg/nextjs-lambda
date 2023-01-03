@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v5.5.1](https://github.com/sladg/nextjs-lambda/compare/v5.5.0...v5.5.1)
+
+* 🐛 fix(imaginex): upgraded imaginex for better performance and fixed s3 assets [[863ff369bb29bf472381d641f0c47d584fecea41](https://github.com/sladg/nextjs-lambda/commit/863ff369bb29bf472381d641f0c47d584fecea41))]
+
+
 ## [v5.5.0](https://github.com/sladg/nextjs-lambda/compare/v5.2.0...v5.5.0)
 
 * fix(cli): typo fixed [[49bb7fb749f5a7670911337dc03a9d006286c49f](https://github.com/sladg/nextjs-lambda/commit/49bb7fb749f5a7670911337dc03a9d006286c49f))]
@@ -439,6 +444,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* 🐛 fix(imaginex): upgraded imaginex for better performance and fixed s3 assets [[863ff369bb29bf472381d641f0c47d584fecea41](https://github.com/sladg/nextjs-lambda/commit/863ff369bb29bf472381d641f0c47d584fecea41))]
 * fix(cli): typo fixed [[49bb7fb749f5a7670911337dc03a9d006286c49f](https://github.com/sladg/nextjs-lambda/commit/49bb7fb749f5a7670911337dc03a9d006286c49f))]
 * feat(cli): adds flags to image lambda and API domain customization [[f4920f81f4a6e11e15213ead32c4eba4aa2aa9b7](https://github.com/sladg/nextjs-lambda/commit/f4920f81f4a6e11e15213ead32c4eba4aa2aa9b7))]
 * feat(cdk): enables customization of the API domain [[2f724a809b7141c06aa7808042cb0457fde51681](https://github.com/sladg/nextjs-lambda/commit/2f724a809b7141c06aa7808042cb0457fde51681))]
