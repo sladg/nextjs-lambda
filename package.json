@@ -27,7 +27,7 @@
     "release": "npx --package @sladg/release-utils utils shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
   },
   "dependencies": {
-    "@sladg/imaginex-lambda": "0.5.0",
+    "@sladg/imaginex-lambda": "0.7.0",
     "@types/archiver": "^5.3.1",
     "@types/node": "^18.7.16"
   },
