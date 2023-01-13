@@ -1,6 +1,12 @@
 # Changelog
 
 
+## [v6.0.0](https://github.com/sladg/nextjs-lambda/compare/v5.5.2...v6.0.0)
+
+* ✨ feat(region & remove): allow for specifying of region and add remove command (fix #68, fix #69) [[b75c9c200b5f7578dc11782f2359997549bf4839](https://github.com/sladg/nextjs-lambda/commit/b75c9c200b5f7578dc11782f2359997549bf4839))]
+* ♻️ refactor(cli): renamed cli property (#70) [[a5ef4ba1687b1d349b4ee639033bdb73442c7f8f](https://github.com/sladg/nextjs-lambda/commit/a5ef4ba1687b1d349b4ee639033bdb73442c7f8f))]
+
+
 ## [v5.5.2](https://github.com/sladg/nextjs-lambda/compare/v5.5.1...v5.5.2)
 
 * 🐛 fix(imaginex): upgraded image handler to deal with division by zero error [[a52061b7380e9cd3d19687e48b2a7287933d0757](https://github.com/sladg/nextjs-lambda/commit/a52061b7380e9cd3d19687e48b2a7287933d0757))]
@@ -449,6 +455,8 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* ✨ feat(region & remove): allow for specifying of region and add remove command (fix #68, fix #69) [[b75c9c200b5f7578dc11782f2359997549bf4839](https://github.com/sladg/nextjs-lambda/commit/b75c9c200b5f7578dc11782f2359997549bf4839))]
+* ♻️ refactor(cli): renamed cli property (#70) [[a5ef4ba1687b1d349b4ee639033bdb73442c7f8f](https://github.com/sladg/nextjs-lambda/commit/a5ef4ba1687b1d349b4ee639033bdb73442c7f8f))]
 * 🐛 fix(imaginex): upgraded image handler to deal with division by zero error [[a52061b7380e9cd3d19687e48b2a7287933d0757](https://github.com/sladg/nextjs-lambda/commit/a52061b7380e9cd3d19687e48b2a7287933d0757))]
 * 🐛 fix(imaginex): upgraded imaginex for better performance and fixed s3 assets [[863ff369bb29bf472381d641f0c47d584fecea41](https://github.com/sladg/nextjs-lambda/commit/863ff369bb29bf472381d641f0c47d584fecea41))]
 * fix(cli): typo fixed [[49bb7fb749f5a7670911337dc03a9d006286c49f](https://github.com/sladg/nextjs-lambda/commit/49bb7fb749f5a7670911337dc03a9d006286c49f))]
