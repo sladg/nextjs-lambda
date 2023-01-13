@@ -6,10 +6,9 @@ import packageJson from '../package.json'
 import { deployHandler } from './cli/deploy'
 import { packHandler } from './cli/pack'
 import { wrapProcess } from './utils'
-import {
-	DEFAULT_TIMEOUT as IMAGE_LAMBDA_DEFAULT_TIMEOUT,
-	DEFAULT_MEMORY as IMAGE_LAMBDA_DEFAULT_MEMORY,
-} from './cdk/utils/imageLambda'
+import { DEFAULT_TIMEOUT as IMAGE_LAMBDA_DEFAULT_TIMEOUT, DEFAULT_MEMORY as IMAGE_LAMBDA_DEFAULT_MEMORY } from './cdk/utils/imageLambda'
+import { removeHandler } from './cli/remove'
+import { DEFAULT_REGION } from './consts'
 
 const commandCwd = process.cwd()
 const program = new Command()
@@ -46,6 +45,7 @@ program
 	.action(async (options) => {
 		console.log('Our config is: ', options)
 		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = options
+
 		wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, publicFolder, standaloneFolder }))
 	})
 
@@ -55,17 +55,58 @@ program
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
 	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk/app.js'))
 	.option('--bootstrap', 'Bootstrap CDK stack.', false)
+	.option('--region <region>', 'AWS region to deploy to.', DEFAULT_REGION)
 	.option('--lambdaTimeout <sec>', 'Set timeout for lambda function handling server requests.', Number, 15)
 	.option('--lambdaMemory <mb>', 'Set memory for lambda function handling server requests.', Number, 512)
 	.option('--imageLambdaTimeout <sec>', 'Set timeout for lambda function handling image optimization.', Number, IMAGE_LAMBDA_DEFAULT_TIMEOUT)
 	.option('--imageLambdaMemory <mb>', 'Set memory for lambda function handling image optimization.', Number, IMAGE_LAMBDA_DEFAULT_MEMORY)
 	.option('--hostedZone <domainName>', 'Hosted zone domain name to be used for creating DNS records (example: example.com).', undefined)
 	.option('--domainNamePrefix <prefix>', 'Prefix for creating DNS records, if left undefined, hostedZone will be used (example: app).', undefined)
-	.option('--customApiDomain <domain>', 'Domain to forward the requests to /api routes, if left undefined, API routes will be handled by the server lambda.', undefined)
+	.option('--customApiDomain <domain>', 'Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.', undefined)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
-		const { stackName, appPath, bootstrap, lambdaTimeout, lambdaMemory, imageLambdaMemory, imageLambdaTimeout, hostedZone, domainNamePrefix, customApiDomain } = options
-		wrapProcess(deployHandler({ stackName, appPath, bootstrap, lambdaTimeout, lambdaMemory, imageLambdaMemory, imageLambdaTimeout, hostedZone, domainNamePrefix, customApiDomain }))
+		const {
+			stackName,
+			appPath,
+			bootstrap,
+			region,
+			lambdaTimeout,
+			lambdaMemory,
+			imageLambdaMemory,
+			imageLambdaTimeout,
+			hostedZone,
+			domainNamePrefix,
+			customApiDomain,
+		} = options
+
+		wrapProcess(
+			deployHandler({
+				stackName,
+				appPath,
+				bootstrap,
+				region,
+				lambdaTimeout,
+				lambdaMemory,
+				imageLambdaMemory,
+				imageLambdaTimeout,
+				hostedZone,
+				domainNamePrefix,
+				customApiDomain,
+			}),
+		)
+	})
+
+program
+	.command('remove')
+	.description('Remove Next application via CDK')
+	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
+	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk/app.js'))
+	.option('--region <region>', 'AWS region to deploy to.', DEFAULT_REGION)
+	.action(async (options) => {
+		console.log('Our config is: ', options)
+		const { stackName, appPath, region } = options
+
+		wrapProcess(removeHandler({ stackName, appPath, region }))
 	})
 
 program.parse(process.argv)

@@ -10,7 +10,13 @@ export interface SetupServerLambdaProps {
 	timeout: number
 }
 
-export const setupServerLambda = (scope: Stack, { basePath, codePath, dependenciesPath, handler, memory, timeout }: SetupServerLambdaProps) => {
+export const DEFAULT_MEMORY = 1024
+export const DEFAULT_TIMEOUT = 20
+
+export const setupServerLambda = (
+	scope: Stack,
+	{ basePath, codePath, dependenciesPath, handler, memory = DEFAULT_MEMORY, timeout = DEFAULT_TIMEOUT }: SetupServerLambdaProps,
+) => {
 	const depsLayer = new LayerVersion(scope, 'DepsLayer', {
 		// This folder does not use Custom hash as depenendencies are most likely changing every time we deploy.
 		code: Code.fromAsset(dependenciesPath),

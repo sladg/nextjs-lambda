@@ -12,10 +12,13 @@ export interface SetupImageLambdaProps {
 	timeout?: number
 }
 
-export const DEFAULT_MEMORY = 256
+export const DEFAULT_MEMORY = 512
 export const DEFAULT_TIMEOUT = 10
 
-export const setupImageLambda = (scope: Stack, { assetsBucket, codePath, handler, layerPath, lambdaHash, memory = DEFAULT_MEMORY, timeout = DEFAULT_TIMEOUT }: SetupImageLambdaProps) => {
+export const setupImageLambda = (
+	scope: Stack,
+	{ assetsBucket, codePath, handler, layerPath, lambdaHash, memory = DEFAULT_MEMORY, timeout = DEFAULT_TIMEOUT }: SetupImageLambdaProps,
+) => {
 	const depsLayer = new LayerVersion(scope, 'ImageOptimizationLayer', {
 		code: Code.fromAsset(layerPath, {
 			assetHash: lambdaHash + '_layer',
