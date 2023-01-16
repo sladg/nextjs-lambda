@@ -1,19 +1,14 @@
+import { handler, name, optimizerCodePath, optimizerLayerPath, version } from '@sladg/imaginex-lambda'
 import { App } from 'aws-cdk-lib'
 import path from 'path'
+import { envConfig } from './config'
 import { NextStandaloneStack } from './stack'
-import { DEFAULT_TIMEOUT as IMAGE_LAMBDA_DEFAULT_TIMEOUT, DEFAULT_MEMORY as IMAGE_LAMBDA_DEFAULT_MEMORY } from './utils/imageLambda'
-import { handler, name, optimizerCodePath, optimizerLayerPath, version } from '@sladg/imaginex-lambda'
-import { DEFAULT_TIMEOUT as SERVER_LAMBDA_DEFAULT_TIMEOUT, DEFAULT_MEMORY as SERVER_LAMBDA_DEFAULT_MEMORY } from './utils/serverLambda'
 
 const app = new App()
 
-if (!process.env.STACK_NAME) {
-	throw new Error('Name of CDK stack was not specified!')
-}
-
 const commandCwd = process.cwd()
 
-new NextStandaloneStack(app, process.env.STACK_NAME, {
+new NextStandaloneStack(app, envConfig.stackName, {
 	// NextJS lambda specific config
 	assetsZipPath: path.resolve(commandCwd, './next.out/assetsLayer.zip'),
 	codeZipPath: path.resolve(commandCwd, './next.out/code.zip'),
@@ -30,13 +25,8 @@ new NextStandaloneStack(app, process.env.STACK_NAME, {
 	apigwServerPath: '/_server',
 	apigwImagePath: '/_image',
 
-	lambdaTimeout: process.env.LAMBDA_TIMEOUT ? Number(process.env.LAMBDA_TIMEOUT) : SERVER_LAMBDA_DEFAULT_TIMEOUT,
-	lambdaMemory: process.env.LAMBDA_MEMORY ? Number(process.env.LAMBDA_MEMORY) : SERVER_LAMBDA_DEFAULT_MEMORY,
-	imageLambdaTimeout: process.env.LAMBDA_TIMEOUT ? Number(process.env.IMAGE_LAMBDA_TIMEOUT) : IMAGE_LAMBDA_DEFAULT_TIMEOUT,
-	imageLambdaMemory: process.env.LAMBDA_MEMORY ? Number(process.env.IMAGE_LAMBDA_MEMORY) : IMAGE_LAMBDA_DEFAULT_MEMORY,
-	hostedZone: process.env.HOSTED_ZONE ?? undefined,
-	dnsPrefix: process.env.DNS_PREFIX ?? undefined,
-	customApiDomain: process.env.CUSTOM_API_DOMAIN ?? undefined,
+	...envConfig,
+
 	env: {
 		account: process.env.CDK_DEFAULT_ACCOUNT,
 		region: process.env.AWS_REGION ?? process.env.CDK_DEFAULT_REGION,

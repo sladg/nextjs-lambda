@@ -18,4 +18,5 @@ export interface CustomStackProps extends StackProps {
 	hostedZone?: string
 	dnsPrefix?: string
 	customApiDomain?: string
+	redirectFromApex?: boolean
 }

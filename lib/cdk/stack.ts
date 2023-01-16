@@ -12,6 +12,7 @@ import { setupCfnCertificate, SetupCfnCertificateProps } from './utils/cfnCertif
 import { setupCfnDistro, SetupCfnDistroProps } from './utils/cfnDistro'
 import { setupDnsRecords, SetupDnsRecordsProps } from './utils/dnsRecords'
 import { setupImageLambda, SetupImageLambdaProps } from './utils/imageLambda'
+import { setupApexRedirect, SetupApexRedirectProps } from './utils/redirect'
 import { setupAssetsBucket, UploadAssetsProps, uploadStaticAssets } from './utils/s3'
 import { setupServerLambda, SetupServerLambdaProps } from './utils/serverLambda'
 
@@ -75,7 +76,7 @@ export class NextStandaloneStack extends Stack {
 			apiGateway: this.apiGateway,
 			imageBasePath: config.apigwImagePath,
 			serverBasePath: config.apigwServerPath,
-			domainName: config.dnsPrefix ? `${config.dnsPrefix}.${config.hostedZone}` : config.hostedZone,
+			domainName: this.domainName,
 			certificate: this.cfnCertificate,
 			customApiOrigin: config.customApiDomain ? new HttpOrigin(config.customApiDomain) : undefined,
 		})
@@ -91,6 +92,13 @@ export class NextStandaloneStack extends Stack {
 				cfnDistro: this.cfnDistro,
 				hostedZone: this.hostedZone,
 				dnsPrefix: config.dnsPrefix,
+			})
+		}
+
+		if (config.redirectFromApex && this.domainName && this.hostedZone) {
+			this.setupApexRedirect({
+				sourceHostedZone: this.hostedZone,
+				targetDomain: this.domainName,
 			})
 		}
 	}
@@ -122,6 +130,11 @@ export class NextStandaloneStack extends Stack {
 
 	setupDnsRecords(props: SetupDnsRecordsProps) {
 		return setupDnsRecords(this, props)
+	}
+
+	// Creates a redirect from apex/root domain to subdomain (typically wwww).
+	setupApexRedirect(props: SetupApexRedirectProps) {
+		return setupApexRedirect(this, props)
 	}
 
 	// Upload static assets, public folder, etc.
