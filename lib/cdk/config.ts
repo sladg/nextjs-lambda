@@ -21,7 +21,7 @@ export const envConfig = {
 	imageLambdaMemory: RawEnvConfig.IMAGE_LAMBDA_MEMORY,
 	imageLambdaTimeout: RawEnvConfig.IMAGE_LAMBDA_TIMEOUT,
 	hostedZone: RawEnvConfig.HOSTED_ZONE,
-	domainNamePrefix: RawEnvConfig.DNS_PREFIX,
+	dnsPrefix: RawEnvConfig.DNS_PREFIX,
 	customApiDomain: RawEnvConfig.CUSTOM_API_DOMAIN,
 	redirectFromApex: RawEnvConfig.REDIRECT_FROM_APEX,
 }

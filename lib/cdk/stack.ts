@@ -36,6 +36,9 @@ export class NextStandaloneStack extends Stack {
 			this.domainName = config.dnsPrefix ? `${config.dnsPrefix}.${config.hostedZone}` : config.hostedZone
 		}
 
+		console.log('Hosted zone:', this.hostedZone)
+		console.log('Normalized domain name:', this.domainName)
+
 		this.assetsBucket = this.setupAssetsBucket()
 
 		this.imageLambda = this.setupImageLambda({
