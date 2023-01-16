@@ -3,7 +3,7 @@ import { executeAsyncCmd } from '../utils'
 interface Props {
 	stackName: string
 	appPath: string
-	region: string
+	region?: string
 }
 
 const cdkExecutable = require.resolve('aws-cdk/bin/cdk')
@@ -14,7 +14,7 @@ export const removeHandler = async ({ appPath, stackName, region }: Props) => {
 
 	const variables = {
 		STACK_NAME: stackName,
-		AWS_REGION: region,
+		...(region && { AWS_REGION: region }),
 	}
 
 	await executeAsyncCmd({

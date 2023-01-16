@@ -93,13 +93,13 @@ export class NextStandaloneStack extends Stack {
 				hostedZone: this.hostedZone,
 				dnsPrefix: config.dnsPrefix,
 			})
-		}
 
-		if (config.redirectFromApex && this.domainName && this.hostedZone) {
-			this.setupApexRedirect({
-				sourceHostedZone: this.hostedZone,
-				targetDomain: this.domainName,
-			})
+			if (!!config.redirectFromApex) {
+				this.setupApexRedirect({
+					sourceHostedZone: this.hostedZone,
+					targetDomain: this.domainName,
+				})
+			}
 		}
 	}
 

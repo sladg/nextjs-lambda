@@ -8,7 +8,6 @@ import { packHandler } from './cli/pack'
 import { wrapProcess } from './utils'
 import { DEFAULT_TIMEOUT as IMAGE_LAMBDA_DEFAULT_TIMEOUT, DEFAULT_MEMORY as IMAGE_LAMBDA_DEFAULT_MEMORY } from './cdk/utils/imageLambda'
 import { removeHandler } from './cli/remove'
-import { DEFAULT_REGION } from './consts'
 
 const commandCwd = process.cwd()
 const program = new Command()
@@ -55,7 +54,7 @@ program
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
 	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk/app.js'))
 	.option('--bootstrap', 'Bootstrap CDK stack.', false)
-	.option('--region <region>', 'AWS region to deploy to.', DEFAULT_REGION)
+	.option('--region <region>', 'AWS region to deploy to.', undefined)
 	.option('--lambdaTimeout <sec>', 'Set timeout for lambda function handling server requests.', Number, 15)
 	.option('--lambdaMemory <mb>', 'Set memory for lambda function handling server requests.', Number, 512)
 	.option('--imageLambdaTimeout <sec>', 'Set timeout for lambda function handling image optimization.', Number, IMAGE_LAMBDA_DEFAULT_TIMEOUT)
@@ -104,7 +103,7 @@ program
 	.description('Remove Next application via CDK')
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
 	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk/app.js'))
-	.option('--region <region>', 'AWS region to deploy to.', DEFAULT_REGION)
+	.option('--region <region>', 'AWS region to deploy to.', undefined)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
 		const { stackName, appPath, region } = options

@@ -4,7 +4,7 @@ interface Props {
 	stackName: string
 	appPath: string
 	bootstrap: boolean
-	region: string
+	region?: string
 	lambdaMemory?: number
 	lambdaTimeout?: number
 	imageLambdaMemory?: number

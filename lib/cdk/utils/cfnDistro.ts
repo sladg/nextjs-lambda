@@ -25,7 +25,10 @@ export interface SetupCfnDistroProps {
 	customApiOrigin?: IOrigin
 }
 
-export const setupCfnDistro = (scope: Stack, { apiGateway, imageBasePath, serverBasePath, assetsBucket, domainName, certificate, customApiOrigin }: SetupCfnDistroProps) => {
+export const setupCfnDistro = (
+	scope: Stack,
+	{ apiGateway, imageBasePath, serverBasePath, assetsBucket, domainName, certificate, customApiOrigin }: SetupCfnDistroProps,
+) => {
 	const apiGwDomainName = `${apiGateway.apiId}.execute-api.${scope.region}.amazonaws.com`
 
 	const serverOrigin = new HttpOrigin(apiGwDomainName, { originPath: serverBasePath })
@@ -69,6 +72,7 @@ export const setupCfnDistro = (scope: Stack, { apiGateway, imageBasePath, server
 	// Caching is optinionated to work out-of-the-box, for granular access and customization, create your own cache policies.
 	const cfnDistro = new Distribution(scope, 'CfnDistro', {
 		defaultRootObject: '',
+		comment: `CloudFront distribution for ${scope.stackName}`,
 		enableIpv6: true,
 		priceClass: PriceClass.PRICE_CLASS_100,
 		domainNames: domainName ? [domainName] : undefined,
