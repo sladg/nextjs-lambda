@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v6.1.2](https://github.com/sladg/nextjs-lambda/compare/v6.1.1...v6.1.2)
+
+* 🐛 fix(dns prefix): fixed typo which was causing property not to be passed correctly [[95498061b262cc2e3c7e7076b21fdd23a11f9d3e](https://github.com/sladg/nextjs-lambda/commit/95498061b262cc2e3c7e7076b21fdd23a11f9d3e))]
+
+
 ## [v6.1.1](https://github.com/sladg/nextjs-lambda/compare/v6.1.0...v6.1.1)
 
 * 🐛 fix(region): prefer default region by default, do not enforce eu-central-1 for cli [[80877958845f2d25d98795288192b6e7c63bba2f](https://github.com/sladg/nextjs-lambda/commit/80877958845f2d25d98795288192b6e7c63bba2f))]
@@ -465,6 +470,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* 🐛 fix(dns prefix): fixed typo which was causing property not to be passed correctly [[95498061b262cc2e3c7e7076b21fdd23a11f9d3e](https://github.com/sladg/nextjs-lambda/commit/95498061b262cc2e3c7e7076b21fdd23a11f9d3e))]
 * 🐛 fix(region): prefer default region by default, do not enforce eu-central-1 for cli [[80877958845f2d25d98795288192b6e7c63bba2f](https://github.com/sladg/nextjs-lambda/commit/80877958845f2d25d98795288192b6e7c63bba2f))]
 * ✨ feat(apex redirect): allow for redirection from apex domain via CLI and CDK (re #71) [[5938b8825696d586118e4e9103a9755942149258](https://github.com/sladg/nextjs-lambda/commit/5938b8825696d586118e4e9103a9755942149258))]
 * ✨ feat(region & remove): allow for specifying of region and add remove command (fix #68, fix #69) [[b75c9c200b5f7578dc11782f2359997549bf4839](https://github.com/sladg/nextjs-lambda/commit/b75c9c200b5f7578dc11782f2359997549bf4839))]
