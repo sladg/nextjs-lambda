@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v6.1.0](https://github.com/sladg/nextjs-lambda/compare/v6.0.0...v6.1.0)
+
+* ✨ feat(apex redirect): allow for redirection from apex domain via CLI and CDK (re #71) [[5938b8825696d586118e4e9103a9755942149258](https://github.com/sladg/nextjs-lambda/commit/5938b8825696d586118e4e9103a9755942149258))]
+
+
 ## [v6.0.0](https://github.com/sladg/nextjs-lambda/compare/v5.5.2...v6.0.0)
 
 * ✨ feat(region & remove): allow for specifying of region and add remove command (fix #68, fix #69) [[b75c9c200b5f7578dc11782f2359997549bf4839](https://github.com/sladg/nextjs-lambda/commit/b75c9c200b5f7578dc11782f2359997549bf4839))]
@@ -455,6 +460,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* ✨ feat(apex redirect): allow for redirection from apex domain via CLI and CDK (re #71) [[5938b8825696d586118e4e9103a9755942149258](https://github.com/sladg/nextjs-lambda/commit/5938b8825696d586118e4e9103a9755942149258))]
 * ✨ feat(region & remove): allow for specifying of region and add remove command (fix #68, fix #69) [[b75c9c200b5f7578dc11782f2359997549bf4839](https://github.com/sladg/nextjs-lambda/commit/b75c9c200b5f7578dc11782f2359997549bf4839))]
 * ♻️ refactor(cli): renamed cli property (#70) [[a5ef4ba1687b1d349b4ee639033bdb73442c7f8f](https://github.com/sladg/nextjs-lambda/commit/a5ef4ba1687b1d349b4ee639033bdb73442c7f8f))]
 * 🐛 fix(imaginex): upgraded image handler to deal with division by zero error [[a52061b7380e9cd3d19687e48b2a7287933d0757](https://github.com/sladg/nextjs-lambda/commit/a52061b7380e9cd3d19687e48b2a7287933d0757))]
