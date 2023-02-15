@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v6.2.0](https://github.com/sladg/nextjs-lambda/compare/v6.1.2...v6.2.0)
+
+* ✨ feat(runtime): allow configuration of NodeJS runtime for Lambda (#74) [[fd1e1da6d66107bf7fc0f5e7949b627be36ecc93](https://github.com/sladg/nextjs-lambda/commit/fd1e1da6d66107bf7fc0f5e7949b627be36ecc93))]
+
+
 ## [v6.1.2](https://github.com/sladg/nextjs-lambda/compare/v6.1.1...v6.1.2)
 
 * 🐛 fix(dns prefix): fixed typo which was causing property not to be passed correctly [[95498061b262cc2e3c7e7076b21fdd23a11f9d3e](https://github.com/sladg/nextjs-lambda/commit/95498061b262cc2e3c7e7076b21fdd23a11f9d3e))]
@@ -470,6 +475,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* ✨ feat(runtime): allow configuration of NodeJS runtime for Lambda (#74) [[fd1e1da6d66107bf7fc0f5e7949b627be36ecc93](https://github.com/sladg/nextjs-lambda/commit/fd1e1da6d66107bf7fc0f5e7949b627be36ecc93))]
 * 🐛 fix(dns prefix): fixed typo which was causing property not to be passed correctly [[95498061b262cc2e3c7e7076b21fdd23a11f9d3e](https://github.com/sladg/nextjs-lambda/commit/95498061b262cc2e3c7e7076b21fdd23a11f9d3e))]
 * 🐛 fix(region): prefer default region by default, do not enforce eu-central-1 for cli [[80877958845f2d25d98795288192b6e7c63bba2f](https://github.com/sladg/nextjs-lambda/commit/80877958845f2d25d98795288192b6e7c63bba2f))]
 * ✨ feat(apex redirect): allow for redirection from apex domain via CLI and CDK (re #71) [[5938b8825696d586118e4e9103a9755942149258](https://github.com/sladg/nextjs-lambda/commit/5938b8825696d586118e4e9103a9755942149258))]
