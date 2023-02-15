@@ -7,6 +7,7 @@ interface Props {
 	region?: string
 	lambdaMemory?: number
 	lambdaTimeout?: number
+	lambdaRuntime?: string
 	imageLambdaMemory?: number
 	imageLambdaTimeout?: number
 	customApiDomain?: string
@@ -24,6 +25,7 @@ export const deployHandler = async ({
 	region,
 	lambdaMemory,
 	lambdaTimeout,
+	lambdaRuntime,
 	imageLambdaMemory,
 	imageLambdaTimeout,
 	domainNamePrefix,
@@ -33,13 +35,14 @@ export const deployHandler = async ({
 }: Props) => {
 	// All paths are absolute.
 	const cdkApp = `node ${appPath}`
-	const cdkCiFlags = `--require-approval never --ci`
+	const cdkCiFlags = `--require-approval never --ci --hotswap`
 
 	const variables = {
 		STACK_NAME: stackName,
 		...(region && { AWS_REGION: region }),
 		...(lambdaMemory && { LAMBDA_MEMORY: lambdaMemory.toString() }),
 		...(lambdaTimeout && { LAMBDA_TIMEOUT: lambdaTimeout.toString() }),
+		...(lambdaRuntime && { LAMBDA_RUNTIME: lambdaRuntime.toString() }),
 		...(imageLambdaMemory && { IMAGE_LAMBDA_MEMORY: imageLambdaMemory.toString() }),
 		...(imageLambdaTimeout && { IMAGE_LAMBDA_TIMEOUT: imageLambdaTimeout.toString() }),
 		...(hostedZone && { HOSTED_ZONE: hostedZone }),

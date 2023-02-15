@@ -36,7 +36,7 @@ export class NextStandaloneStack extends Stack {
 			this.domainName = config.dnsPrefix ? `${config.dnsPrefix}.${config.hostedZone}` : config.hostedZone
 		}
 
-		console.log('Hosted zone:', this.hostedZone)
+		console.log('Hosted zone:', this.hostedZone?.zoneName)
 		console.log('Normalized domain name:', this.domainName)
 
 		this.assetsBucket = this.setupAssetsBucket()
@@ -58,6 +58,7 @@ export class NextStandaloneStack extends Stack {
 			dependenciesPath: config.dependenciesZipPath,
 			timeout: config.lambdaTimeout,
 			memory: config.lambdaMemory,
+			runtime: config.lambdaRuntime,
 		})
 
 		this.apiGateway = this.setupApiGateway({

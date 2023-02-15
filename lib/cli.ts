@@ -59,6 +59,7 @@ program
 	.option('--lambdaMemory <mb>', 'Set memory for lambda function handling server requests.', Number, 512)
 	.option('--imageLambdaTimeout <sec>', 'Set timeout for lambda function handling image optimization.', Number, IMAGE_LAMBDA_DEFAULT_TIMEOUT)
 	.option('--imageLambdaMemory <mb>', 'Set memory for lambda function handling image optimization.', Number, IMAGE_LAMBDA_DEFAULT_MEMORY)
+	.option('--lambdaRuntime <runtime>', "Specify version of NodeJS to use as Lambda's runtime. Options: node14, node16, node18.", 'node16')
 	.option('--hostedZone <domainName>', 'Hosted zone domain name to be used for creating DNS records (example: example.com).', undefined)
 	.option('--domainNamePrefix <prefix>', 'Prefix for creating DNS records, if left undefined, hostedZone will be used (example: app).', undefined)
 	.option('--customApiDomain <domain>', 'Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.', undefined)
@@ -72,6 +73,7 @@ program
 			region,
 			lambdaTimeout,
 			lambdaMemory,
+			lambdaRuntime,
 			imageLambdaMemory,
 			imageLambdaTimeout,
 			hostedZone,
@@ -88,6 +90,7 @@ program
 				region,
 				lambdaTimeout,
 				lambdaMemory,
+				lambdaRuntime,
 				imageLambdaMemory,
 				imageLambdaTimeout,
 				hostedZone,

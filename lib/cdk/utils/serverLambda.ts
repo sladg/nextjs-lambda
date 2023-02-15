@@ -8,14 +8,16 @@ export interface SetupServerLambdaProps {
 	basePath: string
 	memory: number
 	timeout: number
+	runtime: Runtime
 }
 
 export const DEFAULT_MEMORY = 1024
 export const DEFAULT_TIMEOUT = 20
+export const DEFAULT_RUNTIME = Runtime.NODEJS_16_X
 
 export const setupServerLambda = (
 	scope: Stack,
-	{ basePath, codePath, dependenciesPath, handler, memory = DEFAULT_MEMORY, timeout = DEFAULT_TIMEOUT }: SetupServerLambdaProps,
+	{ basePath, codePath, dependenciesPath, handler, memory = DEFAULT_MEMORY, timeout = DEFAULT_TIMEOUT, runtime = DEFAULT_RUNTIME }: SetupServerLambdaProps,
 ) => {
 	const depsLayer = new LayerVersion(scope, 'DepsLayer', {
 		// This folder does not use Custom hash as depenendencies are most likely changing every time we deploy.
@@ -24,7 +26,7 @@ export const setupServerLambda = (
 
 	const serverLambda = new Function(scope, 'DefaultNextJs', {
 		code: Code.fromAsset(codePath),
-		runtime: Runtime.NODEJS_16_X,
+		runtime,
 		handler,
 		layers: [depsLayer],
 		// No need for big memory as image handling is done elsewhere.
