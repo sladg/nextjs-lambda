@@ -14,6 +14,7 @@ interface Props {
 	hostedZone?: string
 	domainNamePrefix?: string
 	redirectFromApex?: boolean
+	profile?: string
 }
 
 const cdkExecutable = require.resolve('aws-cdk/bin/cdk')
@@ -32,10 +33,11 @@ export const deployHandler = async ({
 	hostedZone,
 	customApiDomain,
 	redirectFromApex,
+	profile,
 }: Props) => {
 	// All paths are absolute.
 	const cdkApp = `node ${appPath}`
-	const cdkCiFlags = `--require-approval never --ci --hotswap`
+	const cdkCiFlags = `--require-approval never --ci --hotswap` + profile ? `--profile ${profile}` : ``
 
 	const variables = {
 		STACK_NAME: stackName,

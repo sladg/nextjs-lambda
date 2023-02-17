@@ -64,6 +64,7 @@ program
 	.option('--domainNamePrefix <prefix>', 'Prefix for creating DNS records, if left undefined, hostedZone will be used (example: app).', undefined)
 	.option('--customApiDomain <domain>', 'Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.', undefined)
 	.option('--redirectFromApex', 'Redirect from apex domain to specified address.', false)
+	.option('--profile <name>', 'AWS profile to use with CDK', undefined)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
 		const {
@@ -80,6 +81,7 @@ program
 			domainNamePrefix,
 			customApiDomain,
 			redirectFromApex,
+			profile,
 		} = options
 
 		wrapProcess(
@@ -97,6 +99,7 @@ program
 				domainNamePrefix,
 				customApiDomain,
 				redirectFromApex,
+				profile,
 			}),
 		)
 	})
@@ -107,11 +110,12 @@ program
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
 	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk/app.js'))
 	.option('--region <region>', 'AWS region to deploy to.', undefined)
+	.option('--profile <name>', 'AWS profile to use with CDK', undefined)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
-		const { stackName, appPath, region } = options
+		const { stackName, appPath, region, profile } = options
 
-		wrapProcess(removeHandler({ stackName, appPath, region }))
+		wrapProcess(removeHandler({ stackName, appPath, region, profile }))
 	})
 
 program.parse(process.argv)
