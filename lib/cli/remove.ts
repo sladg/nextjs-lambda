@@ -11,7 +11,7 @@ const cdkExecutable = require.resolve('aws-cdk/bin/cdk')
 
 export const removeHandler = async ({ appPath, stackName, region, profile }: Props) => {
 	const cdkApp = `node ${appPath}`
-	const cdkCiFlags = `--force --ci` + profile ? `--profile ${profile}` : ``
+	const cdkCiFlags = `--force --ci` + profile ? ` --profile ${profile}` : ``
 
 	const variables = {
 		STACK_NAME: stackName,
