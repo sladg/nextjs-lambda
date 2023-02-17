@@ -37,7 +37,7 @@ export const deployHandler = async ({
 }: Props) => {
 	// All paths are absolute.
 	const cdkApp = `node ${appPath}`
-	const cdkCiFlags = `--require-approval never --ci --hotswap` + profile ? `--profile ${profile}` : ``
+	const cdkCiFlags = `--require-approval never --ci --hotswap` + profile ? ` --profile ${profile}` : ``
 
 	const variables = {
 		STACK_NAME: stackName,
