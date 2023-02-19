@@ -15,6 +15,7 @@ interface Props {
 	domainNamePrefix?: string
 	redirectFromApex?: boolean
 	profile?: string
+	hotswap: boolean
 }
 
 const cdkExecutable = require.resolve('aws-cdk/bin/cdk')
@@ -33,11 +34,21 @@ export const deployHandler = async ({
 	hostedZone,
 	customApiDomain,
 	redirectFromApex,
+	hotswap,
 	profile,
 }: Props) => {
 	// All paths are absolute.
-	const cdkApp = `node ${appPath}`
-	const cdkCiFlags = `--require-approval never --ci --hotswap` + profile ? ` --profile ${profile}` : ``
+	const cdkBootstrapArgs = [`--app "node ${appPath}"`]
+	const cdkDeployArgs = [`--app "node ${appPath}"`, '--require-approval never', '--ci']
+
+	if (hotswap) {
+		cdkDeployArgs.push(`--hotswap`)
+	}
+
+	if (profile) {
+		cdkDeployArgs.push(`--profile ${profile}`)
+		cdkBootstrapArgs.push(`--profile ${profile}`)
+	}
 
 	const variables = {
 		STACK_NAME: stackName,
@@ -55,13 +66,13 @@ export const deployHandler = async ({
 
 	if (bootstrap) {
 		await executeAsyncCmd({
-			cmd: `${cdkExecutable} bootstrap --app "${cdkApp}"`,
+			cmd: `${cdkExecutable} bootstrap ${cdkBootstrapArgs.join(' ')}`,
 			env: variables,
 		})
 	}
 
 	await executeAsyncCmd({
-		cmd: `${cdkExecutable} deploy --app "${cdkApp}" ${cdkCiFlags}`,
+		cmd: `${cdkExecutable} deploy ${cdkDeployArgs.join(' ')}`,
 		env: variables,
 	})
 }

@@ -64,7 +64,8 @@ program
 	.option('--domainNamePrefix <prefix>', 'Prefix for creating DNS records, if left undefined, hostedZone will be used (example: app).', undefined)
 	.option('--customApiDomain <domain>', 'Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.', undefined)
 	.option('--redirectFromApex', 'Redirect from apex domain to specified address.', false)
-	.option('--profile <name>', 'AWS profile to use with CDK', undefined)
+	.option('--profile <name>', 'AWS profile to use with CDK.', undefined)
+	.option('--hotswap', 'Hotswap stack to speedup deployment.', false)
 	.action(async (options) => {
 		console.log('Our config is: ', options)
 		const {
@@ -81,6 +82,7 @@ program
 			domainNamePrefix,
 			customApiDomain,
 			redirectFromApex,
+			hotswap,
 			profile,
 		} = options
 
@@ -99,6 +101,7 @@ program
 				domainNamePrefix,
 				customApiDomain,
 				redirectFromApex,
+				hotswap,
 				profile,
 			}),
 		)

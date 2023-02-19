@@ -10,8 +10,11 @@ interface Props {
 const cdkExecutable = require.resolve('aws-cdk/bin/cdk')
 
 export const removeHandler = async ({ appPath, stackName, region, profile }: Props) => {
-	const cdkApp = `node ${appPath}`
-	const cdkCiFlags = `--force --ci` + profile ? ` --profile ${profile}` : ``
+	const cdkRemoveArgs = [`--app "node ${appPath}"`, '--force', '--require-approval never', '--ci']
+
+	if (profile) {
+		cdkRemoveArgs.push(`--profile ${profile}`)
+	}
 
 	const variables = {
 		STACK_NAME: stackName,
@@ -19,7 +22,7 @@ export const removeHandler = async ({ appPath, stackName, region, profile }: Pro
 	}
 
 	await executeAsyncCmd({
-		cmd: `${cdkExecutable} destroy --app "${cdkApp}" ${cdkCiFlags}`,
+		cmd: `${cdkExecutable} destroy ${cdkRemoveArgs.join(' ')}`,
 		env: variables,
 	})
 }
