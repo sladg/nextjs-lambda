@@ -1,6 +1,12 @@
 # Changelog
 
 
+## [v6.2.1](https://github.com/sladg/nextjs-lambda/compare/v6.2.0...v6.2.1)
+
+* Fix command spacing [[e398e4e9438c1f82e9281120418eab8763bfed75](https://github.com/sladg/nextjs-lambda/commit/e398e4e9438c1f82e9281120418eab8763bfed75))]
+* allow specifying aws profile [[216d3717da6bbb2b15c3c3aef2066b2a3116e50f](https://github.com/sladg/nextjs-lambda/commit/216d3717da6bbb2b15c3c3aef2066b2a3116e50f))]
+
+
 ## [v6.2.0](https://github.com/sladg/nextjs-lambda/compare/v6.1.2...v6.2.0)
 
 * ✨ feat(runtime): allow configuration of NodeJS runtime for Lambda (#74) [[fd1e1da6d66107bf7fc0f5e7949b627be36ecc93](https://github.com/sladg/nextjs-lambda/commit/fd1e1da6d66107bf7fc0f5e7949b627be36ecc93))]
@@ -475,6 +481,8 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* Fix command spacing [[e398e4e9438c1f82e9281120418eab8763bfed75](https://github.com/sladg/nextjs-lambda/commit/e398e4e9438c1f82e9281120418eab8763bfed75))]
+* allow specifying aws profile [[216d3717da6bbb2b15c3c3aef2066b2a3116e50f](https://github.com/sladg/nextjs-lambda/commit/216d3717da6bbb2b15c3c3aef2066b2a3116e50f))]
 * ✨ feat(runtime): allow configuration of NodeJS runtime for Lambda (#74) [[fd1e1da6d66107bf7fc0f5e7949b627be36ecc93](https://github.com/sladg/nextjs-lambda/commit/fd1e1da6d66107bf7fc0f5e7949b627be36ecc93))]
 * 🐛 fix(dns prefix): fixed typo which was causing property not to be passed correctly [[95498061b262cc2e3c7e7076b21fdd23a11f9d3e](https://github.com/sladg/nextjs-lambda/commit/95498061b262cc2e3c7e7076b21fdd23a11f9d3e))]
 * 🐛 fix(region): prefer default region by default, do not enforce eu-central-1 for cli [[80877958845f2d25d98795288192b6e7c63bba2f](https://github.com/sladg/nextjs-lambda/commit/80877958845f2d25d98795288192b6e7c63bba2f))]
