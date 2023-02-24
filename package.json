@@ -49,5 +49,21 @@
   "engines": {
     "node": ">=16.15"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "keywords": [
+    "nextjs",
+    "next12",
+    "next13",
+    "lambda",
+    "deployment",
+    "serverless",
+    "aws-cdk",
+    "api-gateway-v2",
+    "httpapi",
+    "caching",
+    "cloudfront",
+    "image",
+    "optimization",
+    "components"
+  ]
 }
