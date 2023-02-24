@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v6.2.3](https://github.com/sladg/nextjs-lambda/compare/v6.2.2...v6.2.3)
+
+* 📝 docs(keywords): added keywords for easier search, updated lock file with node16 [[cf747417e7c89678484b1ad1d26494edadbff07f](https://github.com/sladg/nextjs-lambda/commit/cf747417e7c89678484b1ad1d26494edadbff07f))]
+
+
 ## [v6.2.2](https://github.com/sladg/nextjs-lambda/compare/v6.2.1...v6.2.2)
 
 * 🐛 fix(cdk flags): cleaned cdk args, hotswap off by default, turnable with flag (#78) [[c2d6b02f2125fe1b6608c197b01b986ac03a7060](https://github.com/sladg/nextjs-lambda/commit/c2d6b02f2125fe1b6608c197b01b986ac03a7060))]
@@ -486,6 +491,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* 📝 docs(keywords): added keywords for easier search, updated lock file with node16 [[cf747417e7c89678484b1ad1d26494edadbff07f](https://github.com/sladg/nextjs-lambda/commit/cf747417e7c89678484b1ad1d26494edadbff07f))]
 * 🐛 fix(cdk flags): cleaned cdk args, hotswap off by default, turnable with flag (#78) [[c2d6b02f2125fe1b6608c197b01b986ac03a7060](https://github.com/sladg/nextjs-lambda/commit/c2d6b02f2125fe1b6608c197b01b986ac03a7060))]
 * Fix command spacing [[e398e4e9438c1f82e9281120418eab8763bfed75](https://github.com/sladg/nextjs-lambda/commit/e398e4e9438c1f82e9281120418eab8763bfed75))]
 * allow specifying aws profile [[216d3717da6bbb2b15c3c3aef2066b2a3116e50f](https://github.com/sladg/nextjs-lambda/commit/216d3717da6bbb2b15c3c3aef2066b2a3116e50f))]
