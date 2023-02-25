@@ -60,8 +60,7 @@ program
 	.option('--imageLambdaTimeout <sec>', 'Set timeout for lambda function handling image optimization.', Number, IMAGE_LAMBDA_DEFAULT_TIMEOUT)
 	.option('--imageLambdaMemory <mb>', 'Set memory for lambda function handling image optimization.', Number, IMAGE_LAMBDA_DEFAULT_MEMORY)
 	.option('--lambdaRuntime <runtime>', "Specify version of NodeJS to use as Lambda's runtime. Options: node14, node16, node18.", 'node16')
-	.option('--hostedZone <domainName>', 'Hosted zone domain name to be used for creating DNS records (example: example.com).', undefined)
-	.option('--domainNamePrefix <prefix>', 'Prefix for creating DNS records, if left undefined, hostedZone will be used (example: app).', undefined)
+	.option('--domains <domainList>', 'Comma-separated list of domains to use. (example: mydomain.com,mydonain.au,other.domain.com)', undefined)
 	.option('--customApiDomain <domain>', 'Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.', undefined)
 	.option('--redirectFromApex', 'Redirect from apex domain to specified address.', false)
 	.option('--profile <name>', 'AWS profile to use with CDK.', undefined)
@@ -78,10 +77,9 @@ program
 			lambdaRuntime,
 			imageLambdaMemory,
 			imageLambdaTimeout,
-			hostedZone,
-			domainNamePrefix,
 			customApiDomain,
 			redirectFromApex,
+			domains,
 			hotswap,
 			profile,
 		} = options
@@ -97,10 +95,9 @@ program
 				lambdaRuntime,
 				imageLambdaMemory,
 				imageLambdaTimeout,
-				hostedZone,
-				domainNamePrefix,
 				customApiDomain,
 				redirectFromApex,
+				domains,
 				hotswap,
 				profile,
 			}),

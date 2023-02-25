@@ -1,15 +1,24 @@
 import { CfnOutput, Stack } from 'aws-cdk-lib'
-import { DnsValidatedCertificate } from 'aws-cdk-lib/aws-certificatemanager'
-import { IHostedZone } from 'aws-cdk-lib/aws-route53'
+import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager'
+import { MappedDomain } from '../types'
 
 export interface SetupCfnCertificateProps {
-	hostedZone: IHostedZone
-	domainName: string
+	domains: MappedDomain[]
 }
 
-export const setupCfnCertificate = (scope: Stack, { hostedZone, domainName }: SetupCfnCertificateProps) => {
+export const setupCfnCertificate = (scope: Stack, { domains }: SetupCfnCertificateProps) => {
+	const [firstDomain, ...otherDomains] = domains
+
 	// us-east-1 is needed for Cloudfront to accept certificate.
-	const certificate = new DnsValidatedCertificate(scope, 'Certificate', { domainName, hostedZone, region: 'us-east-1' })
+	// https://github.com/aws/aws-cdk/issues/8934
+	const multiZoneMap = domains.reduce((acc, curr) => ({ ...acc, [curr.domain]: curr.zone }), {})
+
+	const certificate = new Certificate(scope, 'Certificate', {
+		domainName: firstDomain.domain,
+
+		subjectAlternativeNames: otherDomains.map((a) => a.domain),
+		validation: CertificateValidation.fromDnsMultiZone(multiZoneMap),
+	})
 
 	new CfnOutput(scope, 'certificateArn', { value: certificate.certificateArn })
 

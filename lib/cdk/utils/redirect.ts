@@ -1,18 +1,17 @@
 import { CfnOutput, Stack } from 'aws-cdk-lib'
-import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { HttpsRedirect } from 'aws-cdk-lib/aws-route53-patterns'
+import { MappedDomain } from '../types'
 
 export interface SetupApexRedirectProps {
-	sourceHostedZone: IHostedZone
-	targetDomain: string
+	domain: MappedDomain
 }
 
-export const setupApexRedirect = (scope: Stack, { sourceHostedZone, targetDomain }: SetupApexRedirectProps) => {
+export const setupApexRedirect = (scope: Stack, { domain }: SetupApexRedirectProps) => {
 	new HttpsRedirect(scope, `ApexRedirect`, {
 		// Currently supports only apex (root) domain.
-		zone: sourceHostedZone,
-		targetDomain,
+		zone: domain.zone,
+		targetDomain: domain.recordName,
 	})
 
-	new CfnOutput(scope, 'RedirectFrom', { value: sourceHostedZone.zoneName })
+	new CfnOutput(scope, 'RedirectFrom', { value: domain.zone.zoneName })
 }

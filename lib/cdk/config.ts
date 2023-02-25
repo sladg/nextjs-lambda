@@ -22,21 +22,21 @@ const RawEnvConfig = cleanEnv(process.env, {
 	LAMBDA_RUNTIME: str({ default: RuntimeEnum.NODEJS_16_X, choices: Object.values(RuntimeEnum) }),
 	IMAGE_LAMBDA_TIMEOUT: num({ default: IMAGE_LAMBDA_DEFAULT_TIMEOUT }),
 	IMAGE_LAMBDA_MEMORY: num({ default: IMAGE_LAMBDA_DEFAULT_MEMORY }),
-	HOSTED_ZONE: str({ default: undefined }),
-	DNS_PREFIX: str({ default: undefined }),
 	CUSTOM_API_DOMAIN: str({ default: undefined }),
 	REDIRECT_FROM_APEX: bool({ default: false }),
+	DOMAIN_NAMES: str({ default: undefined }),
+	PROFILE: str({ default: undefined }),
 })
 
 export const envConfig = {
+	profile: RawEnvConfig.PROFILE,
 	stackName: RawEnvConfig.STACK_NAME,
 	lambdaMemory: RawEnvConfig.LAMBDA_MEMORY,
 	lambdaTimeout: RawEnvConfig.LAMBDA_TIMEOUT,
 	lambdaRuntime: runtimeMap[RawEnvConfig.LAMBDA_RUNTIME],
 	imageLambdaMemory: RawEnvConfig.IMAGE_LAMBDA_MEMORY,
 	imageLambdaTimeout: RawEnvConfig.IMAGE_LAMBDA_TIMEOUT,
-	hostedZone: RawEnvConfig.HOSTED_ZONE,
-	dnsPrefix: RawEnvConfig.DNS_PREFIX,
 	customApiDomain: RawEnvConfig.CUSTOM_API_DOMAIN,
 	redirectFromApex: RawEnvConfig.REDIRECT_FROM_APEX,
+	domainNames: RawEnvConfig.DOMAIN_NAMES ? RawEnvConfig.DOMAIN_NAMES.split(',').map((a) => a.trim()) : [],
 }

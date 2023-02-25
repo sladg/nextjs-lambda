@@ -4,13 +4,12 @@ import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { Function } from 'aws-cdk-lib/aws-lambda'
-import { HostedZone, IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { Bucket } from 'aws-cdk-lib/aws-s3'
-import { CustomStackProps } from './types'
+import { CustomStackProps, MappedDomain } from './types'
 import { setupApiGateway, SetupApiGwProps } from './utils/apiGw'
 import { setupCfnCertificate, SetupCfnCertificateProps } from './utils/cfnCertificate'
 import { setupCfnDistro, SetupCfnDistroProps } from './utils/cfnDistro'
-import { setupDnsRecords, SetupDnsRecordsProps } from './utils/dnsRecords'
+import { PrepareDomainProps, prepareDomains, setupDnsRecords, SetupDnsRecordsProps } from './utils/dnsRecords'
 import { setupImageLambda, SetupImageLambdaProps } from './utils/imageLambda'
 import { setupApexRedirect, SetupApexRedirectProps } from './utils/redirect'
 import { setupAssetsBucket, UploadAssetsProps, uploadStaticAssets } from './utils/s3'
@@ -23,21 +22,16 @@ export class NextStandaloneStack extends Stack {
 	assetsBucket?: Bucket
 	cfnDistro?: IDistribution
 	cfnCertificate?: ICertificate
-	hostedZone?: IHostedZone
-	domainName?: string
+	domains: MappedDomain[]
 
 	constructor(scope: App, id: string, config: CustomStackProps) {
 		super(scope, id, config)
 
 		console.log("CDK's config:", config)
 
-		if (config.hostedZone) {
-			this.hostedZone = HostedZone.fromLookup(this, 'HostedZone_certificate', { domainName: config.hostedZone })
-			this.domainName = config.dnsPrefix ? `${config.dnsPrefix}.${config.hostedZone}` : config.hostedZone
+		if (!!config.customApiDomain && config.domainNames.length > 1) {
+			throw new Error('Cannot use Apex redirect with multiple domains')
 		}
-
-		console.log('Hosted zone:', this.hostedZone?.zoneName)
-		console.log('Normalized domain name:', this.domainName)
 
 		this.assetsBucket = this.setupAssetsBucket()
 
@@ -68,10 +62,16 @@ export class NextStandaloneStack extends Stack {
 			serverBasePath: config.apigwServerPath,
 		})
 
-		if (!!this.hostedZone && !!this.domainName) {
+		if (config.domainNames.length > 0) {
+			this.domains = this.prepareDomains({
+				domains: config.domainNames,
+				profile: config.awsProfile,
+			})
+		}
+
+		if (this.domains.length > 0) {
 			this.cfnCertificate = this.setupCfnCertificate({
-				hostedZone: this.hostedZone,
-				domainName: this.domainName,
+				domains: this.domains,
 			})
 		}
 
@@ -80,7 +80,7 @@ export class NextStandaloneStack extends Stack {
 			apiGateway: this.apiGateway,
 			imageBasePath: config.apigwImagePath,
 			serverBasePath: config.apigwServerPath,
-			domainName: this.domainName,
+			domains: this.domains,
 			certificate: this.cfnCertificate,
 			customApiOrigin: config.customApiDomain ? new HttpOrigin(config.customApiDomain) : undefined,
 		})
@@ -91,20 +91,22 @@ export class NextStandaloneStack extends Stack {
 			cfnDistribution: this.cfnDistro,
 		})
 
-		if (!!this.hostedZone && !!this.domainName) {
+		if (this.domains.length > 0) {
 			this.setupDnsRecords({
 				cfnDistro: this.cfnDistro,
-				hostedZone: this.hostedZone,
-				dnsPrefix: config.dnsPrefix,
+				domains: this.domains,
 			})
 
 			if (!!config.redirectFromApex) {
 				this.setupApexRedirect({
-					sourceHostedZone: this.hostedZone,
-					targetDomain: this.domainName,
+					domain: this.domains[0],
 				})
 			}
 		}
+	}
+
+	prepareDomains(props: PrepareDomainProps) {
+		return prepareDomains(this, props)
 	}
 
 	setupAssetsBucket() {

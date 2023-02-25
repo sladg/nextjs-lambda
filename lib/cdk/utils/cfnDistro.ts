@@ -14,9 +14,10 @@ import {
 } from 'aws-cdk-lib/aws-cloudfront'
 import { HttpOrigin, S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { Bucket } from 'aws-cdk-lib/aws-s3'
+import { MappedDomain } from '../types'
 
 export interface SetupCfnDistroProps {
-	domainName?: string
+	domains: MappedDomain[]
 	certificate?: ICertificate
 	apiGateway: HttpApi
 	imageBasePath: string
@@ -27,7 +28,7 @@ export interface SetupCfnDistroProps {
 
 export const setupCfnDistro = (
 	scope: Stack,
-	{ apiGateway, imageBasePath, serverBasePath, assetsBucket, domainName, certificate, customApiOrigin }: SetupCfnDistroProps,
+	{ apiGateway, imageBasePath, serverBasePath, assetsBucket, domains, certificate, customApiOrigin }: SetupCfnDistroProps,
 ) => {
 	const apiGwDomainName = `${apiGateway.apiId}.execute-api.${scope.region}.amazonaws.com`
 
@@ -75,7 +76,7 @@ export const setupCfnDistro = (
 		comment: `CloudFront distribution for ${scope.stackName}`,
 		enableIpv6: true,
 		priceClass: PriceClass.PRICE_CLASS_100,
-		domainNames: domainName ? [domainName] : undefined,
+		domainNames: domains.length > 0 ? domains.map((a) => a.domain) : undefined,
 		certificate,
 		defaultBehavior: {
 			origin: serverOrigin,

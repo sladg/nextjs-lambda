@@ -1,5 +1,6 @@
 import { StackProps } from 'aws-cdk-lib'
 import { Runtime } from 'aws-cdk-lib/aws-lambda'
+import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 
 export interface CustomStackProps extends StackProps {
 	apigwServerPath: string
@@ -17,8 +18,14 @@ export interface CustomStackProps extends StackProps {
 	lambdaRuntime: Runtime
 	imageLambdaTimeout?: number
 	imageLambdaMemory?: number
-	hostedZone?: string
-	dnsPrefix?: string
+	domainNames: string[]
+	redirectFromApex: boolean
+	awsProfile?: string
 	customApiDomain?: string
-	redirectFromApex?: boolean
+}
+
+export interface MappedDomain {
+	recordName: string
+	domain: string
+	zone: IHostedZone
 }
