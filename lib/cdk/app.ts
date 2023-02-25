@@ -1,6 +1,7 @@
 import { handler, name, optimizerCodePath, optimizerLayerPath, version } from '@sladg/imaginex-lambda'
 import { App } from 'aws-cdk-lib'
 import path from 'path'
+
 import { envConfig } from './config'
 import { NextStandaloneStack } from './stack'
 

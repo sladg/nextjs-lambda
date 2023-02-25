@@ -5,6 +5,7 @@ import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { Function } from 'aws-cdk-lib/aws-lambda'
 import { Bucket } from 'aws-cdk-lib/aws-s3'
+
 import { CustomStackProps, MappedDomain } from './types'
 import { setupApiGateway, SetupApiGwProps } from './utils/apiGw'
 import { setupCfnCertificate, SetupCfnCertificateProps } from './utils/cfnCertificate'
@@ -97,7 +98,7 @@ export class NextStandaloneStack extends Stack {
 				domains: this.domains,
 			})
 
-			if (!!config.redirectFromApex) {
+			if (config.redirectFromApex) {
 				this.setupApexRedirect({
 					domain: this.domains[0],
 				})

@@ -1,3 +1,4 @@
+/* eslint-disable */
 // ! This is needed for nextjs to correctly resolve.
 process.chdir(__dirname)
 process.env.NODE_ENV = 'production'
