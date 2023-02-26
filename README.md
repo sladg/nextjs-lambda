@@ -6,6 +6,7 @@ This is an alternative to existing Lambda@Edge implementation ([see](https://www
 
 This library uses Cloudfront, S3, ApiGateway and Lambdas to deploy easily in seconds (hotswap supported).
 
+Multiple domains can be specified within CLI and Routing as well as Certificates are handled automatically.
 
 ## TL;DR
 - In your NextJS project, set output to standalone.

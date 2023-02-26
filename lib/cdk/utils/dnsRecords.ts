@@ -45,7 +45,8 @@ const matchDomainToHostedZone = (domainToMatch: string, zones: string[]) => {
 		throw new Error(`No hosted zone found for domain: ${domainToMatch}`)
 	}
 
-	return matchedZone.replace('/.$/', '')
+	// Remove trailing dot
+	return matchedZone.endsWith('.') ? matchedZone.slice(0, -1) : matchedZone
 }
 
 export const prepareDomains = (scope: Stack, { domains, profile }: PrepareDomainProps): MappedDomain[] => {
@@ -53,11 +54,12 @@ export const prepareDomains = (scope: Stack, { domains, profile }: PrepareDomain
 
 	return domains.map((domain, index) => {
 		const hostedZone = matchDomainToHostedZone(domain, zones)
-		const recordName = domain.replace(hostedZone, '')
-
+		const subdomain = domain.replace(hostedZone, '')
+		const recordName = subdomain.endsWith('.') ? subdomain.slice(0, -1) : subdomain
 		const zone = HostedZone.fromLookup(scope, `Zone_${index}`, { domainName: hostedZone })
 
-		return { zone, recordName, domain }
+		// Returning additional info, useful for debugging
+		return { zone, recordName, domain, subdomain, hostedZone }
 	})
 }
 

@@ -23,7 +23,7 @@ export class NextStandaloneStack extends Stack {
 	assetsBucket?: Bucket
 	cfnDistro?: IDistribution
 	cfnCertificate?: ICertificate
-	domains: MappedDomain[]
+	domains: MappedDomain[] = []
 
 	constructor(scope: App, id: string, config: CustomStackProps) {
 		super(scope, id, config)
@@ -68,6 +68,8 @@ export class NextStandaloneStack extends Stack {
 				domains: config.domainNames,
 				profile: config.awsProfile,
 			})
+
+			console.log("Domains's config:", this.domains)
 		}
 
 		if (this.domains.length > 0) {

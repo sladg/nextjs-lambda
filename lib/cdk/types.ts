@@ -18,14 +18,15 @@ export interface CustomStackProps extends StackProps {
 	lambdaRuntime: Runtime
 	imageLambdaTimeout?: number
 	imageLambdaMemory?: number
-	domainNames: string[]
 	redirectFromApex: boolean
-	awsProfile?: string
 	customApiDomain?: string
+	certificateArn?: string
+	domainNames: string[]
+	awsProfile?: string
 }
 
 export interface MappedDomain {
-	recordName: string
+	recordName?: string
 	domain: string
 	zone: IHostedZone
 }

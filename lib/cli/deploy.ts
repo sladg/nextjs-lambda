@@ -11,7 +11,7 @@ interface Props {
 	imageLambdaMemory?: number
 	imageLambdaTimeout?: number
 	customApiDomain?: string
-	domains?: string
+	domainNames?: string
 	redirectFromApex?: boolean
 	profile?: string
 	hotswap: boolean
@@ -29,7 +29,7 @@ export const deployHandler = async ({
 	lambdaRuntime,
 	imageLambdaMemory,
 	imageLambdaTimeout,
-	domains,
+	domainNames,
 	customApiDomain,
 	redirectFromApex,
 	hotswap,
@@ -56,7 +56,7 @@ export const deployHandler = async ({
 		...(lambdaRuntime && { LAMBDA_RUNTIME: lambdaRuntime.toString() }),
 		...(imageLambdaMemory && { IMAGE_LAMBDA_MEMORY: imageLambdaMemory.toString() }),
 		...(imageLambdaTimeout && { IMAGE_LAMBDA_TIMEOUT: imageLambdaTimeout.toString() }),
-		...(domains && { DOMAINS: domains }),
+		...(domainNames && { DOMAIN_NAMES: domainNames }),
 		...(customApiDomain && { CUSTOM_API_DOMAIN: customApiDomain }),
 		...(redirectFromApex && { REDIRECT_FROM_APEX: redirectFromApex.toString() }),
 	}

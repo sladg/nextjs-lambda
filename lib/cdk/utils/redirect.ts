@@ -10,7 +10,7 @@ export const setupApexRedirect = (scope: Stack, { domain }: SetupApexRedirectPro
 	new HttpsRedirect(scope, `ApexRedirect`, {
 		// Currently supports only apex (root) domain.
 		zone: domain.zone,
-		targetDomain: domain.recordName,
+		targetDomain: domain.domain,
 	})
 
 	new CfnOutput(scope, 'RedirectFrom', { value: domain.zone.zoneName })

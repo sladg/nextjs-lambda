@@ -10,19 +10,19 @@ const app = new App()
 const commandCwd = process.cwd()
 
 new NextStandaloneStack(app, envConfig.stackName, {
-	// NextJS lambda specific config
+	// NextJS lambda specific config.
 	assetsZipPath: path.resolve(commandCwd, './next.out/assetsLayer.zip'),
 	codeZipPath: path.resolve(commandCwd, './next.out/code.zip'),
 	dependenciesZipPath: path.resolve(commandCwd, './next.out/dependenciesLayer.zip'),
 	customServerHandler: 'index.handler',
 
-	// Image lambda specific config
+	// Image lambda specific config.
 	imageHandlerZipPath: optimizerCodePath,
 	imageLayerZipPath: optimizerLayerPath,
 	imageLambdaHash: `${name}_${version}`,
 	customImageHandler: handler,
 
-	// Lambda & AWS config
+	// Lambda & AWS config.
 	apigwServerPath: '/_server',
 	apigwImagePath: '/_image',
 
