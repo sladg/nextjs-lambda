@@ -1,5 +1,6 @@
 import { CfnOutput, Stack } from 'aws-cdk-lib'
 import { HttpsRedirect } from 'aws-cdk-lib/aws-route53-patterns'
+
 import { MappedDomain } from '../types'
 
 export interface SetupApexRedirectProps {

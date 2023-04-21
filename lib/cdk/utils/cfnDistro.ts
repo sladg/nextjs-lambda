@@ -14,6 +14,7 @@ import {
 } from 'aws-cdk-lib/aws-cloudfront'
 import { HttpOrigin, S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { Bucket } from 'aws-cdk-lib/aws-s3'
+
 import { MappedDomain } from '../types'
 
 export interface SetupCfnDistroProps {

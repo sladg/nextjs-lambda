@@ -1,5 +1,6 @@
 import { CfnOutput, Stack } from 'aws-cdk-lib'
 import { CertificateValidation, DnsValidatedCertificate } from 'aws-cdk-lib/aws-certificatemanager'
+
 import { MappedDomain } from '../types'
 
 export interface SetupCfnCertificateProps {

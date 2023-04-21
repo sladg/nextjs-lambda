@@ -2,12 +2,13 @@
 
 import { Command } from 'commander'
 import path from 'path'
+
 import packageJson from '../package.json'
+import { DEFAULT_MEMORY as IMAGE_LAMBDA_DEFAULT_MEMORY, DEFAULT_TIMEOUT as IMAGE_LAMBDA_DEFAULT_TIMEOUT } from './cdk/utils/imageLambda'
 import { deployHandler } from './cli/deploy'
 import { packHandler } from './cli/pack'
-import { wrapProcess } from './utils'
-import { DEFAULT_TIMEOUT as IMAGE_LAMBDA_DEFAULT_TIMEOUT, DEFAULT_MEMORY as IMAGE_LAMBDA_DEFAULT_MEMORY } from './cdk/utils/imageLambda'
 import { removeHandler } from './cli/remove'
+import { wrapProcess } from './utils'
 
 const commandCwd = process.cwd()
 const program = new Command()
