@@ -3,10 +3,11 @@ import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
 import { AaaaRecord, ARecord, HostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53'
 import { CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets'
 import { execSync } from 'child_process'
-import { MappedDomain } from '../types'
 import { readFileSync } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
+
+import { MappedDomain } from '../types'
 
 export interface PrepareDomainProps {
 	domains: string[]
