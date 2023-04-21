@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [v7.0.1](https://github.com/sladg/nextjs-lambda/compare/v7.0.0...v7.0.1)
+
+* Lint scripts run on all nested files in lib folder [[502c81450902f367ea6cca42785ced9d04820039](https://github.com/sladg/nextjs-lambda/commit/502c81450902f367ea6cca42785ced9d04820039))]
+* Remove unused variables [[8a8fefaa7384cd95a5a3e88796643b828013f018](https://github.com/sladg/nextjs-lambda/commit/8a8fefaa7384cd95a5a3e88796643b828013f018))]
+* Fix sort import eslint errors [[c4a3b555f30b5d1551a257a2fb2fcf7c13a2eaaa](https://github.com/sladg/nextjs-lambda/commit/c4a3b555f30b5d1551a257a2fb2fcf7c13a2eaaa))]
+
+
 ## [v7.0.0](https://github.com/sladg/nextjs-lambda/compare/v6.2.3...v7.0.0)
 
 * 🐛 fix(certificates): correctly validate multi-zone certificates and handle naming of zones [[d052e6575c858d0564963ef5d3a849112a2bd380](https://github.com/sladg/nextjs-lambda/commit/d052e6575c858d0564963ef5d3a849112a2bd380))]
@@ -498,6 +505,9 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* Lint scripts run on all nested files in lib folder [[502c81450902f367ea6cca42785ced9d04820039](https://github.com/sladg/nextjs-lambda/commit/502c81450902f367ea6cca42785ced9d04820039))]
+* Remove unused variables [[8a8fefaa7384cd95a5a3e88796643b828013f018](https://github.com/sladg/nextjs-lambda/commit/8a8fefaa7384cd95a5a3e88796643b828013f018))]
+* Fix sort import eslint errors [[c4a3b555f30b5d1551a257a2fb2fcf7c13a2eaaa](https://github.com/sladg/nextjs-lambda/commit/c4a3b555f30b5d1551a257a2fb2fcf7c13a2eaaa))]
 * 🐛 fix(certificates): correctly validate multi-zone certificates and handle naming of zones [[d052e6575c858d0564963ef5d3a849112a2bd380](https://github.com/sladg/nextjs-lambda/commit/d052e6575c858d0564963ef5d3a849112a2bd380))]
 * 💎 style(eslint): eslint and prettier added to keep the styles in tact [[9932aa6621ff32c72d1770c169f7eb3da34f9118](https://github.com/sladg/nextjs-lambda/commit/9932aa6621ff32c72d1770c169f7eb3da34f9118))]
 * ✨ feat(domains): rework how domains are passed, allow for many, auto-guess zone (#73, #79) [[e74a2122706ec3a443b8acfa264f2aba6bbf72a3](https://github.com/sladg/nextjs-lambda/commit/e74a2122706ec3a443b8acfa264f2aba6bbf72a3))]
