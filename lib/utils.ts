@@ -89,7 +89,7 @@ export const executeAsyncCmd = async ({ cmd, path, env }: CommandProps) => {
 
 	return new Promise((resolve, reject) => {
 		console.log('Executing command: ', cmd)
-		const sh = exec(cmd, { env: { ...process.env, ...env } }, (error, stdout, stderr) => {
+		const sh = exec(cmd, { env: { ...process.env, ...env } }, (error, stdout) => {
 			if (error) {
 				reject(error)
 			} else {
