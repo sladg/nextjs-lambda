@@ -61,6 +61,7 @@ export const setupCfnDistro = (
 	const apiCachePolicy = new CachePolicy(scope, 'NextApiCachePolicy', {
 		...defaultCacheOptions,
 		maxTtl: Duration.seconds(0),
+		defaultTtl: Duration.seconds(0),
 	})
 
 	// Public folder persists names so we are making default TTL lower for cases when invalidation does not happen.
