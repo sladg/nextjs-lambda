@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v7.0.4](https://github.com/sladg/nextjs-lambda/compare/v7.0.3...v7.0.4)
+
+* fixing API cache default [[4797ecdc4184572bc6955f2e5b641e7d2dbb1a5a](https://github.com/sladg/nextjs-lambda/commit/4797ecdc4184572bc6955f2e5b641e7d2dbb1a5a))]
+
+
 ## [v7.0.3](https://github.com/sladg/nextjs-lambda/compare/v7.0.1...v7.0.3)
 
 * 🧹 chore(imaginex): upgraded dependency to newest version [[6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f](https://github.com/sladg/nextjs-lambda/commit/6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f))]
@@ -511,6 +516,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* fixing API cache default [[4797ecdc4184572bc6955f2e5b641e7d2dbb1a5a](https://github.com/sladg/nextjs-lambda/commit/4797ecdc4184572bc6955f2e5b641e7d2dbb1a5a))]
 * 🧹 chore(imaginex): upgraded dependency to newest version [[6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f](https://github.com/sladg/nextjs-lambda/commit/6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f))]
 * 🐛 fix(support next ^13.3): improved handling of next config lookup (fix #88) [[40076a2b36399df1b3536e5b65304f5a036dfd61](https://github.com/sladg/nextjs-lambda/commit/40076a2b36399df1b3536e5b65304f5a036dfd61))]
 * Lint scripts run on all nested files in lib folder [[502c81450902f367ea6cca42785ced9d04820039](https://github.com/sladg/nextjs-lambda/commit/502c81450902f367ea6cca42785ced9d04820039))]
