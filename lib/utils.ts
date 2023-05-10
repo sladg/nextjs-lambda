@@ -3,15 +3,29 @@ import { exec } from 'child_process'
 import { createWriteStream, existsSync, readdirSync, readFileSync } from 'fs'
 import glob, { IOptions as GlobOptions } from 'glob'
 
-export const findInFile = (filePath: string, regex: RegExp): string => {
+export const findObjectInFile = (filePath: string, regexes: RegExp[]): string => {
 	const content = readFileSync(filePath, 'utf-8')
-	const data = content.match(regex)
 
-	if (!data?.[0]) {
-		throw new Error('Unable to match Next server configuration.')
+	const data = regexes.reduce<string | null>((acc, regex) => {
+		if (acc) {
+			return acc
+		}
+
+		return content.match(regex)?.[0] ?? null
+	}, null)
+
+	if (!data) {
+		throw new Error('Unable to match Next server configuration. Report this issue in Github.')
 	}
 
-	return data[0]
+	try {
+		JSON.parse(data)
+	} catch (err) {
+		console.warn(err)
+		throw new Error('Unable to parse Next server configuration. Report this issue in Github.')
+	}
+
+	return data
 }
 
 interface ZipFolderProps {

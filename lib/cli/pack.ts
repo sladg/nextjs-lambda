@@ -2,8 +2,8 @@ import { mkdirSync, rmSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 
-import { nextServerConfigRegex } from '../consts'
-import { findInFile, findPathToNestedFile, validateFolderExists, validatePublicFolderStructure, zipMultipleFoldersOrFiles } from '../utils'
+import { nextServerConfigRegex, nextServerConfigRegex13_3 } from '../consts'
+import { findObjectInFile, findPathToNestedFile, validateFolderExists, validatePublicFolderStructure, zipMultipleFoldersOrFiles } from '../utils'
 
 interface Props {
 	standaloneFolder: string
@@ -90,7 +90,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 
 	const tmpFolder = tmpdir()
 
-	const nextConfig = findInFile(generatedNextServerPath, nextServerConfigRegex)
+	const nextConfig = findObjectInFile(generatedNextServerPath, [nextServerConfigRegex13_3, nextServerConfigRegex])
 	const configPath = path.resolve(tmpFolder, `./config.json_${Math.random()}`)
 	writeFileSync(configPath, nextConfig, 'utf-8')
 
