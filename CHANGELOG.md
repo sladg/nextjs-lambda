@@ -1,6 +1,12 @@
 # Changelog
 
 
+## [v7.0.3](https://github.com/sladg/nextjs-lambda/compare/v7.0.1...v7.0.3)
+
+* 🧹 chore(imaginex): upgraded dependency to newest version [[6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f](https://github.com/sladg/nextjs-lambda/commit/6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f))]
+* 🐛 fix(support next ^13.3): improved handling of next config lookup (fix #88) [[40076a2b36399df1b3536e5b65304f5a036dfd61](https://github.com/sladg/nextjs-lambda/commit/40076a2b36399df1b3536e5b65304f5a036dfd61))]
+
+
 ## [v7.0.1](https://github.com/sladg/nextjs-lambda/compare/v7.0.0...v7.0.1)
 
 * Lint scripts run on all nested files in lib folder [[502c81450902f367ea6cca42785ced9d04820039](https://github.com/sladg/nextjs-lambda/commit/502c81450902f367ea6cca42785ced9d04820039))]
@@ -505,6 +511,8 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* 🧹 chore(imaginex): upgraded dependency to newest version [[6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f](https://github.com/sladg/nextjs-lambda/commit/6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f))]
+* 🐛 fix(support next ^13.3): improved handling of next config lookup (fix #88) [[40076a2b36399df1b3536e5b65304f5a036dfd61](https://github.com/sladg/nextjs-lambda/commit/40076a2b36399df1b3536e5b65304f5a036dfd61))]
 * Lint scripts run on all nested files in lib folder [[502c81450902f367ea6cca42785ced9d04820039](https://github.com/sladg/nextjs-lambda/commit/502c81450902f367ea6cca42785ced9d04820039))]
 * Remove unused variables [[8a8fefaa7384cd95a5a3e88796643b828013f018](https://github.com/sladg/nextjs-lambda/commit/8a8fefaa7384cd95a5a3e88796643b828013f018))]
 * Fix sort import eslint errors [[c4a3b555f30b5d1551a257a2fb2fcf7c13a2eaaa](https://github.com/sladg/nextjs-lambda/commit/c4a3b555f30b5d1551a257a2fb2fcf7c13a2eaaa))]
