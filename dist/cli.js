@@ -23362,7 +23362,7 @@ var package_default = {
   exports: "./dist/index.js",
   types: "./dist/index.d.ts",
   bin: {
-    cli: "./dist/cli.js"
+    njs: "./dist/cli.js"
   },
   files: [
     "dist"
@@ -23376,8 +23376,7 @@ var package_default = {
     "build:cli": "tsup lib/cli.ts",
     "build:handler": "tsup lib/server-handler/index.ts --out-dir dist/server-handler",
     "build:main": "tsup lib/index.ts --dts lib/index.ts",
-    "copy:files": "cp -R ./lib/templates ./dist/templates",
-    postinstall: "npm run build"
+    "copy:files": "cp -R ./lib/templates ./dist/templates"
   },
   dependencies: {
     "@sladg/imaginex-lambda": "0.17.0"

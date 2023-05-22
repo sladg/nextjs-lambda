@@ -6,7 +6,7 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "cli": "./dist/cli.js"
+    "njs": "./dist/cli.js"
   },
   "files": [
     "dist"
