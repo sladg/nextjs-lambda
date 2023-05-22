@@ -1,0 +1,14 @@
+stackName: StandaloneNextjsStack-Temporary
+appPath: ../dist/cdk/app.js
+bootstrap: false
+region: eu-central-1
+lambdaTimeout: 15
+lambdaMemory: 512
+lambdaRuntime: node16
+imageLambdaMemory: 512
+imageLambdaTimeout: 10
+customApiDomain: null
+redirectFromApex: false
+domainNames: mydomain.com,mydomain.au,other.domain.com
+hotswap: false
+profile: null

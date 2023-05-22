@@ -1,0 +1,4 @@
+standaloneFolder: ./.next/standalone
+publicFolder: ./public
+handlerPath: ./server-handler/index.js
+outputFolder: ./next.out

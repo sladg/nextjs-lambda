@@ -20,18 +20,21 @@
     "lint:check": "eslint ./lib/** --ext .ts",
     "lint:fix": "eslint --fix ./lib/** --ext .ts",
     "prebuild": "rm -rf dist",
-    "build": "npm run build:cli && npm run build:main && npm run build:cdk && npm run build:handler",
+    "build": "npm run build:cli && npm run build:main && npm run build:cdk && npm run build:handler && npm run copy:files",
     "build:cdk": "tsup lib/cdk/app.ts --out-dir dist/cdk",
     "build:cli": "tsup lib/cli.ts",
     "build:handler": "tsup lib/server-handler/index.ts --out-dir dist/server-handler",
     "build:main": "tsup lib/index.ts --dts lib/index.ts",
     "commit": "npx --package cz-emoji-conventional --package commitizen -- cz",
+    "copy:files": "cp -R ./lib/templates ./dist/templates",
+    "postinstall":"npm run build",
     "release": "npx --package @sladg/release-utils utils shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
   },
   "dependencies": {
     "@sladg/imaginex-lambda": "0.17.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "^18.14.1",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
@@ -43,6 +46,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "js-yaml": "^4.1.0",
     "prettier": "^2.8.4",
     "serverless-http": "^3.1.1",
     "tsup": "^6.6.3",

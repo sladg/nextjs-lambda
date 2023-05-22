@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander'
+import { copyFileSync, readFileSync } from 'fs'
+import yaml from 'js-yaml'
 import path from 'path'
 
 import packageJson from '../package.json'
@@ -22,6 +24,7 @@ program
 program
 	.command('pack')
 	.description('Package standalone Next12 build into Lambda compatible ZIPs.')
+	.option('--config <path>', 'YAML config file that can be set as opposed to having to set every flag.')
 	.option(
 		'--standaloneFolder <path>',
 		'Folder including NextJS standalone build. Parental folder should include more folders as well.',
@@ -43,8 +46,16 @@ program
 		path.resolve(commandCwd, './next.out'),
 	)
 	.action(async (options) => {
-		console.log('Our config is: ', options)
-		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = options
+		let config
+		if (options.config) {
+			const configPath = path.resolve(process.cwd(), options.config)
+			config = yaml.load(readFileSync(configPath, 'utf-8'))
+		} else {
+			config = options
+		}
+
+		console.log('Our config is: ', config)
+		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = config
 
 		wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, publicFolder, standaloneFolder }))
 	})
@@ -52,6 +63,7 @@ program
 program
 	.command('deploy')
 	.description('Deploy Next application via CDK')
+	.option('--config <path>', 'YAML config file that can be set as opposed to having to set every flag.')
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
 	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk/app.js'))
 	.option('--bootstrap', 'Bootstrap CDK stack.', false)
@@ -67,7 +79,15 @@ program
 	.option('--profile <name>', 'AWS profile to use with CDK.', undefined)
 	.option('--hotswap', 'Hotswap stack to speedup deployment.', false)
 	.action(async (options) => {
-		console.log('Our config is: ', options)
+		let config
+		if (options.config) {
+			const configPath = path.resolve(process.cwd(), options.config)
+			config = yaml.load(readFileSync(configPath, 'utf-8'))
+		} else {
+			config = options
+		}
+
+		console.log('Our config is: ', config)
 		const {
 			stackName,
 			appPath,
@@ -83,7 +103,7 @@ program
 			domainNames,
 			hotswap,
 			profile,
-		} = options
+		} = config
 
 		wrapProcess(
 			deployHandler({
@@ -117,6 +137,20 @@ program
 		const { stackName, appPath, region, profile } = options
 
 		wrapProcess(removeHandler({ stackName, appPath, region, profile }))
+	})
+
+program
+	.command('config')
+	.description('Create the default config files in the current directory.')
+	.action(async () => {
+		const configFiles = ['deployConfig.yml', 'packConfig.yml']
+		const sourceDirectory = path.resolve(__dirname, './templates')
+
+		configFiles.forEach((configFile) => {
+			const source = path.resolve(sourceDirectory, `./${configFile}`)
+			const dest = path.resolve(process.cwd(), `./${configFile}`)
+			copyFileSync(source, dest)
+		})
 	})
 
 program.parse(process.argv)
