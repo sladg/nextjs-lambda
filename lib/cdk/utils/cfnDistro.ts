@@ -60,7 +60,7 @@ export const setupCfnDistro = (
 
 	const apiCachePolicy = new CachePolicy(scope, 'NextApiCachePolicy', {
 		...defaultCacheOptions,
-		maxTtl: Duration.seconds(0),
+		maxTtl: Duration.seconds(1),
 		defaultTtl: Duration.seconds(0),
 		minTtl: Duration.seconds(0),
 	})

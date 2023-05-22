@@ -23356,7 +23356,7 @@ var import_path2 = __toESM(require("path"));
 // package.json
 var package_default = {
   name: "@dbd/nextjs-lambda",
-  version: "1.0.1",
+  version: "1.0.2",
   description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
   exports: "./dist/index.js",
