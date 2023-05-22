@@ -30,7 +30,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 
 	// Dependencies layer configuration
 	const nodeModulesFolderPath = path.resolve(standaloneFolder, staticNames.nodeFolder)
-	const depsLambdaFolder = 'nodejs/node_modules'
+	const depsLambdaFolder = 'node_modules'
 	const dependenciesOutputPath = path.resolve(outputFolder, staticNames.dependenciesZip)
 	const nestedDependenciesOutputPath = dependenciesOutputPath.includes(pathToNextOutput) ? null : path.resolve(pathToNextOutput, staticNames.nodeFolder)
 
@@ -112,6 +112,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 			},
 			{
 				path: nodeModulesFolderPath,
+				dir: 'node_modules',
 			},
 			{
 				isFile: true,
