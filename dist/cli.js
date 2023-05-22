@@ -23658,7 +23658,7 @@ var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFo
         dot: true,
         cwd: pathToNextOutput,
         path: "**/*",
-        ignore: ["**/node_modules/**", "*.zip", "**/package.json"]
+        ignore: ["*.zip", "**/package.json"]
       },
       {
         isFile: true,
