@@ -23355,15 +23355,10 @@ var import_path2 = __toESM(require("path"));
 
 // package.json
 var package_default = {
-  name: "@sladg/nextjs-lambda",
-  version: "7.0.4",
-  description: "Plug-and-play lambda for replacing default NextJS image optimization handler.",
-  repository: {
-    type: "git",
-    url: "https://github.com/sladg/nextjs-lambda"
-  },
+  name: "@dbd/nextjs-lambda",
+  version: "1.0.0",
+  description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
-  author: "Jan Soukup <jan@ssoukup.com>",
   exports: "./dist/index.js",
   types: "./dist/index.d.ts",
   bin: {
@@ -23381,10 +23376,8 @@ var package_default = {
     "build:cli": "tsup lib/cli.ts",
     "build:handler": "tsup lib/server-handler/index.ts --out-dir dist/server-handler",
     "build:main": "tsup lib/index.ts --dts lib/index.ts",
-    commit: "npx --package cz-emoji-conventional --package commitizen -- cz",
     "copy:files": "cp -R ./lib/templates ./dist/templates",
-    postinstall: "npm run build",
-    release: "npx --package @sladg/release-utils utils shipit --gitUser @sladg --gitEmail jan@ssoukup.com --changelog"
+    postinstall: "npm run build"
   },
   dependencies: {
     "@sladg/imaginex-lambda": "0.17.0"
@@ -23421,23 +23414,7 @@ var package_default = {
   engines: {
     node: ">=16.15"
   },
-  engineStrict: true,
-  keywords: [
-    "nextjs",
-    "next12",
-    "next13",
-    "lambda",
-    "deployment",
-    "serverless",
-    "aws-cdk",
-    "api-gateway-v2",
-    "httpapi",
-    "caching",
-    "cloudfront",
-    "image",
-    "optimization",
-    "components"
-  ]
+  engineStrict: true
 };
 
 // lib/cdk/utils/imageLambda.ts
