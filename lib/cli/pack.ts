@@ -111,6 +111,9 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 				ignore: ['*.zip', '**/package.json'],
 			},
 			{
+				path: nodeModulesFolderPath,
+			},
+			{
 				isFile: true,
 				path: handlerPath,
 				name: 'index.js',
