@@ -35,8 +35,8 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	const nestedDependenciesOutputPath = dependenciesOutputPath.includes(pathToNextOutput) ? null : path.resolve(pathToNextOutput, staticNames.nodeFolder)
 
 	// Assets bundle configuration
-	const buildIdPath = path.resolve(commandCwd, './.next/BUILD_ID')
-	const generatedStaticContentPath = path.resolve(commandCwd, '.next/static')
+	const buildIdPath = path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/.next/BUILD_ID')
+	const generatedStaticContentPath = path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/.next/static')
 	const generatedStaticRemapping = '_next/static'
 	const assetsOutputPath = path.resolve(outputFolder, staticNames.assetsZip)
 

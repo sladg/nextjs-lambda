@@ -23356,7 +23356,7 @@ var import_path2 = __toESM(require("path"));
 // package.json
 var package_default = {
   name: "@dbd/nextjs-lambda",
-  version: "1.0.2",
+  version: "1.0.3",
   description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
   exports: "./dist/index.js",
@@ -23600,8 +23600,8 @@ var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFo
   const depsLambdaFolder = "nodejs/node_modules";
   const dependenciesOutputPath = import_path.default.resolve(outputFolder, staticNames.dependenciesZip);
   const nestedDependenciesOutputPath = dependenciesOutputPath.includes(pathToNextOutput) ? null : import_path.default.resolve(pathToNextOutput, staticNames.nodeFolder);
-  const buildIdPath = import_path.default.resolve(commandCwd2, "./.next/BUILD_ID");
-  const generatedStaticContentPath = import_path.default.resolve(commandCwd2, ".next/static");
+  const buildIdPath = import_path.default.resolve(commandCwd2, "./dist/apps/ui-hosted-checkout-page/.next/BUILD_ID");
+  const generatedStaticContentPath = import_path.default.resolve(commandCwd2, "./dist/apps/ui-hosted-checkout-page/.next/static");
   const generatedStaticRemapping = "_next/static";
   const assetsOutputPath = import_path.default.resolve(outputFolder, staticNames.assetsZip);
   const generatedNextServerPath = import_path.default.resolve(pathToNextOutput, staticNames.nextServer);
