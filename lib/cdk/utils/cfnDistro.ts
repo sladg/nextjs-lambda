@@ -62,6 +62,7 @@ export const setupCfnDistro = (
 		...defaultCacheOptions,
 		maxTtl: Duration.seconds(0),
 		defaultTtl: Duration.seconds(0),
+		minTtl: Duration.seconds(0),
 	})
 
 	// Public folder persists names so we are making default TTL lower for cases when invalidation does not happen.

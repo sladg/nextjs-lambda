@@ -871,7 +871,8 @@ var setupCfnDistro = (scope, { apiGateway, imageBasePath, serverBasePath, assets
   const apiCachePolicy = new import_aws_cloudfront.CachePolicy(scope, "NextApiCachePolicy", {
     ...defaultCacheOptions,
     maxTtl: import_aws_cdk_lib3.Duration.seconds(0),
-    defaultTtl: import_aws_cdk_lib3.Duration.seconds(0)
+    defaultTtl: import_aws_cdk_lib3.Duration.seconds(0),
+    minTtl: import_aws_cdk_lib3.Duration.seconds(0)
   });
   const assetsCachePolicy = new import_aws_cloudfront.CachePolicy(scope, "NextPublicCachePolicy", {
     queryStringBehavior: import_aws_cloudfront.CacheQueryStringBehavior.all(),
