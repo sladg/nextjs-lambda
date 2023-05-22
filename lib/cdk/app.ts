@@ -11,9 +11,9 @@ const commandCwd = process.cwd()
 
 new NextStandaloneStack(app, envConfig.stackName, {
 	// NextJS lambda specific config.
-	assetsZipPath: path.resolve(commandCwd, './next.out/assetsLayer.zip'),
-	codeZipPath: path.resolve(commandCwd, './next.out/code.zip'),
-	dependenciesZipPath: path.resolve(commandCwd, './next.out/dependenciesLayer.zip'),
+	assetsZipPath: path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/next.out/assetsLayer.zip'),
+	codeZipPath: path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/next.out/code.zip'),
+	dependenciesZipPath: path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/next.out/dependenciesLayer.zip'),
 	customServerHandler: 'index.handler',
 
 	// Image lambda specific config.

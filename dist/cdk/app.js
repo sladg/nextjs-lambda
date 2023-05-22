@@ -447,9 +447,9 @@ var commandCwd = process.cwd();
 var _a;
 new NextStandaloneStack(app, envConfig.stackName, {
   // NextJS lambda specific config.
-  assetsZipPath: import_path2.default.resolve(commandCwd, "./next.out/assetsLayer.zip"),
-  codeZipPath: import_path2.default.resolve(commandCwd, "./next.out/code.zip"),
-  dependenciesZipPath: import_path2.default.resolve(commandCwd, "./next.out/dependenciesLayer.zip"),
+  assetsZipPath: import_path2.default.resolve(commandCwd, "./dist/apps/ui-hosted-checkout-page/next.out/assetsLayer.zip"),
+  codeZipPath: import_path2.default.resolve(commandCwd, "./dist/apps/ui-hosted-checkout-page/next.out/code.zip"),
+  dependenciesZipPath: import_path2.default.resolve(commandCwd, "./dist/apps/ui-hosted-checkout-page/next.out/dependenciesLayer.zip"),
   customServerHandler: "index.handler",
   // Image lambda specific config.
   imageHandlerZipPath: import_imaginex_lambda.optimizerCodePath,
