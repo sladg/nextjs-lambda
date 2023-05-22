@@ -23356,7 +23356,7 @@ var import_path2 = __toESM(require("path"));
 // package.json
 var package_default = {
   name: "@dbd/nextjs-lambda",
-  version: "1.0.0",
+  version: "1.0.1",
   description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
   exports: "./dist/index.js",
@@ -23724,7 +23724,7 @@ program2.command("pack").description("Package standalone Next12 build into Lambd
   const { standaloneFolder, publicFolder, handlerPath, outputFolder } = config;
   wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, publicFolder, standaloneFolder }));
 });
-program2.command("deploy").description("Deploy Next application via CDK").option("--config <path>", "YAML config file that can be set as opposed to having to set every flag.").option("--stackName <name>", "Name of the stack to be deployed.", "StandaloneNextjsStack-Temporary").option("--appPath <path>", "Absolute path to app.", import_path2.default.resolve(__dirname, "../dist/cdk/app.js")).option("--bootstrap", "Bootstrap CDK stack.", false).option("--region <region>", "AWS region to deploy to.", void 0).option("--lambdaTimeout <sec>", "Set timeout for lambda function handling server requests.", Number, 15).option("--lambdaMemory <mb>", "Set memory for lambda function handling server requests.", Number, 512).option("--imageLambdaTimeout <sec>", "Set timeout for lambda function handling image optimization.", Number, DEFAULT_TIMEOUT).option("--imageLambdaMemory <mb>", "Set memory for lambda function handling image optimization.", Number, DEFAULT_MEMORY).option("--lambdaRuntime <runtime>", "Specify version of NodeJS to use as Lambda's runtime. Options: node14, node16, node18.", "node16").option("--domainNames <domainList>", "Comma-separated list of domains to use. (example: mydomain.com,mydonain.au,other.domain.com)", void 0).option("--customApiDomain <domain>", "Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.", void 0).option("--redirectFromApex", "Redirect from apex domain to specified address.", false).option("--profile <name>", "AWS profile to use with CDK.", void 0).option("--hotswap", "Hotswap stack to speedup deployment.", false).action(async (options) => {
+program2.command("deploy").description("Deploy Next application via CDK").option("--config <path>", "YAML config file that can be set as opposed to having to set every flag.").option("--stackName <name>", "Name of the stack to be deployed.", "StandaloneNextjsStack-Temporary").option("--appPath <path>", "Path to the app.", import_path2.default.resolve(__dirname, "../dist/cdk/app.js")).option("--bootstrap", "Bootstrap CDK stack.", false).option("--region <region>", "AWS region to deploy to.", void 0).option("--lambdaTimeout <sec>", "Set timeout for lambda function handling server requests.", Number, 15).option("--lambdaMemory <mb>", "Set memory for lambda function handling server requests.", Number, 512).option("--imageLambdaTimeout <sec>", "Set timeout for lambda function handling image optimization.", Number, DEFAULT_TIMEOUT).option("--imageLambdaMemory <mb>", "Set memory for lambda function handling image optimization.", Number, DEFAULT_MEMORY).option("--lambdaRuntime <runtime>", "Specify version of NodeJS to use as Lambda's runtime. Options: node14, node16, node18.", "node16").option("--domainNames <domainList>", "Comma-separated list of domains to use. (example: mydomain.com,mydonain.au,other.domain.com)", void 0).option("--customApiDomain <domain>", "Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.", void 0).option("--redirectFromApex", "Redirect from apex domain to specified address.", false).option("--profile <name>", "AWS profile to use with CDK.", void 0).option("--hotswap", "Hotswap stack to speedup deployment.", false).action(async (options) => {
   let config;
   if (options.config) {
     const configPath = import_path2.default.resolve(process.cwd(), options.config);
@@ -23749,10 +23749,11 @@ program2.command("deploy").description("Deploy Next application via CDK").option
     hotswap,
     profile
   } = config;
+  const absoluteAppPath = import_path2.default.resolve(process.cwd(), appPath);
   wrapProcess(
     deployHandler({
       stackName,
-      appPath,
+      appPath: absoluteAppPath,
       bootstrap,
       region,
       lambdaTimeout,

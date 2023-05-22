@@ -65,7 +65,7 @@ program
 	.description('Deploy Next application via CDK')
 	.option('--config <path>', 'YAML config file that can be set as opposed to having to set every flag.')
 	.option('--stackName <name>', 'Name of the stack to be deployed.', 'StandaloneNextjsStack-Temporary')
-	.option('--appPath <path>', 'Absolute path to app.', path.resolve(__dirname, '../dist/cdk/app.js'))
+	.option('--appPath <path>', 'Path to the app.', path.resolve(__dirname, '../dist/cdk/app.js'))
 	.option('--bootstrap', 'Bootstrap CDK stack.', false)
 	.option('--region <region>', 'AWS region to deploy to.', undefined)
 	.option('--lambdaTimeout <sec>', 'Set timeout for lambda function handling server requests.', Number, 15)
@@ -105,10 +105,12 @@ program
 			profile,
 		} = config
 
+		const absoluteAppPath = path.resolve(process.cwd(), appPath)
+
 		wrapProcess(
 			deployHandler({
 				stackName,
-				appPath,
+				appPath: absoluteAppPath,
 				bootstrap,
 				region,
 				lambdaTimeout,
