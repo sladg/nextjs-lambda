@@ -15,6 +15,7 @@ interface Props {
 	redirectFromApex?: boolean
 	profile?: string
 	hotswap: boolean
+	buildFolder: string
 }
 
 const cdkExecutable = require.resolve('aws-cdk/bin/cdk')
@@ -34,6 +35,7 @@ export const deployHandler = async ({
 	redirectFromApex,
 	hotswap,
 	profile,
+	buildFolder,
 }: Props) => {
 	// All paths are absolute.
 	const cdkBootstrapArgs = [`--app "node ${appPath}"`]
@@ -59,6 +61,7 @@ export const deployHandler = async ({
 		...(domainNames && { DOMAIN_NAMES: domainNames }),
 		...(customApiDomain && { CUSTOM_API_DOMAIN: customApiDomain }),
 		...(redirectFromApex && { REDIRECT_FROM_APEX: redirectFromApex.toString() }),
+		...(buildFolder && { BUILD_FOLDER: buildFolder }),
 	}
 
 	if (bootstrap) {

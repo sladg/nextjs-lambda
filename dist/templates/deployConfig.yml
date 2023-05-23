@@ -12,3 +12,4 @@ redirectFromApex: false
 domainNames: mydomain.com,mydomain.au,other.domain.com
 hotswap: false
 profile: null
+buildFolder: ./dist

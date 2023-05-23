@@ -114,9 +114,11 @@ var RawEnvConfig = (0, import_envalid.cleanEnv)(process.env, {
   CUSTOM_API_DOMAIN: (0, import_envalid.str)({ default: void 0 }),
   REDIRECT_FROM_APEX: (0, import_envalid.bool)({ default: false }),
   DOMAIN_NAMES: (0, import_envalid.str)({ default: void 0 }),
-  PROFILE: (0, import_envalid.str)({ default: void 0 })
+  PROFILE: (0, import_envalid.str)({ default: void 0 }),
+  BUILD_FOLDER: (0, import_envalid.str)({ default: "./dist" })
 });
 var envConfig = {
+  buildFolder: RawEnvConfig.BUILD_FOLDER,
   profile: RawEnvConfig.PROFILE,
   stackName: RawEnvConfig.STACK_NAME,
   lambdaMemory: RawEnvConfig.LAMBDA_MEMORY,
@@ -444,13 +446,16 @@ var NextStandaloneStack = class extends import_aws_cdk_lib9.Stack {
 
 // lib/cdk/app.ts
 var app = new import_aws_cdk_lib10.App();
-var commandCwd = process.cwd();
+var stackConfig = {
+  ...envConfig,
+  buildFolder: void 0
+};
 var _a;
 new NextStandaloneStack(app, envConfig.stackName, {
   // NextJS lambda specific config.
-  assetsZipPath: import_path2.default.resolve(commandCwd, "./dist/apps/ui-hosted-checkout-page/next.out/assetsLayer.zip"),
-  codeZipPath: import_path2.default.resolve(commandCwd, "./dist/apps/ui-hosted-checkout-page/next.out/code.zip"),
-  dependenciesZipPath: import_path2.default.resolve(commandCwd, "./dist/apps/ui-hosted-checkout-page/next.out/dependenciesLayer.zip"),
+  assetsZipPath: import_path2.default.resolve(envConfig.buildFolder, "./next.out/assetsLayer.zip"),
+  codeZipPath: import_path2.default.resolve(envConfig.buildFolder, "./next.out/code.zip"),
+  dependenciesZipPath: import_path2.default.resolve(envConfig.buildFolder, "./next.out/dependenciesLayer.zip"),
   customServerHandler: "index.handler",
   // Image lambda specific config.
   imageHandlerZipPath: import_imaginex_lambda.optimizerCodePath,
@@ -460,7 +465,7 @@ new NextStandaloneStack(app, envConfig.stackName, {
   // Lambda & AWS config.
   apigwServerPath: "/_server",
   apigwImagePath: "/_image",
-  ...envConfig,
+  ...stackConfig,
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: (_a = process.env.AWS_REGION) != null ? _a : process.env.CDK_DEFAULT_REGION

@@ -23356,7 +23356,7 @@ var import_path2 = __toESM(require("path"));
 // package.json
 var package_default = {
   name: "@dbd/nextjs-lambda",
-  version: "1.0.6",
+  version: "1.0.7",
   description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
   exports: "./dist/index.js",
@@ -23539,7 +23539,8 @@ var deployHandler = async ({
   customApiDomain,
   redirectFromApex,
   hotswap,
-  profile
+  profile,
+  buildFolder
 }) => {
   const cdkBootstrapArgs = [`--app "node ${appPath}"`];
   const cdkDeployArgs = [`--app "node ${appPath}"`, "--require-approval never", "--ci"];
@@ -23560,7 +23561,8 @@ var deployHandler = async ({
     ...imageLambdaTimeout && { IMAGE_LAMBDA_TIMEOUT: imageLambdaTimeout.toString() },
     ...domainNames && { DOMAIN_NAMES: domainNames },
     ...customApiDomain && { CUSTOM_API_DOMAIN: customApiDomain },
-    ...redirectFromApex && { REDIRECT_FROM_APEX: redirectFromApex.toString() }
+    ...redirectFromApex && { REDIRECT_FROM_APEX: redirectFromApex.toString() },
+    ...buildFolder && { BUILD_FOLDER: buildFolder }
   };
   if (bootstrap) {
     await executeAsyncCmd({
@@ -23592,7 +23594,7 @@ var staticNames = {
   assetsZip: "assetsLayer.zip",
   codeZip: "code.zip"
 };
-var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFolder, commandCwd: commandCwd2 }) => {
+var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFolder, buildFolder }) => {
   validatePublicFolderStructure(publicFolder);
   validateFolderExists(standaloneFolder);
   const pathToNextOutput = findPathToNestedFile(staticNames.nextServer, standaloneFolder);
@@ -23600,8 +23602,8 @@ var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFo
   const depsLambdaFolder = "node_modules";
   const dependenciesOutputPath = import_path.default.resolve(outputFolder, staticNames.dependenciesZip);
   const nestedDependenciesOutputPath = dependenciesOutputPath.includes(pathToNextOutput) ? null : import_path.default.resolve(pathToNextOutput, staticNames.nodeFolder);
-  const buildIdPath = import_path.default.resolve(commandCwd2, "./dist/apps/ui-hosted-checkout-page/.next/BUILD_ID");
-  const generatedStaticContentPath = import_path.default.resolve(commandCwd2, "./dist/apps/ui-hosted-checkout-page/.next/static");
+  const buildIdPath = import_path.default.resolve(buildFolder, "./.next/BUILD_ID");
+  const generatedStaticContentPath = import_path.default.resolve(buildFolder, "./.next/static");
   const generatedStaticRemapping = "_next/static";
   const assetsOutputPath = import_path.default.resolve(outputFolder, staticNames.assetsZip);
   const generatedNextServerPath = import_path.default.resolve(pathToNextOutput, staticNames.nextServer);
@@ -23621,6 +23623,7 @@ var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFo
           path: nestedDependenciesOutputPath,
           dir: depsLambdaFolder
         }
+        // eslint-disable-next-line no-mixed-spaces-and-tabs
       ] : []
     ]
   });
@@ -23716,7 +23719,7 @@ program2.command("pack").description("Package standalone Next12 build into Lambd
   "--outputFolder <path>",
   "Path to folder which should be used for outputting bundled ZIP files for your Lambda. It will be cleared before every script run.",
   import_path2.default.resolve(commandCwd, "./next.out")
-).action(async (options) => {
+).option("--buildFolder <path>", "Path to the build folder.", import_path2.default.resolve(commandCwd, "./dist")).action(async (options) => {
   let config;
   if (options.config) {
     const configPath = import_path2.default.resolve(process.cwd(), options.config);
@@ -23725,10 +23728,11 @@ program2.command("pack").description("Package standalone Next12 build into Lambd
     config = options;
   }
   console.log("Our config is: ", config);
-  const { standaloneFolder, publicFolder, handlerPath, outputFolder } = config;
-  wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, publicFolder, standaloneFolder }));
+  const { standaloneFolder, publicFolder, handlerPath, outputFolder, buildFolder: configBuildFolder } = config;
+  const buildFolder = import_path2.default.resolve(commandCwd, configBuildFolder);
+  wrapProcess(packHandler({ buildFolder, handlerPath, outputFolder, publicFolder, standaloneFolder }));
 });
-program2.command("deploy").description("Deploy Next application via CDK").option("--config <path>", "YAML config file that can be set as opposed to having to set every flag.").option("--stackName <name>", "Name of the stack to be deployed.", "StandaloneNextjsStack-Temporary").option("--appPath <path>", "Path to the app.", import_path2.default.resolve(__dirname, "../dist/cdk/app.js")).option("--bootstrap", "Bootstrap CDK stack.", false).option("--region <region>", "AWS region to deploy to.", void 0).option("--lambdaTimeout <sec>", "Set timeout for lambda function handling server requests.", Number, 15).option("--lambdaMemory <mb>", "Set memory for lambda function handling server requests.", Number, 512).option("--imageLambdaTimeout <sec>", "Set timeout for lambda function handling image optimization.", Number, DEFAULT_TIMEOUT).option("--imageLambdaMemory <mb>", "Set memory for lambda function handling image optimization.", Number, DEFAULT_MEMORY).option("--lambdaRuntime <runtime>", "Specify version of NodeJS to use as Lambda's runtime. Options: node14, node16, node18.", "node16").option("--domainNames <domainList>", "Comma-separated list of domains to use. (example: mydomain.com,mydonain.au,other.domain.com)", void 0).option("--customApiDomain <domain>", "Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.", void 0).option("--redirectFromApex", "Redirect from apex domain to specified address.", false).option("--profile <name>", "AWS profile to use with CDK.", void 0).option("--hotswap", "Hotswap stack to speedup deployment.", false).action(async (options) => {
+program2.command("deploy").description("Deploy Next application via CDK").option("--config <path>", "YAML config file that can be set as opposed to having to set every flag.").option("--stackName <name>", "Name of the stack to be deployed.", "StandaloneNextjsStack-Temporary").option("--appPath <path>", "Path to the app.", import_path2.default.resolve(__dirname, "../dist/cdk/app.js")).option("--bootstrap", "Bootstrap CDK stack.", false).option("--region <region>", "AWS region to deploy to.", void 0).option("--lambdaTimeout <sec>", "Set timeout for lambda function handling server requests.", Number, 15).option("--lambdaMemory <mb>", "Set memory for lambda function handling server requests.", Number, 512).option("--imageLambdaTimeout <sec>", "Set timeout for lambda function handling image optimization.", Number, DEFAULT_TIMEOUT).option("--imageLambdaMemory <mb>", "Set memory for lambda function handling image optimization.", Number, DEFAULT_MEMORY).option("--lambdaRuntime <runtime>", "Specify version of NodeJS to use as Lambda's runtime. Options: node14, node16, node18.", "node16").option("--domainNames <domainList>", "Comma-separated list of domains to use. (example: mydomain.com,mydonain.au,other.domain.com)", void 0).option("--customApiDomain <domain>", "Domain to forward the requests to /api routes, by default API routes will be handled by the server lambda.", void 0).option("--redirectFromApex", "Redirect from apex domain to specified address.", false).option("--profile <name>", "AWS profile to use with CDK.", void 0).option("--hotswap", "Hotswap stack to speedup deployment.", false).option("--buildFolder <path>", "Path to the build folder.", import_path2.default.resolve(commandCwd, "./dist")).action(async (options) => {
   let config;
   if (options.config) {
     const configPath = import_path2.default.resolve(process.cwd(), options.config);
@@ -23739,7 +23743,7 @@ program2.command("deploy").description("Deploy Next application via CDK").option
   console.log("Our config is: ", config);
   const {
     stackName,
-    appPath,
+    appPath: configAppPath,
     bootstrap,
     region,
     lambdaTimeout,
@@ -23751,13 +23755,15 @@ program2.command("deploy").description("Deploy Next application via CDK").option
     redirectFromApex,
     domainNames,
     hotswap,
-    profile
+    profile,
+    buildFolder: configBuildFolder
   } = config;
-  const absoluteAppPath = import_path2.default.resolve(process.cwd(), appPath);
+  const appPath = import_path2.default.resolve(commandCwd, configAppPath);
+  const buildFolder = import_path2.default.resolve(commandCwd, configBuildFolder);
   wrapProcess(
     deployHandler({
       stackName,
-      appPath: absoluteAppPath,
+      appPath,
       bootstrap,
       region,
       lambdaTimeout,
@@ -23769,7 +23775,8 @@ program2.command("deploy").description("Deploy Next application via CDK").option
       redirectFromApex,
       domainNames,
       hotswap,
-      profile
+      profile,
+      buildFolder
     })
   );
 });

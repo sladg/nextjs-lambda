@@ -10,7 +10,7 @@ interface Props {
 	publicFolder: string
 	handlerPath: string
 	outputFolder: string
-	commandCwd: string
+	buildFolder: string
 }
 
 const staticNames = {
@@ -22,7 +22,7 @@ const staticNames = {
 	codeZip: 'code.zip',
 }
 
-export const packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFolder, commandCwd }: Props) => {
+export const packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFolder, buildFolder }: Props) => {
 	validatePublicFolderStructure(publicFolder)
 	validateFolderExists(standaloneFolder)
 
@@ -35,8 +35,8 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	const nestedDependenciesOutputPath = dependenciesOutputPath.includes(pathToNextOutput) ? null : path.resolve(pathToNextOutput, staticNames.nodeFolder)
 
 	// Assets bundle configuration
-	const buildIdPath = path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/.next/BUILD_ID')
-	const generatedStaticContentPath = path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/.next/static')
+	const buildIdPath = path.resolve(buildFolder, './.next/BUILD_ID')
+	const generatedStaticContentPath = path.resolve(buildFolder, './.next/static')
 	const generatedStaticRemapping = '_next/static'
 	const assetsOutputPath = path.resolve(outputFolder, staticNames.assetsZip)
 
@@ -64,6 +64,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 							path: nestedDependenciesOutputPath,
 							dir: depsLambdaFolder,
 						},
+						// eslint-disable-next-line no-mixed-spaces-and-tabs
 				  ]
 				: []),
 		],

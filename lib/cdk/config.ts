@@ -27,9 +27,11 @@ const RawEnvConfig = cleanEnv(process.env, {
 	REDIRECT_FROM_APEX: bool({ default: false }),
 	DOMAIN_NAMES: str({ default: undefined }),
 	PROFILE: str({ default: undefined }),
+	BUILD_FOLDER: str({ default: './dist' }),
 })
 
 export const envConfig = {
+	buildFolder: RawEnvConfig.BUILD_FOLDER,
 	profile: RawEnvConfig.PROFILE,
 	stackName: RawEnvConfig.STACK_NAME,
 	lambdaMemory: RawEnvConfig.LAMBDA_MEMORY,

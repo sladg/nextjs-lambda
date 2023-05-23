@@ -45,6 +45,7 @@ program
 		'Path to folder which should be used for outputting bundled ZIP files for your Lambda. It will be cleared before every script run.',
 		path.resolve(commandCwd, './next.out'),
 	)
+	.option('--buildFolder <path>', 'Path to the build folder.', path.resolve(commandCwd, './dist'))
 	.action(async (options) => {
 		let config
 		if (options.config) {
@@ -55,9 +56,10 @@ program
 		}
 
 		console.log('Our config is: ', config)
-		const { standaloneFolder, publicFolder, handlerPath, outputFolder } = config
+		const { standaloneFolder, publicFolder, handlerPath, outputFolder, buildFolder: configBuildFolder } = config
+		const buildFolder = path.resolve(commandCwd, configBuildFolder)
 
-		wrapProcess(packHandler({ commandCwd, handlerPath, outputFolder, publicFolder, standaloneFolder }))
+		wrapProcess(packHandler({ buildFolder, handlerPath, outputFolder, publicFolder, standaloneFolder }))
 	})
 
 program
@@ -78,6 +80,7 @@ program
 	.option('--redirectFromApex', 'Redirect from apex domain to specified address.', false)
 	.option('--profile <name>', 'AWS profile to use with CDK.', undefined)
 	.option('--hotswap', 'Hotswap stack to speedup deployment.', false)
+	.option('--buildFolder <path>', 'Path to the build folder.', path.resolve(commandCwd, './dist'))
 	.action(async (options) => {
 		let config
 		if (options.config) {
@@ -90,7 +93,7 @@ program
 		console.log('Our config is: ', config)
 		const {
 			stackName,
-			appPath,
+			appPath: configAppPath,
 			bootstrap,
 			region,
 			lambdaTimeout,
@@ -103,14 +106,16 @@ program
 			domainNames,
 			hotswap,
 			profile,
+			buildFolder: configBuildFolder,
 		} = config
 
-		const absoluteAppPath = path.resolve(process.cwd(), appPath)
+		const appPath = path.resolve(commandCwd, configAppPath)
+		const buildFolder = path.resolve(commandCwd, configBuildFolder)
 
 		wrapProcess(
 			deployHandler({
 				stackName,
-				appPath: absoluteAppPath,
+				appPath,
 				bootstrap,
 				region,
 				lambdaTimeout,
@@ -123,6 +128,7 @@ program
 				domainNames,
 				hotswap,
 				profile,
+				buildFolder,
 			}),
 		)
 	})

@@ -7,13 +7,16 @@ import { NextStandaloneStack } from './stack'
 
 const app = new App()
 
-const commandCwd = process.cwd()
+const stackConfig = {
+	...envConfig,
+	buildFolder: undefined,
+}
 
 new NextStandaloneStack(app, envConfig.stackName, {
 	// NextJS lambda specific config.
-	assetsZipPath: path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/next.out/assetsLayer.zip'),
-	codeZipPath: path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/next.out/code.zip'),
-	dependenciesZipPath: path.resolve(commandCwd, './dist/apps/ui-hosted-checkout-page/next.out/dependenciesLayer.zip'),
+	assetsZipPath: path.resolve(envConfig.buildFolder, './next.out/assetsLayer.zip'),
+	codeZipPath: path.resolve(envConfig.buildFolder, './next.out/code.zip'),
+	dependenciesZipPath: path.resolve(envConfig.buildFolder, './next.out/dependenciesLayer.zip'),
 	customServerHandler: 'index.handler',
 
 	// Image lambda specific config.
@@ -26,7 +29,7 @@ new NextStandaloneStack(app, envConfig.stackName, {
 	apigwServerPath: '/_server',
 	apigwImagePath: '/_image',
 
-	...envConfig,
+	...stackConfig,
 
 	env: {
 		account: process.env.CDK_DEFAULT_ACCOUNT,
