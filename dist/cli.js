@@ -23356,7 +23356,7 @@ var import_path2 = __toESM(require("path"));
 // package.json
 var package_default = {
   name: "@dbd/nextjs-lambda",
-  version: "1.0.10",
+  version: "1.0.11",
   description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
   exports: "./dist/index.js",
@@ -23662,10 +23662,6 @@ var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFo
         cwd: pathToNextOutput,
         path: "**/*",
         ignore: ["*.zip", "**/package.json", generatedNextServerPath]
-      },
-      {
-        path: nodeModulesFolderPath,
-        dir: "node_modules"
       },
       {
         isFile: true,
