@@ -23356,7 +23356,7 @@ var import_path2 = __toESM(require("path"));
 // package.json
 var package_default = {
   name: "@dbd/nextjs-lambda",
-  version: "1.0.8",
+  version: "1.0.9",
   description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
   exports: "./dist/index.js",
@@ -23599,7 +23599,7 @@ var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFo
   validateFolderExists(standaloneFolder);
   const pathToNextOutput = findPathToNestedFile(staticNames.nextServer, standaloneFolder);
   const nodeModulesFolderPath = import_path.default.resolve(standaloneFolder, staticNames.nodeFolder);
-  const depsLambdaFolder = "node_modules";
+  const depsLambdaFolder = "nodejs/node_modules";
   const dependenciesOutputPath = import_path.default.resolve(outputFolder, staticNames.dependenciesZip);
   const nestedDependenciesOutputPath = dependenciesOutputPath.includes(pathToNextOutput) ? null : import_path.default.resolve(pathToNextOutput, staticNames.nodeFolder);
   const buildIdPath = import_path.default.resolve(buildFolder, "./.next/BUILD_ID");
