@@ -23356,7 +23356,7 @@ var import_path2 = __toESM(require("path"));
 // package.json
 var package_default = {
   name: "@dbd/nextjs-lambda",
-  version: "1.0.5",
+  version: "1.0.6",
   description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
   exports: "./dist/index.js",
@@ -23642,8 +23642,7 @@ var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFo
     ]
   });
   const tmpFolder = (0, import_os.tmpdir)();
-  const nextConfig = findObjectInFile(generatedNextServerPath, [nextServerConfigRegex13_3, nextServerConfigRegex]);
-  console.log(nextConfig, nextConfig.replace("../../", ""));
+  const nextConfig = findObjectInFile(generatedNextServerPath, [nextServerConfigRegex13_3, nextServerConfigRegex]).replace("../../", "");
   const configPath = import_path.default.resolve(tmpFolder, `./config.json_${Math.random()}`);
   (0, import_fs2.writeFileSync)(configPath, nextConfig, "utf-8");
   await zipMultipleFoldersOrFiles({
