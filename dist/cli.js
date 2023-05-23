@@ -23643,6 +23643,7 @@ var packHandler = async ({ handlerPath, outputFolder, publicFolder, standaloneFo
   });
   const tmpFolder = (0, import_os.tmpdir)();
   const nextConfig = findObjectInFile(generatedNextServerPath, [nextServerConfigRegex13_3, nextServerConfigRegex]);
+  console.log(nextConfig, nextConfig.replace("../../", ""));
   const configPath = import_path.default.resolve(tmpFolder, `./config.json_${Math.random()}`);
   (0, import_fs2.writeFileSync)(configPath, nextConfig, "utf-8");
   await zipMultipleFoldersOrFiles({
