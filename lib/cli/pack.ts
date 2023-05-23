@@ -91,6 +91,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 	const tmpFolder = tmpdir()
 
 	const nextConfig = findObjectInFile(generatedNextServerPath, [nextServerConfigRegex13_3, nextServerConfigRegex])
+	console.log(nextConfig, nextConfig.replace('../../', ''))
 	const configPath = path.resolve(tmpFolder, `./config.json_${Math.random()}`)
 	writeFileSync(configPath, nextConfig, 'utf-8')
 
