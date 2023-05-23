@@ -24,8 +24,6 @@ export const setupServerLambda = (
 		code: Code.fromAsset(dependenciesPath),
 	})
 
-	console.log('$PROCESS.ENV:', process.env)
-
 	const serverLambda = new Function(scope, 'DefaultNextJs', {
 		code: Code.fromAsset(codePath),
 		runtime,
