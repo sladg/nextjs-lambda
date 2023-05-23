@@ -1,6 +1,6 @@
 {
   "name": "@dbd/nextjs-lambda",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "DBD fork of @sladg/nextjs-lambda.",
   "license": "MIT",
   "exports": "./dist/index.js",

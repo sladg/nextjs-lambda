@@ -109,7 +109,7 @@ export const packHandler = async ({ handlerPath, outputFolder, publicFolder, sta
 				dot: true,
 				cwd: pathToNextOutput,
 				path: '**/*',
-				ignore: ['*.zip', '**/package.json'],
+				ignore: ['*.zip', '**/package.json', generatedNextServerPath],
 			},
 			{
 				path: nodeModulesFolderPath,
