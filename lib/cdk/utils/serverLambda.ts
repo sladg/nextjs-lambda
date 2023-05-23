@@ -35,6 +35,10 @@ export const setupServerLambda = (
 		environment: {
 			// Set env vars based on what's available in environment.
 			...Object.entries(process.env)
+				.filter(([key]) => key.startsWith('DBD_'))
+				.map<[string, string | undefined]>(([key, value]) => [key.replace('DBD_', ''), value])
+				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
+			...Object.entries(process.env)
 				.filter(([key]) => key.startsWith('NEXT_'))
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
 			NEXTJS_LAMBDA_BASE_PATH: basePath,
