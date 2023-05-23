@@ -1045,6 +1045,7 @@ var setupServerLambda = (scope, { basePath, codePath, dependenciesPath, handler:
     // This folder does not use Custom hash as depenendencies are most likely changing every time we deploy.
     code: import_aws_lambda2.Code.fromAsset(dependenciesPath)
   });
+  console.log("$PROCESS.ENV:", process.env);
   const serverLambda = new import_aws_lambda2.Function(scope, "DefaultNextJs", {
     code: import_aws_lambda2.Code.fromAsset(codePath),
     runtime,
