@@ -1,6 +1,6 @@
 import archiver from 'archiver'
 import { exec } from 'child_process'
-import { createWriteStream, existsSync, readdirSync, readFileSync } from 'fs'
+import { createWriteStream, existsSync, readFileSync } from 'fs'
 import glob, { IOptions as GlobOptions } from 'glob'
 
 export const findObjectInFile = (filePath: string, regexes: RegExp[]): string => {
@@ -145,12 +145,12 @@ export const validatePublicFolderStructure = (publicFolderPath: string) => {
 		return
 	}
 
-	const paths = readdirSync(publicFolderPath)
-	paths.forEach((publicPath) => {
-		if (publicPath !== 'assets') {
-			throw new Error('Public folder assets must be nested in public/assets folder.')
-		}
-	})
+	if (existsSync(`${publicFolderPath}/assets`)) {
+		console.warn('Any public folder files not in assets will not be archived correctly.')
+		return
+	}
+
+	throw new Error('Public folder assets must be nested in public/assets folder.')
 }
 
 export const validateFolderExists = (folderPath: string) => {

@@ -23356,7 +23356,7 @@ var import_path2 = __toESM(require("path"));
 // package.json
 var package_default = {
   name: "@dbd/nextjs-lambda",
-  version: "1.0.11",
+  version: "1.0.12",
   description: "DBD fork of @sladg/nextjs-lambda.",
   license: "MIT",
   exports: "./dist/index.js",
@@ -23509,12 +23509,11 @@ var validatePublicFolderStructure = (publicFolderPath) => {
   if (!(0, import_fs.existsSync)(publicFolderPath)) {
     return;
   }
-  const paths = (0, import_fs.readdirSync)(publicFolderPath);
-  paths.forEach((publicPath) => {
-    if (publicPath !== "assets") {
-      throw new Error("Public folder assets must be nested in public/assets folder.");
-    }
-  });
+  if ((0, import_fs.existsSync)(`${publicFolderPath}/assets`)) {
+    console.warn("Any public folder files not in assets will not be archived correctly.");
+    return;
+  }
+  throw new Error("Public folder assets must be nested in public/assets folder.");
 };
 var validateFolderExists = (folderPath) => {
   const exists = (0, import_fs.existsSync)(folderPath);
