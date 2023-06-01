@@ -42,6 +42,14 @@ const server = slsHttp(
 		binary: true,
 		provider: 'aws',
 		basePath: process.env.NEXTJS_LAMBDA_BASE_PATH,
+		request: (request: any) => {
+			/*
+				See following for more details:
+					https://github.com/jetbridge/cdk-nextjs/pull/33/files
+					https://github.com/dougmoscrop/serverless-http/issues/227
+			*/
+			delete request.body
+		},
 	},
 )
 
