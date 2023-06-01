@@ -3,9 +3,11 @@ import { CfnOutput, Duration, Stack } from 'aws-cdk-lib'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import {
 	AllowedMethods,
+	BehaviorOptions,
 	CacheCookieBehavior,
 	CacheHeaderBehavior,
 	CachePolicy,
+	CachePolicyProps,
 	CacheQueryStringBehavior,
 	Distribution,
 	IOrigin,
@@ -37,12 +39,12 @@ export const setupCfnDistro = (
 	const imageOrigin = new HttpOrigin(apiGwDomainName, { originPath: imageBasePath })
 	const assetsOrigin = new S3Origin(assetsBucket)
 
-	const defaultOptions = {
+	const defaultOptions: Partial<BehaviorOptions> = {
 		viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 		allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
 	}
 
-	const defaultCacheOptions = {
+	const defaultCacheOptions: Partial<CachePolicyProps> = {
 		headerBehavior: CacheHeaderBehavior.allowList('accept', 'accept-language', 'content-language', 'content-type', 'user-agent', 'authorization'),
 		queryStringBehavior: CacheQueryStringBehavior.all(),
 		cookieBehavior: CacheCookieBehavior.all(),
@@ -56,12 +58,6 @@ export const setupCfnDistro = (
 
 	const serverCachePolicy = new CachePolicy(scope, 'NextServerCachePolicy', {
 		...defaultCacheOptions,
-	})
-
-	const apiCachePolicy = new CachePolicy(scope, 'NextApiCachePolicy', {
-		...defaultCacheOptions,
-		maxTtl: Duration.seconds(0),
-		defaultTtl: Duration.seconds(0),
 	})
 
 	// Public folder persists names so we are making default TTL lower for cases when invalidation does not happen.
@@ -91,7 +87,7 @@ export const setupCfnDistro = (
 				...defaultOptions,
 				origin: customApiOrigin ?? serverOrigin,
 				allowedMethods: AllowedMethods.ALLOW_ALL,
-				cachePolicy: apiCachePolicy,
+				cachePolicy: CachePolicy.CACHING_DISABLED,
 			},
 			'_next/data/*': {
 				...defaultOptions,
