@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [v7.0.6](https://github.com/sladg/nextjs-lambda/compare/v7.0.5...v7.0.6)
+
+* 🐛 fix(buffer in body): request body would not get parsed by nextjs [[27a2b86698d9f60c7323fc05177d226abc259a17](https://github.com/sladg/nextjs-lambda/commit/27a2b86698d9f60c7323fc05177d226abc259a17))]
+
+
 ## [v7.0.5](https://github.com/sladg/nextjs-lambda/compare/v7.0.4...v7.0.5)
 
 * 🐛 fix(caching): properly set API caching as previous syntax was not working [[7480a8624dd5d7a35162c95e49c091edd7d07e5f](https://github.com/sladg/nextjs-lambda/commit/7480a8624dd5d7a35162c95e49c091edd7d07e5f))]
@@ -521,6 +526,7 @@
 
 ## [v0.1.0](https://github.com/sladg/nextjs-lambda/compare/v0.1.0)
 
+* 🐛 fix(buffer in body): request body would not get parsed by nextjs [[27a2b86698d9f60c7323fc05177d226abc259a17](https://github.com/sladg/nextjs-lambda/commit/27a2b86698d9f60c7323fc05177d226abc259a17))]
 * 🐛 fix(caching): properly set API caching as previous syntax was not working [[7480a8624dd5d7a35162c95e49c091edd7d07e5f](https://github.com/sladg/nextjs-lambda/commit/7480a8624dd5d7a35162c95e49c091edd7d07e5f))]
 * fixing API cache default [[4797ecdc4184572bc6955f2e5b641e7d2dbb1a5a](https://github.com/sladg/nextjs-lambda/commit/4797ecdc4184572bc6955f2e5b641e7d2dbb1a5a))]
 * 🧹 chore(imaginex): upgraded dependency to newest version [[6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f](https://github.com/sladg/nextjs-lambda/commit/6c42ca4f6e8d91baf3b086f533b7c57b4ea0d61f))]
